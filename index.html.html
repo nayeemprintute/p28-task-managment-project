@@ -114,18 +114,15 @@ select.fs option{background:var(--s2);}
 .srt.asc .sa{transform:rotate(180deg);}
 
 .tw{background:var(--s1);border:1px solid var(--bd);border-radius:13px;overflow:hidden;}
-.th{display:grid;grid-template-columns:30px 26px 1fr 105px 88px 110px 108px 68px;padding:8px 13px;background:var(--s2);border-bottom:1px solid var(--bd);font-size:9px;letter-spacing:1.5px;text-transform:uppercase;color:var(--t3);font-weight:600;}
-.tr{display:grid;grid-template-columns:30px 26px 1fr 105px 88px 110px 108px 68px;padding:10px 13px;border-bottom:1px solid var(--bd);align-items:center;transition:background .15s;cursor:pointer;position:relative;}
+.th{display:grid;grid-template-columns:30px 1fr 105px 88px 110px 108px 68px;padding:8px 13px;background:var(--s2);border-bottom:1px solid var(--bd);font-size:9px;letter-spacing:1.5px;text-transform:uppercase;color:var(--t3);font-weight:600;}
+.tr{display:grid;grid-template-columns:30px 1fr 105px 88px 110px 108px 68px;padding:10px 13px;border-bottom:1px solid var(--bd);align-items:center;transition:background .15s;cursor:pointer;position:relative;}
 .tr:last-child{border-bottom:none;}
 .tr:hover{background:var(--s2);}
 .tr.done-r{opacity:.5;}
 .tr.exp{background:var(--s2);}
-.tr.blocked-r{border-left:3px solid var(--red);}
-.tr.overdue-r .tt{color:var(--red)!important;}
 .chk{width:16px;height:16px;border:2px solid var(--bd2);border-radius:4px;cursor:pointer;transition:all .2s;display:flex;align-items:center;justify-content:center;flex-shrink:0;}
 .chk.ck{background:var(--green);border-color:var(--green);}
 .chk.ck::after{content:'✓';color:#000;font-size:10px;font-weight:800;}
-.sel-chk{width:14px;height:14px;accent-color:var(--blue);cursor:pointer;}
 .tt{font-size:13px;font-weight:500;color:var(--text);margin-bottom:2px;padding-right:8px;}
 .tt.done{text-decoration:line-through;color:var(--t3);}
 .tm{display:flex;gap:5px;align-items:center;flex-wrap:wrap;}
@@ -139,18 +136,8 @@ select.fs option{background:var(--s2);}
 .rb{padding:3px 6px;border-radius:5px;cursor:pointer;font-size:11px;color:var(--t2);background:var(--s3);border:1px solid var(--bd2);transition:.15s;}
 .rb:hover{color:var(--text);}
 .rb.dl:hover{color:var(--red);border-color:var(--red);}
-
-/* EXPANDED PANEL */
-.sp{border-top:1px solid var(--bd);background:var(--bg);padding:0;display:none;}
+.sp{border-top:1px solid var(--bd);background:var(--bg);padding:9px 13px 11px 43px;display:none;}
 .sp.open{display:block;}
-.sp-tabs{display:flex;gap:3px;padding:8px 13px 0 43px;border-bottom:1px solid var(--bd);}
-.sp-tab{background:none;border:none;border-bottom:2px solid transparent;padding:6px 10px;font-size:11px;font-weight:600;color:var(--t3);cursor:pointer;font-family:var(--font);transition:.15s;}
-.sp-tab.active{color:var(--red);border-bottom-color:var(--red);}
-.sp-tab:hover{color:var(--text);}
-.sp-panel{padding:11px 13px 13px 43px;display:none;}
-.sp-panel.active{display:block;}
-
-/* SUBTASKS */
 .str{display:flex;align-items:center;gap:8px;padding:5px 0;border-bottom:1px solid var(--bd);}
 .str:last-of-type{border-bottom:none;}
 .stxt{flex:1;font-size:12px;color:var(--t2);}
@@ -159,111 +146,6 @@ select.fs option{background:var(--s2);}
 .add-s input{flex:1;background:var(--s2);border:1px solid var(--bd2);border-radius:7px;padding:6px 10px;color:var(--text);font-size:12px;outline:none;font-family:var(--font);}
 .add-s input:focus{border-color:var(--red);}
 
-/* COMMENTS */
-.cm-item{display:flex;gap:9px;margin-bottom:10px;}
-.cm-av{width:28px;height:28px;border-radius:8px;display:flex;align-items:center;justify-content:center;font-size:11px;font-weight:700;flex-shrink:0;margin-top:2px;}
-.cm-body{flex:1;}
-.cm-bubble{background:var(--s2);border:1px solid var(--bd);border-radius:10px;padding:8px 12px;}
-.cm-name{font-size:10px;font-weight:700;margin-bottom:3px;color:var(--t2);}
-.cm-text{font-size:12px;color:var(--text);line-height:1.55;word-break:break-word;}
-.cm-text .mention{color:var(--blue);font-weight:600;}
-.cm-time{font-size:10px;color:var(--t3);margin-top:4px;}
-.cm-input-area{display:flex;gap:8px;align-items:flex-end;margin-top:10px;}
-.cm-ta{flex:1;background:var(--s2);border:1px solid var(--bd2);border-radius:9px;padding:8px 11px;color:var(--text);font-family:var(--font);font-size:12px;outline:none;resize:none;height:36px;max-height:100px;transition:all .2s;overflow:hidden;}
-.cm-ta:focus{border-color:var(--blue);height:68px;}
-.cm-typing{font-size:10px;color:var(--t3);font-style:italic;margin-bottom:5px;min-height:15px;}
-.cm-hint{font-size:10px;color:var(--t3);margin-top:4px;}
-.cm-mention-drop{position:absolute;background:var(--s1);border:1px solid var(--bd2);border-radius:8px;box-shadow:0 8px 24px rgba(0,0,0,.5);z-index:500;min-width:160px;overflow:hidden;}
-.cm-mention-opt{padding:8px 12px;cursor:pointer;font-size:12px;display:flex;align-items:center;gap:8px;transition:.1s;}
-.cm-mention-opt:hover{background:var(--s2);}
-
-/* TIME TRACKER */
-.timer-disp{display:inline-flex;align-items:center;gap:5px;font-size:11px;color:var(--t3);background:var(--s2);border:1px solid var(--bd);border-radius:5px;padding:3px 7px;font-family:var(--mono);}
-.timer-disp.running{color:var(--green);border-color:rgba(34,212,122,.4);animation:tpulse 1.5s ease-in-out infinite;}
-@keyframes tpulse{0%,100%{opacity:1}50%{opacity:.7}}
-.time-log-entry{display:flex;align-items:center;justify-content:space-between;font-size:11px;padding:5px 0;border-bottom:1px solid var(--bd);color:var(--t2);}
-.time-log-entry:last-child{border:none;}
-
-/* DEPS */
-.dep-badge{display:inline-flex;align-items:center;gap:3px;font-size:9px;color:var(--red);padding:1px 5px;background:rgba(240,62,95,.15);border-radius:4px;border:1px solid rgba(240,62,95,.3);}
-.dep-row{display:flex;align-items:center;gap:8px;padding:5px 0;border-bottom:1px solid var(--bd);font-size:12px;}
-.dep-row:last-child{border:none;}
-.dep-status{width:8px;height:8px;border-radius:50%;flex-shrink:0;}
-
-/* STAR */
-.star-btn{background:none;border:none;cursor:pointer;font-size:14px;padding:1px 3px;line-height:1;transition:.2s;display:flex;align-items:center;}
-.star-btn:hover{transform:scale(1.2);}
-
-/* OVERDUE BADGE */
-.ov-badge{display:inline-flex;align-items:center;padding:1px 5px;background:rgba(240,62,95,.2);color:var(--red);border-radius:4px;font-size:9px;font-weight:700;border:1px solid rgba(240,62,95,.4);}
-.today-badge{display:inline-flex;align-items:center;padding:1px 5px;background:rgba(245,166,35,.2);color:var(--gold);border-radius:4px;font-size:9px;font-weight:700;border:1px solid rgba(245,166,35,.4);}
-
-/* ONLINE DOT */
-.online-dot{width:8px;height:8px;border-radius:50%;background:var(--green);box-shadow:0 0 5px var(--green);flex-shrink:0;}
-.online-dot.off{background:var(--t3);box-shadow:none;}
-
-/* BULK ACTION BAR */
-.bulk-bar{position:fixed;bottom:24px;left:50%;transform:translateX(-50%) translateY(80px);background:var(--s1);border:1px solid var(--bd2);border-radius:14px;padding:12px 18px;display:flex;align-items:center;gap:10px;box-shadow:0 20px 50px rgba(0,0,0,.6);z-index:900;transition:.35s cubic-bezier(.34,1.56,.64,1);opacity:0;pointer-events:none;}
-.bulk-bar.show{transform:translateX(-50%) translateY(0);opacity:1;pointer-events:all;}
-.bulk-count{font-size:13px;font-weight:700;color:var(--text);margin-right:4px;}
-.bulk-divider{width:1px;height:20px;background:var(--bd2);}
-
-/* CALENDAR VIEW */
-.cal-nav{display:flex;align-items:center;justify-content:space-between;margin-bottom:16px;}
-.cal-nav-btn{background:var(--s2);border:1px solid var(--bd2);border-radius:7px;padding:6px 13px;cursor:pointer;color:var(--t2);font-size:13px;transition:.15s;font-family:var(--font);}
-.cal-nav-btn:hover{border-color:var(--red);color:var(--red);}
-.cal-month-title{font-size:16px;font-weight:700;}
-.cal-header{display:grid;grid-template-columns:repeat(7,1fr);gap:5px;margin-bottom:5px;}
-.cal-day-label{text-align:center;font-size:10px;color:var(--t3);font-weight:600;padding:4px 0;}
-.cal-grid{display:grid;grid-template-columns:repeat(7,1fr);gap:5px;}
-.cal-cell{background:var(--s1);border:1px solid var(--bd);border-radius:9px;padding:7px;min-height:90px;cursor:pointer;transition:.15s;position:relative;}
-.cal-cell:hover{border-color:var(--bd2);background:var(--s2);}
-.cal-cell.today{border-color:var(--red)!important;background:var(--red-d);}
-.cal-cell.other-month{opacity:.25;}
-.cal-cell.has-tasks{border-color:var(--bd2);}
-.cal-day-num{font-size:12px;font-weight:700;margin-bottom:5px;}
-.cal-task-pill{font-size:9px;padding:1px 5px;border-radius:3px;margin-bottom:2px;overflow:hidden;text-overflow:ellipsis;white-space:nowrap;display:block;line-height:1.5;}
-.cal-more{font-size:9px;color:var(--t3);text-align:right;}
-
-/* GANTT VIEW */
-.gantt-container{overflow-x:auto;}
-.gantt-header-row{display:flex;margin-bottom:6px;padding-left:190px;}
-.gantt-day-hdr{text-align:center;font-size:9px;color:var(--t3);font-weight:600;flex:1;min-width:20px;}
-.gantt-row{display:flex;align-items:center;margin-bottom:5px;min-height:30px;}
-.gantt-label{width:185px;flex-shrink:0;font-size:11px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;color:var(--t2);padding-right:10px;}
-.gantt-track{flex:1;height:22px;background:var(--s2);border-radius:4px;position:relative;}
-.gantt-bar{position:absolute;height:100%;border-radius:4px;display:flex;align-items:center;padding:0 6px;font-size:9px;font-weight:700;color:#fff;overflow:hidden;cursor:pointer;transition:.15s;}
-.gantt-bar:hover{filter:brightness(1.15);}
-.gantt-today-line{position:absolute;width:2px;height:100%;background:rgba(240,62,95,.6);top:0;pointer-events:none;}
-
-/* ANALYTICS */
-.an-grid{display:grid;grid-template-columns:1fr 1fr;gap:14px;margin-bottom:16px;}
-.an-card{background:var(--s1);border:1px solid var(--bd);border-radius:13px;padding:16px;}
-.an-card h3{font-size:11px;font-weight:600;color:var(--t3);margin-bottom:13px;letter-spacing:1px;text-transform:uppercase;display:flex;justify-content:space-between;align-items:center;}
-.an-bar-row{display:flex;align-items:center;gap:8px;margin-bottom:8px;}
-.an-bar-label{width:85px;font-size:11px;color:var(--t2);flex-shrink:0;overflow:hidden;text-overflow:ellipsis;white-space:nowrap;}
-.an-bar-track{flex:1;height:14px;background:var(--s3);border-radius:3px;overflow:hidden;}
-.an-bar-fill{height:100%;border-radius:3px;transition:width .6s;}
-.an-bar-val{font-size:10px;color:var(--t3);white-space:nowrap;min-width:28px;text-align:right;}
-.an-svg-wrap{overflow:hidden;border-radius:6px;}
-.an-summary-grid{display:grid;grid-template-columns:1fr 1fr;gap:8px;}
-.an-sum-item{background:var(--s2);border-radius:8px;padding:10px 12px;}
-.an-sum-val{font-size:20px;font-weight:800;margin-bottom:2px;}
-.an-sum-lbl{font-size:10px;color:var(--t3);text-transform:uppercase;letter-spacing:.5px;}
-
-/* ACTIVITY LOG */
-.al-list{background:var(--s1);border:1px solid var(--bd);border-radius:13px;overflow:hidden;}
-.al-item{display:flex;gap:11px;padding:11px 16px;border-bottom:1px solid var(--bd);align-items:flex-start;}
-.al-item:last-child{border:none;}
-.al-item:hover{background:var(--s2);}
-.al-icon{width:32px;height:32px;border-radius:9px;display:flex;align-items:center;justify-content:center;font-size:13px;flex-shrink:0;background:var(--s2);margin-top:1px;}
-.al-body{flex:1;}
-.al-title{font-size:12px;font-weight:600;margin-bottom:2px;line-height:1.4;}
-.al-sub{font-size:11px;color:var(--t2);}
-.al-time{font-size:10px;color:var(--t3);white-space:nowrap;}
-.al-filter-row{display:flex;gap:7px;margin-bottom:13px;flex-wrap:wrap;}
-
-/* DASHBOARD */
 .dg{display:grid;grid-template-columns:1fr 1fr;gap:14px;}
 .dc{background:var(--s1);border:1px solid var(--bd);border-radius:13px;padding:16px;}
 .dc h3{font-size:11px;font-weight:600;color:var(--t3);margin-bottom:13px;}
@@ -284,7 +166,6 @@ select.fs option{background:var(--s2);}
 .tlday{font-size:10px;color:var(--t3);margin-bottom:1px;}
 .tltask{font-size:12px;font-weight:500;}
 
-/* KANBAN */
 .kb{display:grid;grid-template-columns:repeat(4,1fr);gap:11px;align-items:start;}
 .kc{background:var(--s1);border:1px solid var(--bd);border-radius:12px;overflow:hidden;}
 .kch{padding:12px 13px;border-bottom:1px solid var(--bd);display:flex;align-items:center;justify-content:space-between;}
@@ -296,7 +177,6 @@ select.fs option{background:var(--s2);}
 .kct2{font-size:12px;font-weight:600;margin-bottom:6px;line-height:1.5;}
 .kcf{display:flex;align-items:center;justify-content:space-between;}
 
-/* SETTINGS */
 .set-grid{display:grid;grid-template-columns:1fr 1fr;gap:14px;}
 .set-card{background:var(--s1);border:1px solid var(--bd);border-radius:13px;padding:16px;}
 .set-card h3{font-size:12px;font-weight:700;color:var(--t2);margin-bottom:13px;display:flex;align-items:center;justify-content:space-between;}
@@ -306,7 +186,6 @@ select.fs option{background:var(--s2);}
 .set-item .si-del{cursor:pointer;color:var(--t3);font-size:12px;padding:2px 5px;border-radius:4px;background:var(--s3);border:1px solid var(--bd2);transition:.15s;}
 .set-item .si-del:hover{color:var(--red);border-color:var(--red);}
 
-/* MODALS */
 .mo{position:fixed;inset:0;background:rgba(0,0,0,.8);display:none;align-items:center;justify-content:center;z-index:1000;backdrop-filter:blur(5px);}
 .mo.open{display:flex;}
 .md{background:var(--s1);border:1px solid var(--bd2);border-radius:17px;width:570px;max-width:calc(100vw - 20px);max-height:90vh;overflow-y:auto;box-shadow:0 40px 80px rgba(0,0,0,.7);}
@@ -323,9 +202,7 @@ select.fs option{background:var(--s2);}
 .fg input:focus,.fg select:focus,.fg textarea:focus{border-color:var(--red);}
 .fg textarea{resize:vertical;min-height:68px;}
 .fg select option{background:var(--s2);}
-.fg input[type="date"]{color-scheme:dark;}
 
-/* USERS TABLE */
 .ut{background:var(--s1);border:1px solid var(--bd);border-radius:12px;overflow:hidden;}
 .ur{display:grid;grid-template-columns:44px 1fr 130px 115px 70px;padding:12px 16px;border-bottom:1px solid var(--bd);align-items:center;}
 .ur:last-child{border-bottom:none;}
@@ -339,6 +216,7 @@ select.fs option{background:var(--s2);}
 .npc{cursor:pointer;color:var(--t2);font-size:17px;transition:.15s;}
 .npc:hover{color:var(--red);}
 .npb{flex:1;overflow-y:auto;padding:10px;}
+/* Notif item */
 .npi{background:var(--s2);border:1px solid var(--bd);border-radius:11px;padding:13px 14px;margin-bottom:8px;cursor:pointer;transition:all .2s;position:relative;}
 .npi.unread{border-color:var(--red);background:rgba(240,62,95,.08);}
 .npi.unread::before{content:'';position:absolute;left:0;top:50%;transform:translateY(-50%);width:3px;height:60%;background:var(--red);border-radius:0 3px 3px 0;}
@@ -370,12 +248,113 @@ select.fs option{background:var(--s2);}
 .mob-ov{position:fixed;inset:0;background:rgba(0,0,0,.55);z-index:399;display:none;}
 .mob-ov.open{display:block;}
 
-/* BULK SELECT MODE */
-.bulk-active-row{background:rgba(77,142,255,.08)!important;border-color:rgba(77,142,255,.3)!important;}
+@media(max-width:960px){.sg{grid-template-columns:repeat(3,1fr);}.dg{grid-template-columns:1fr;}.kb{grid-template-columns:repeat(2,1fr);}.set-grid{grid-template-columns:1fr;}.th,.tr{grid-template-columns:30px 1fr 88px 82px 90px 68px;}.th>div:nth-child(6),.tr>div:nth-child(6){display:none;}}
+@media(max-width:680px){.ag{grid-template-columns:1fr;}.sb{position:fixed;left:0;top:0;bottom:0;z-index:400;transform:translateX(-100%);transition:.25s;width:250px;}.sb.open{transform:translateX(0);}.ham{display:flex;}.sg{grid-template-columns:repeat(2,1fr);}.kb{grid-template-columns:1fr;}.th,.tr{grid-template-columns:30px 1fr 80px 64px;}.th>div:nth-child(3),.tr>div:nth-child(3),.th>div:nth-child(4),.tr>div:nth-child(4),.th>div:nth-child(6),.tr>div:nth-child(6){display:none;}.tb{padding:0 13px;}.ct{padding:13px;}.fr2{grid-template-columns:1fr;}.lw{padding:26px 18px;}.np{width:100%;}.fts{display:none;}.set-grid{grid-template-columns:1fr;}}
 
-@media(max-width:960px){.sg{grid-template-columns:repeat(3,1fr);}.dg{grid-template-columns:1fr;}.kb{grid-template-columns:repeat(2,1fr);}.set-grid{grid-template-columns:1fr;}.an-grid{grid-template-columns:1fr;}.th,.tr{grid-template-columns:30px 22px 1fr 88px 82px 90px 68px;}.th>div:nth-child(7),.tr>div:nth-child(7){display:none;}}
-@media(max-width:680px){.ag{grid-template-columns:1fr;}.sb{position:fixed;left:0;top:0;bottom:0;z-index:400;transform:translateX(-100%);transition:.25s;width:250px;}.sb.open{transform:translateX(0);}.ham{display:flex;}.sg{grid-template-columns:repeat(2,1fr);}.kb{grid-template-columns:1fr;}.th,.tr{grid-template-columns:30px 22px 1fr 80px 64px;}.th>div:nth-child(3),.tr>div:nth-child(3),.th>div:nth-child(4),.tr>div:nth-child(4),.th>div:nth-child(7),.tr>div:nth-child(7){display:none;}.tb{padding:0 13px;}.ct{padding:13px;}.fr2{grid-template-columns:1fr;}.lw{padding:26px 18px;}.np{width:100%;}.fts{display:none;}.set-grid{grid-template-columns:1fr;}.an-grid{grid-template-columns:1fr;}.cal-grid{grid-template-columns:repeat(7,1fr)!important;gap:2px!important;}.cal-cell{min-height:50px!important;padding:4px!important;}}
-@media print{body{background:#fff!important;color:#000!important;}.sb,.tb,.np,.bulk-bar{display:none!important;}.ct{padding:0!important;}.view.active{display:block!important;}}
+/* ══ DAILY TASKS ══ */
+.dt-header{display:flex;align-items:center;justify-content:space-between;margin-bottom:14px;}
+.dt-date-nav{display:flex;align-items:center;gap:9px;}
+.dt-date-btn{background:var(--s2);border:1px solid var(--bd2);color:var(--t2);border-radius:7px;padding:5px 10px;cursor:pointer;font-size:13px;transition:.15s;}
+.dt-date-btn:hover{border-color:var(--text);color:var(--text);}
+.dt-date-label{font-size:14px;font-weight:700;min-width:140px;text-align:center;}
+.dt-user-tabs{display:flex;gap:6px;flex-wrap:wrap;margin-bottom:14px;}
+.dt-user-tab{padding:5px 13px;border-radius:20px;font-size:12px;font-weight:600;cursor:pointer;border:1px solid var(--bd2);background:var(--s2);color:var(--t2);transition:.15s;}
+.dt-user-tab.active{background:var(--red-d);border-color:var(--red);color:var(--red);}
+.dt-section{background:var(--s1);border:1px solid var(--bd);border-radius:13px;margin-bottom:12px;overflow:hidden;}
+.dt-sec-head{padding:11px 15px;border-bottom:1px solid var(--bd);display:flex;align-items:center;justify-content:space-between;cursor:pointer;}
+.dt-sec-title{font-size:12px;font-weight:700;display:flex;align-items:center;gap:7px;}
+.dt-sec-count{font-size:10px;background:var(--s2);padding:2px 7px;border-radius:20px;color:var(--t3);}
+.dt-tasks{padding:6px 8px;}
+.dt-task{display:flex;align-items:center;gap:9px;padding:8px 8px;border-radius:8px;transition:.15s;cursor:pointer;}
+.dt-task:hover{background:var(--s2);}
+.dt-task-title{flex:1;font-size:13px;}
+.dt-task.done-t .dt-task-title{text-decoration:line-through;color:var(--t3);}
+.dt-add-row{display:flex;gap:7px;padding:7px 8px 9px;}
+.dt-add-row input{flex:1;background:var(--s2);border:1px solid var(--bd2);border-radius:7px;padding:6px 10px;color:var(--text);font-size:12px;outline:none;font-family:var(--font);}
+.dt-add-row input:focus{border-color:var(--red);}
+.dt-stats{display:grid;grid-template-columns:repeat(4,1fr);gap:9px;margin-bottom:16px;}
+.dt-stat{background:var(--s1);border:1px solid var(--bd);border-radius:10px;padding:12px;text-align:center;}
+.dt-stat .dsv{font-size:20px;font-weight:800;margin-bottom:2px;}
+.dt-stat .dsl{font-size:9px;letter-spacing:1px;text-transform:uppercase;color:var(--t3);}
+.dt-prog-bar{height:4px;background:var(--s3);border-radius:2px;margin-top:6px;overflow:hidden;}
+.dt-prog-fill{height:100%;background:var(--green);border-radius:2px;transition:width .4s;}
+
+/* ══ BULK ACTIONS ══ */
+.bulk-bar{background:var(--s3);border:1px solid var(--bd2);border-radius:10px;padding:9px 14px;margin-bottom:10px;display:none;align-items:center;gap:10px;flex-wrap:wrap;}
+.bulk-bar.show{display:flex;}
+.bulk-count{font-size:12px;font-weight:700;color:var(--text);}
+.bulk-sep{width:1px;height:18px;background:var(--bd2);}
+.chk-all{width:16px;height:16px;border:2px solid var(--bd2);border-radius:4px;cursor:pointer;transition:all .2s;display:inline-flex;align-items:center;justify-content:center;flex-shrink:0;}
+.chk-all.ck{background:var(--blue);border-color:var(--blue);}
+.chk-all.ck::after{content:'✓';color:#fff;font-size:10px;font-weight:800;}
+.tr-sel .chk-row{background:var(--red-d)!important;}
+.tr.selected{background:rgba(77,142,255,.08)!important;}
+
+/* ══ TIME TRACKING ══ */
+.tt-row{display:flex;align-items:center;gap:6px;margin-top:4px;}
+.tt-chip{font-size:10px;padding:2px 7px;border-radius:20px;background:rgba(157,111,255,.15);color:var(--purple);border:1px solid rgba(157,111,255,.3);display:inline-flex;align-items:center;gap:4px;}
+.tt-btn{padding:3px 8px;border-radius:5px;font-size:10px;cursor:pointer;border:1px solid;transition:.15s;font-family:var(--font);}
+.tt-start{background:rgba(34,212,122,.1);color:var(--green);border-color:rgba(34,212,122,.3);}
+.tt-start:hover{background:rgba(34,212,122,.2);}
+.tt-stop{background:rgba(240,62,95,.1);color:var(--red);border-color:rgba(240,62,95,.3);}
+.tt-stop:hover{background:rgba(240,62,95,.2);}
+
+/* ══ REPORT ══ */
+.rpt-tabs{display:flex;gap:5px;background:var(--s1);border:1px solid var(--bd);border-radius:9px;padding:4px;margin-bottom:16px;width:fit-content;}
+.rpt-tab{padding:6px 16px;border-radius:6px;font-size:12px;font-weight:600;cursor:pointer;color:var(--t2);transition:.15s;}
+.rpt-tab.active{background:var(--s3);color:var(--text);}
+.rpt-grid{display:grid;grid-template-columns:1fr 1fr;gap:14px;margin-bottom:14px;}
+.rpt-card{background:var(--s1);border:1px solid var(--bd);border-radius:13px;padding:16px;}
+.rpt-card h3{font-size:11px;font-weight:700;color:var(--t3);margin-bottom:13px;text-transform:uppercase;letter-spacing:1px;}
+.rpt-bar-row{display:flex;align-items:center;gap:9px;margin-bottom:8px;}
+.rpt-bar-label{font-size:11px;min-width:80px;color:var(--t2);}
+.rpt-bar-wrap{flex:1;height:6px;background:var(--s3);border-radius:3px;overflow:hidden;}
+.rpt-bar-fill{height:100%;border-radius:3px;transition:width .6s;}
+.rpt-bar-val{font-size:10px;color:var(--t3);min-width:28px;text-align:right;}
+.rpt-summary-row{display:flex;justify-content:space-between;align-items:center;padding:7px 0;border-bottom:1px solid var(--bd);font-size:12px;}
+.rpt-summary-row:last-child{border-bottom:none;}
+
+/* ══ CALENDAR VIEW ══ */
+.cal-header{display:flex;align-items:center;justify-content:space-between;margin-bottom:14px;}
+.cal-grid{display:grid;grid-template-columns:repeat(7,1fr);gap:3px;}
+.cal-day-label{text-align:center;font-size:10px;font-weight:700;color:var(--t3);text-transform:uppercase;padding:6px 0;}
+.cal-cell{background:var(--s1);border:1px solid var(--bd);border-radius:8px;min-height:80px;padding:6px;cursor:pointer;transition:.15s;position:relative;}
+.cal-cell:hover{border-color:var(--bd2);background:var(--s2);}
+.cal-cell.today{border-color:var(--red);background:var(--red-d);}
+.cal-cell.other-month{opacity:.4;}
+.cal-cell.has-tasks{border-color:var(--blue);}
+.cal-dn{font-size:11px;font-weight:700;margin-bottom:4px;}
+.cal-dot{font-size:9px;padding:1px 5px;border-radius:10px;margin-bottom:2px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;max-width:100%;}
+
+/* ══ GANTT / TIMELINE ══ */
+.gantt-wrap{overflow-x:auto;}
+.gantt-header{display:flex;border-bottom:1px solid var(--bd);padding-bottom:8px;margin-bottom:4px;}
+.gantt-task-col{width:200px;flex-shrink:0;font-size:10px;font-weight:700;color:var(--t3);text-transform:uppercase;letter-spacing:1px;padding-left:6px;}
+.gantt-days{display:flex;flex:1;}
+.gantt-day-head{font-size:9px;color:var(--t3);text-align:center;min-width:40px;font-weight:600;}
+.gantt-row{display:flex;align-items:center;padding:4px 0;border-bottom:1px solid var(--bd);}
+.gantt-row:last-child{border-bottom:none;}
+.gantt-row-label{width:200px;flex-shrink:0;font-size:11px;padding:4px 6px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;}
+.gantt-row-bars{flex:1;display:flex;align-items:center;height:28px;position:relative;}
+.gantt-bar{position:absolute;height:18px;border-radius:4px;display:flex;align-items:center;padding:0 6px;font-size:9px;font-weight:700;color:#fff;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;cursor:pointer;transition:.15s;}
+.gantt-bar:hover{filter:brightness(1.15);}
+
+/* ══ STAR/PIN ══ */
+.star-btn{cursor:pointer;font-size:13px;padding:2px 4px;border-radius:4px;transition:.15s;line-height:1;background:none;border:none;color:var(--t3);}
+.star-btn:hover{color:var(--gold);}
+.star-btn.starred{color:var(--gold);}
+
+/* ══ ONLINE INDICATOR ══ */
+.online-dot{width:8px;height:8px;border-radius:50%;background:var(--green);box-shadow:0 0 5px var(--green);display:inline-block;flex-shrink:0;}
+.online-dot.offline{background:var(--t3);box-shadow:none;}
+.online-dot.away{background:var(--gold);box-shadow:0 0 5px var(--gold);}
+
+/* ══ DATE PICKER ══ */
+input[type="date"].fg-date{color-scheme:dark;}
+
+/* ══ MEMBER RESTRICTED OVERLAY ══ */
+.restricted{pointer-events:none;opacity:.5;}
+.member-badge{font-size:9px;padding:2px 6px;border-radius:10px;background:rgba(77,142,255,.15);color:var(--blue);border:1px solid rgba(77,142,255,.3);margin-left:6px;}
 </style>
 </head>
 <body>
@@ -417,22 +396,22 @@ select.fs option{background:var(--s2);}
         <div class="ng">
           <div class="ngl">Overview</div>
           <div class="ni active" onclick="showV('dashboard',this)"><span class="ic">📊</span> Dashboard</div>
+          <div class="ni" onclick="showV('daily',this)"><span class="ic">📅</span> Daily Tasks</div>
           <div class="ni" onclick="showV('tasks',this)"><span class="ic">✅</span> All Tasks <span class="bc" id="nc">0</span></div>
           <div class="ni" onclick="showV('kanban',this)"><span class="ic">🗂</span> Kanban Board</div>
+          <div class="ni" onclick="showV('calendar',this)"><span class="ic">🗓</span> Calendar</div>
+          <div class="ni" onclick="showV('gantt',this)"><span class="ic">📊</span> Timeline/Gantt</div>
           <div class="ni" onclick="showV('starred',this)"><span class="ic">⭐</span> Starred Tasks</div>
-          <div class="ni" onclick="showV('calendar',this)"><span class="ic">📅</span> Calendar</div>
-          <div class="ni" onclick="showV('gantt',this)"><span class="ic">📐</span> Gantt View</div>
-          <div class="ni" onclick="showV('analytics',this)"><span class="ic">📊</span> Analytics</div>
-          <div class="ni" onclick="showV('activity',this)"><span class="ic">📋</span> Activity Log</div>
+          <div class="ni" onclick="showV('report',this)"><span class="ic">📈</span> Reports</div>
         </div>
         <div class="ng">
-          <div class="ngl">Sections <span class="ngl-add" id="secAddBtn" onclick="openQuick('section')">＋</span></div>
+          <div class="ngl">Sections <span class="ngl-add" onclick="openQuick('section')">＋</span></div>
           <div id="secNav"></div>
         </div>
         <div class="ng">
-          <div class="ngl">Team <span class="ngl-add" id="teamAddBtn" onclick="openM('user')">＋</span></div>
+          <div class="ngl">Team <span class="ngl-add" onclick="openM('user')">＋</span></div>
           <div id="teamNav"></div>
-          <div class="ni" id="manageUsersNav" onclick="showV('users',this)"><span class="ic">👥</span> Manage Users</div>
+          <div class="ni" onclick="showV('users',this)"><span class="ic">👥</span> Manage Users</div>
         </div>
         <div class="ng">
           <div class="ngl">System</div>
@@ -451,18 +430,15 @@ select.fs option{background:var(--s2);}
           <div class="ham" onclick="toggleMob()"><span></span><span></span><span></span></div>
           <div class="tb-title" id="vt">Dashboard</div>
         </div>
-        <div class="tb-act" id="tbAct">
-          <button class="btn bg bsm" id="btnAddTask" onclick="openM('task')">+ Task</button>
-          <button class="btn br bsm" id="btnAddUser" onclick="openM('user')">+ User</button>
-          <button class="btn bg bsm" id="btnBulk" onclick="toggleBulkMode()" style="display:none">☐ Select</button>
+        <div class="tb-act">
+          <button class="btn bg bsm" onclick="openM('task')">+ Task</button>
+          <button class="btn br bsm" onclick="openM('user')">+ User</button>
           <button class="btn bg bsm" onclick="toggleNP()" style="position:relative;padding:6px 11px;">
             🔔<span class="unread-badge" id="nbadge"></span>
           </button>
         </div>
       </div>
       <div class="ct">
-
-        <!-- DASHBOARD -->
         <div class="view active" id="view-dashboard">
           <div class="sg" id="sg"></div>
           <div class="dg">
@@ -472,8 +448,6 @@ select.fs option{background:var(--s2);}
             <div class="dc"><h3>📊 KPI</h3><div id="dKpi"></div></div>
           </div>
         </div>
-
-        <!-- ALL TASKS -->
         <div class="view" id="view-tasks">
           <div class="tlb">
             <div class="sb2"><span style="color:var(--t3)">🔍</span><input type="text" id="si" placeholder="Search tasks..." oninput="renderT()"/></div>
@@ -488,83 +462,23 @@ select.fs option{background:var(--s2);}
             <div class="srt" id="srtBtn" onclick="toggleAsc()"><span>A→Z</span><span class="sa">▲</span></div>
           </div>
           <div class="tw">
-            <div class="th"><div></div><div>⭐</div><div>Task</div><div>Section</div><div>Priority</div><div>Status</div><div>Assignee</div><div></div></div>
+            <div class="th"><div></div><div>Task</div><div>Section</div><div>Priority</div><div>Status</div><div>Assignee</div><div></div></div>
             <div id="tl"></div>
           </div>
         </div>
-
-        <!-- KANBAN -->
         <div class="view" id="view-kanban"><div class="kb" id="kb"></div></div>
-
-        <!-- STARRED -->
-        <div class="view" id="view-starred">
-          <div style="margin-bottom:14px;display:flex;align-items:center;gap:8px;"><span style="font-size:20px">⭐</span><div><div style="font-weight:700;font-size:15px">Starred Tasks</div><div style="font-size:12px;color:var(--t3)">আপনার starred tasks</div></div></div>
-          <div class="tw">
-            <div class="th"><div></div><div></div><div>Task</div><div>Section</div><div>Priority</div><div>Status</div><div>Assignee</div><div></div></div>
-            <div id="starredList"></div>
-          </div>
-        </div>
-
-        <!-- CALENDAR -->
-        <div class="view" id="view-calendar">
-          <div class="cal-nav">
-            <button class="cal-nav-btn" onclick="calPrev()">‹ আগের মাস</button>
-            <div class="cal-month-title" id="calTitle"></div>
-            <button class="cal-nav-btn" onclick="calNext()">পরের মাস ›</button>
-          </div>
-          <div class="cal-header" id="calHeader"></div>
-          <div class="cal-grid" id="calGrid"></div>
-        </div>
-
-        <!-- GANTT -->
-        <div class="view" id="view-gantt">
-          <div style="margin-bottom:14px;display:flex;align-items:center;justify-content:space-between;">
-            <div><div style="font-weight:700;font-size:15px">📐 Gantt View</div><div style="font-size:12px;color:var(--t3)">30-দিনের task timeline</div></div>
-            <select class="fs" id="ganttFilter" onchange="renderGantt()"><option value="">All Sections</option></select>
-          </div>
-          <div class="gantt-container" id="ganttContainer"></div>
-        </div>
-
-        <!-- ANALYTICS -->
-        <div class="view" id="view-analytics">
-          <div style="margin-bottom:16px;display:flex;align-items:center;justify-content:space-between;flex-wrap:wrap;gap:8px;">
-            <div><div style="font-weight:700;font-size:15px">📊 Analytics & Reports</div><div style="font-size:12px;color:var(--t3)">Performance data ও export options</div></div>
-            <div style="display:flex;gap:7px;">
-              <button class="btn bg bsm" onclick="exportCSV()">⬇ Export CSV</button>
-              <button class="btn bg bsm" onclick="exportPDF()">🖨 Print / PDF</button>
-            </div>
-          </div>
-          <div id="analyticsContent"></div>
-        </div>
-
-        <!-- ACTIVITY LOG -->
-        <div class="view" id="view-activity">
-          <div style="margin-bottom:14px;display:flex;align-items:center;justify-content:space-between;flex-wrap:wrap;gap:8px;">
-            <div><div style="font-weight:700;font-size:15px">📋 Activity Log</div><div style="font-size:12px;color:var(--t3)">কে কখন কী করেছে — সব record</div></div>
-            <div style="display:flex;gap:7px;align-items:center;">
-              <select class="fs" id="alUserFilter" onchange="renderActivity()"><option value="">All Users</option></select>
-              <select class="fs" id="alActionFilter" onchange="renderActivity()"><option value="">All Actions</option><option value="task_created">Created</option><option value="task_updated">Updated</option><option value="task_deleted">Deleted</option><option value="status_changed">Status</option><option value="comment_added">Comment</option><option value="subtask_done">Subtask</option><option value="user_added">User Added</option></select>
-            </div>
-          </div>
-          <div class="al-list" id="activityList"></div>
-        </div>
-
-        <!-- USERS -->
         <div class="view" id="view-users">
           <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:16px;">
             <div><div style="font-weight:700;font-size:16px">Team Members</div><div style="color:var(--t3);font-size:12px">Manage users & credentials</div></div>
-            <button class="btn br bsm" id="addUserBtn" onclick="openM('user')">+ Add User</button>
+            <button class="btn br bsm" onclick="openM('user')">+ Add User</button>
           </div>
           <div class="ut"><div class="ur urh"><div></div><div>User</div><div>Credentials</div><div>Role</div><div></div></div><div id="ul"></div></div>
         </div>
-
-        <!-- SETTINGS -->
         <div class="view" id="view-settings">
           <div style="font-weight:700;font-size:16px;margin-bottom:4px">⚙️ Settings</div>
           <div style="color:var(--t3);font-size:12px;margin-bottom:16px">Sections, Statuses, Priorities, Roles</div>
           <div class="set-grid" id="setGrid"></div>
         </div>
-
       </div>
     </div>
   </div>
@@ -583,20 +497,7 @@ select.fs option{background:var(--s2);}
   <div class="npb" id="nl"></div>
 </div>
 
-<!-- BULK ACTION BAR -->
-<div class="bulk-bar" id="bulkBar">
-  <span class="bulk-count" id="bulkCount">0 selected</span>
-  <div class="bulk-divider"></div>
-  <select class="fs" id="bulkStatusSel" style="padding:5px 8px;font-size:11px;"><option value="">Status পরিবর্তন করুন</option></select>
-  <button class="btn bg bxs" onclick="bulkChangeStatus()">✓ Apply</button>
-  <select class="fs" id="bulkAssigneeSel" style="padding:5px 8px;font-size:11px;"><option value="">Assignee পরিবর্তন করুন</option></select>
-  <button class="btn bg bxs" onclick="bulkChangeAssignee()">✓ Apply</button>
-  <div class="bulk-divider"></div>
-  <button class="btn bxs" style="background:rgba(240,62,95,.15);border:1px solid rgba(240,62,95,.4);color:var(--red)" id="bulkDeleteBtn" onclick="bulkDelete()">🗑 Delete</button>
-  <button class="btn bg bxs" onclick="cancelBulk()">✕ Cancel</button>
-</div>
-
-<!-- TASK MODAL -->
+<!-- MODALS -->
 <div class="mo" id="mo-task">
   <div class="md">
     <div class="mdh"><div class="mdt" id="mdT">Add New Task</div><button class="mdc" onclick="closeM('task')">✕</button></div>
@@ -613,12 +514,8 @@ select.fs option{background:var(--s2);}
         <div class="fg"><label>Status</label><select id="tSt"></select></div>
       </div>
       <div class="fr2">
-        <div class="fg"><label>Due Date (Calendar)</label><input type="date" id="tDueDate"/></div>
-        <div class="fg"><label>Day Reference (e.g. Day 1–3)</label><input type="text" id="tDu" placeholder="Day 1, Day 4–6..."/></div>
-      </div>
-      <div class="fr2">
+        <div class="fg"><label>Due</label><input type="text" id="tDu" placeholder="Day 1, Day 4–6..."/></div>
         <div class="fg"><label>Phase</label><select id="tPh"><option value="Phase 1">Phase 1</option><option value="Phase 2">Phase 2</option><option value="Both">Both</option></select></div>
-        <div class="fg"><label>Depends On (Task ID)</label><input type="text" id="tDep" placeholder="Task ID (optional)"/></div>
       </div>
     </div>
     <div class="mdf"><button class="btn bg" onclick="closeM('task')">Cancel</button><button class="btn br" onclick="saveTask()">Save Task</button></div>
@@ -662,7 +559,7 @@ select.fs option{background:var(--s2);}
 
 <script type="module">
 import { initializeApp } from "https://www.gstatic.com/firebasejs/10.12.0/firebase-app.js";
-import { getFirestore, collection, doc, setDoc, deleteDoc, onSnapshot, getDoc } from "https://www.gstatic.com/firebasejs/10.12.0/firebase-firestore.js";
+import { getFirestore, collection, doc, setDoc, deleteDoc, onSnapshot, getDoc, query, where, orderBy } from "https://www.gstatic.com/firebasejs/10.12.0/firebase-firestore.js";
 
 const firebaseConfig = {
   apiKey: "AIzaSyBru1HpJJshu1XH3pArR7QEIb9Wi9NVaEk",
@@ -676,7 +573,7 @@ const firebaseConfig = {
 const fbApp = initializeApp(firebaseConfig);
 const db = getFirestore(fbApp);
 
-// ══ DEFAULT DATA (UNCHANGED) ══
+// ══ DEFAULT DATA ══
 const DEF_SECTIONS=[{id:'setup',name:'Campaign Setup',icon:'⚙️',color:'#f03e5f'},{id:'creative',name:'Creative',icon:'🎨',color:'#9d6fff'},{id:'website',name:'Website',icon:'🌐',color:'#f5a623'},{id:'ads',name:'Ads & Scaling',icon:'📣',color:'#4d8eff'},{id:'sales',name:'Sales & Reply',icon:'💬',color:'#22d47a'},{id:'analysis',name:'Analysis',icon:'📈',color:'#8d96b8'}];
 const DEF_STATUSES=[{id:'todo',name:'To Do',color:'#8d96b8'},{id:'progress',name:'In Progress',color:'#4d8eff'},{id:'review',name:'Review',color:'#f5a623'},{id:'done',name:'Done',color:'#22d47a'},{id:'blocked',name:'Blocked',color:'#f03e5f'}];
 const DEF_PRIORITIES=[{id:'critical',name:'Critical',color:'#f03e5f'},{id:'high',name:'High',color:'#f5a623'},{id:'medium',name:'Medium',color:'#4d8eff'},{id:'low',name:'Low',color:'#22d47a'}];
@@ -720,32 +617,17 @@ const DEF_TASKS=[
 ];
 
 // ══ STATE ══
-let sections=[],statuses=[],priorities=[],roles=[],users=[],tasks=[],notifs=[],activityLogs=[],presenceMap={};
+let sections=[],statuses=[],priorities=[],roles=[],users=[],tasks=[],notifs=[];
 let cu=null,filt={status:'all',section:null,assignee:null},sortAsc=true,sortF='due',exp=new Set(),cv='dashboard';
-let _local=false,bulkMode=false,selectedTasks=new Set(),activeTimers={};
-let calYear=new Date().getFullYear(),calMonth=new Date().getMonth();
-let presenceInterval=null;
-
-// ══ PERMISSIONS ══
-const isOwner=()=>cu&&cu.role==='Owner';
-const canManage=()=>cu&&['Owner','Manager'].includes(cu.role);
-const canEditTask=(t)=>isOwner()||canManage()||(t&&t.assignee===cu?.id);
-const canDeleteTask=()=>isOwner();
-const canAddUser=()=>isOwner();
-const canManageSettings=()=>isOwner();
-const isOwnTask=(t)=>t&&t.assignee===cu?.id;
+let _local=false;
 
 // ══ HELPERS ══
-const h2r=(h,a)=>{try{const r=parseInt(h.slice(1,3),16),g=parseInt(h.slice(3,5),16),b=parseInt(h.slice(5,7),16);return`rgba(${r},${g},${b},${a})`;}catch{return`rgba(100,100,100,${a})`;}};
+const h2r=(h,a)=>{const r=parseInt(h.slice(1,3),16),g=parseInt(h.slice(3,5),16),b=parseInt(h.slice(5,7),16);return`rgba(${r},${g},${b},${a})`;};
 const secById=id=>sections.find(s=>s.id===id)||{name:id,icon:'📁',color:'#8d96b8'};
 const priById=id=>priorities.find(p=>p.id===id)||{name:id,color:'#8d96b8'};
 const staById=id=>statuses.find(s=>s.id===id)||{name:id,color:'#8d96b8'};
 const tsNow=()=>new Date().toLocaleString('en-GB',{day:'2-digit',month:'short',hour:'2-digit',minute:'2-digit'});
 const eid=id=>document.getElementById(id);
-const fmtTime=s=>{const h=Math.floor(s/3600),m=Math.floor((s%3600)/60),sec=s%60;return h?`${h}h ${m}m`:(m?`${m}m ${sec}s`:`${sec}s`);};
-const isOverdue=t=>{if(!t.dueDate||t.status==='done')return false;const d=new Date(t.dueDate);d.setHours(23,59,59);return d<new Date();};
-const isDueToday=t=>{if(!t.dueDate||t.status==='done')return false;const d=new Date(t.dueDate),n=new Date();return d.toDateString()===n.toDateString();};
-const isBlocked=t=>{if(!t.dependencies||!t.dependencies.length)return false;return t.dependencies.some(id=>{const dep=tasks.find(x=>x.id===id);return dep&&dep.status!=='done';});};
 
 // ══ SYNC STATUS ══
 function setSyncStatus(on){
@@ -754,101 +636,30 @@ function setSyncStatus(on){
   if(t)t.textContent=on?'Real-time Connected':(_local?'Local Mode':'Reconnecting...');
 }
 
-// ══ SOUND ══
-function playNotifSound(){
-  try{
-    const ctx=new(window.AudioContext||window.webkitAudioContext)();
-    const osc=ctx.createOscillator(),gain=ctx.createGain();
-    osc.connect(gain);gain.connect(ctx.destination);
-    osc.frequency.setValueAtTime(880,ctx.currentTime);
-    osc.frequency.exponentialRampToValueAtTime(440,ctx.currentTime+.15);
-    gain.gain.setValueAtTime(.12,ctx.currentTime);
-    gain.gain.exponentialRampToValueAtTime(.001,ctx.currentTime+.4);
-    osc.start(ctx.currentTime);osc.stop(ctx.currentTime+.4);
-  }catch(e){}
-}
-
-// ══ BROWSER PUSH ══
-async function requestPush(){
-  if('Notification'in window&&Notification.permission==='default'){
-    await Notification.requestPermission();
-  }
-}
-function sendPush(title,body){
-  if('Notification'in window&&Notification.permission==='granted'){
-    try{new Notification('Printute — '+title,{body,icon:'data:image/svg+xml,<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 32 32"><circle cx="16" cy="16" r="16" fill="%23f03e5f"/><text x="8" y="22" font-size="18">P</text></svg>'});}catch(e){}
-  }
-}
-
-// ══ ACTIVITY LOG ══
-async function logActivity(action,taskId,taskTitle,details){
-  if(!cu)return;
-  const entry={
-    id:'al_'+Date.now()+'_'+Math.random().toString(36).slice(2,5),
-    userId:cu.id,userName:cu.name,
-    action,taskId:taskId||'',taskTitle:taskTitle||'',details:details||'',
-    timestamp:Date.now(),time:tsNow()
-  };
-  if(_local){activityLogs.unshift(entry);if(cv==='activity')renderActivity();return;}
-  await setDoc(doc(db,'activityLogs',entry.id),entry);
-}
-const AL_ICONS={task_created:'➕',task_updated:'✏️',task_deleted:'🗑',status_changed:'🔄',comment_added:'💬',subtask_done:'☑',user_added:'👤',user_deleted:'🚫',starred:'⭐',timer_started:'⏱',timer_stopped:'⏹',bulk_action:'⚡'};
-const AL_LABELS={task_created:'Task created',task_updated:'Task updated',task_deleted:'Task deleted',status_changed:'Status changed',comment_added:'Comment added',subtask_done:'Subtask done',user_added:'User added',user_deleted:'User removed',starred:'Task starred',timer_started:'Timer started',timer_stopped:'Timer stopped',bulk_action:'Bulk action'};
-
 // ══ FIREBASE INIT ══
 async function initFirebase(){
-  // Always hide loading and show login after max 10s, no matter what
-  const hardTimeout=setTimeout(()=>{
-    eid('loading').style.display='none';
-    eid('loginScreen').style.display='flex';
-    if(!cu){_local=true;startLocalMode();}
-  },10000);
-
+  const timeout=setTimeout(()=>{_local=true;startLocalMode();},6000);
   try{
-    // Test connection with a short race timeout
-    const connectTest=new Promise(async(resolve,reject)=>{
-      const t=setTimeout(()=>reject(new Error('timeout')),8000);
-      try{
-        const cfgDoc=await getDoc(doc(db,'config','meta'));
-        clearTimeout(t);
-        resolve(cfgDoc);
-      }catch(e){clearTimeout(t);reject(e);}
-    });
-
-    const cfgDoc=await connectTest;
-    clearTimeout(hardTimeout);
-
+    const cfgDoc=await getDoc(doc(db,'config','meta'));
+    clearTimeout(timeout);
     if(!cfgDoc.exists()){
       await setDoc(doc(db,'config','meta'),{sections:DEF_SECTIONS,statuses:DEF_STATUSES,priorities:DEF_PRIORITIES,roles:DEF_ROLES,users:DEF_USERS,seeded:true});
-      for(const t of DEF_TASKS)await setDoc(doc(db,'tasks',t.id),t);
+      for(const t of DEF_TASKS) await setDoc(doc(db,'tasks',t.id),t);
       toast('প্রথমবার setup সম্পন্ন! ✓','ok');
     }
     startListeners();
-  }catch(e){
-    clearTimeout(hardTimeout);
-    console.warn('Firebase connect failed, switching to local mode:',e);
-    _local=true;
-    startLocalMode();
-  }
+  }catch(e){clearTimeout(timeout);_local=true;startLocalMode();}
 }
 
 function startLocalMode(){
-  sections=DEF_SECTIONS;statuses=DEF_STATUSES;priorities=DEF_PRIORITIES;roles=DEF_ROLES;users=DEF_USERS;tasks=DEF_TASKS;notifs=[];activityLogs=[];
+  sections=DEF_SECTIONS;statuses=DEF_STATUSES;priorities=DEF_PRIORITIES;roles=DEF_ROLES;users=DEF_USERS;tasks=DEF_TASKS;notifs=[];
   setSyncStatus(false);
-  const loadEl=eid('loading');
-  const loginEl=eid('loginScreen');
-  if(loadEl){loadEl.style.display='none';}
-  if(loginEl){loginEl.style.display='flex';}
+  eid('loading').style.display='none';
+  eid('loginScreen').style.display='flex';
   buildPG();
 }
 
 function startListeners(){
-  // Hide loading, show login as soon as listeners start
-  const loadEl=eid('loading');
-  if(loadEl)loadEl.style.display='none';
-  const loginEl=eid('loginScreen');
-  if(loginEl&&!cu)loginEl.style.display='flex';
-
   onSnapshot(doc(db,'config','meta'),snap=>{
     if(snap.exists()){
       const d=snap.data();
@@ -864,29 +675,15 @@ function startListeners(){
     tasks=[];snap.forEach(d=>tasks.push(d.data()));
     tasks.sort((a,b)=>(a.order||0)-(b.order||0));
     renderAll();setSyncStatus(true);
-    checkDeadlines();
   },()=>setSyncStatus(false));
 
+  // Notifications listener — real-time per user
   onSnapshot(collection(db,'notifications'),snap=>{
     notifs=[];snap.forEach(d=>notifs.push(d.data()));
     notifs.sort((a,b)=>b.createdAt-a.createdAt);
-    if(cu)renderNP();
+    if(cu) renderNP();
     upND();setSyncStatus(true);
   },()=>setSyncStatus(false));
-
-  onSnapshot(collection(db,'activityLogs'),snap=>{
-    activityLogs=[];snap.forEach(d=>activityLogs.push(d.data()));
-    activityLogs.sort((a,b)=>b.timestamp-a.timestamp);
-    if(cv==='activity')renderActivity();
-    setSyncStatus(true);
-  },()=>setSyncStatus(false));
-
-  onSnapshot(collection(db,'presence'),snap=>{
-    presenceMap={};
-    const now=Date.now();
-    snap.forEach(d=>{const p=d.data();presenceMap[p.userId]={online:(now-p.lastSeen)<90000,typing:p.typing||null};});
-    buildSidebar();
-  },()=>{});
 
   eid('loading').style.display='none';
   eid('loginScreen').style.display='flex';
@@ -907,53 +704,37 @@ async function deleteTaskFS(id){
   await deleteDoc(doc(db,'tasks',String(id)));
 }
 
-// ══ PRESENCE ══
-async function goOnline(){
-  if(!cu||_local)return;
-  await setDoc(doc(db,'presence',cu.id),{userId:cu.id,online:true,lastSeen:Date.now(),typing:null});
-}
-async function goOffline(){
-  if(!cu||_local)return;
-  try{await setDoc(doc(db,'presence',cu.id),{userId:cu.id,online:false,lastSeen:Date.now(),typing:null});}catch(e){}
-}
-async function setTyping(taskId,val){
-  if(!cu||_local)return;
-  await setDoc(doc(db,'presence',cu.id),{userId:cu.id,online:true,lastSeen:Date.now(),typing:val?taskId:null});
-}
-
-// ══ DEADLINE CHECKER ══
-function checkDeadlines(){
-  if(!cu)return;
-  const now=new Date();now.setHours(0,0,0,0);
-  const tmr=new Date(now);tmr.setDate(tmr.getDate()+1);
-  tasks.filter(t=>t.assignee===cu.id&&t.status!=='done'&&t.dueDate).forEach(t=>{
-    const d=new Date(t.dueDate);d.setHours(0,0,0,0);
-    if(d.getTime()===tmr.getTime()){
-      sendPush('Deadline Tomorrow!',`"${t.title}" — kal deadline!`);
-    }
-  });
-}
-
 // ══ NOTIFICATION HELPERS ══
-async function sendNotif(toUserId,type,taskId,taskTitle,fromName,extra=''){
-  if(toUserId===cu?.id)return;
-  const icons={assigned:'📌',completed:'✅',subtask:'📋',updated:'✏️',deleted:'🗑',mention:'@',comment:'💬'};
-  const msgs={assigned:`${fromName} তোমাকে একটি task assign করেছে`,completed:`${fromName} একটি task সম্পন্ন করেছে`,subtask:`${fromName} একটি sub-task add করেছে`,updated:`${fromName} task update করেছে`,deleted:`${fromName} একটি task delete করেছে`,mention:`${fromName} তোমাকে mention করেছে: ${extra.slice(0,50)}`,comment:`${fromName} comment করেছে`};
+async function sendNotif(toUserId, type, taskId, taskTitle, fromName){
+  // Don't notify yourself
+  if(toUserId===cu?.id) return;
+  const icons={assigned:'📌',completed:'✅',subtask:'📋',updated:'✏️',deleted:'🗑'};
+  const msgs={
+    assigned:`${fromName} তোমাকে একটি task assign করেছে`,
+    completed:`${fromName} একটি task সম্পন্ন করেছে`,
+    subtask:`${fromName} একটি sub-task add করেছে`,
+    updated:`${fromName} task update করেছে`,
+    deleted:`${fromName} একটি task delete করেছে`
+  };
   const nid='n_'+Date.now()+'_'+Math.random().toString(36).slice(2,7);
-  const notif={id:nid,to:toUserId,type,taskId,taskTitle,message:msgs[type]||`${fromName} একটি পরিবর্তন করেছে`,icon:icons[type]||'🔔',from:fromName,read:false,createdAt:Date.now(),time:tsNow()};
+  const notif={
+    id:nid, to:toUserId, type, taskId, taskTitle,
+    message:msgs[type]||`${fromName} একটি পরিবর্তন করেছে`,
+    icon:icons[type]||'🔔', from:fromName,
+    read:false, createdAt:Date.now(), time:tsNow()
+  };
   if(_local){notifs.unshift(notif);upND();renderNP();return;}
   await setDoc(doc(db,'notifications',nid),notif);
-  playNotifSound();
-  sendPush(taskTitle,msgs[type]||'');
 }
 async function markNotifRead(nid){
   const n=notifs.find(x=>x.id===nid);if(!n)return;
-  n.read=true;if(!_local)await setDoc(doc(db,'notifications',nid),n);
+  n.read=true;
+  if(!_local) await setDoc(doc(db,'notifications',nid),n);
   upND();renderNP();
 }
 async function deleteNotif(nid){
   notifs=notifs.filter(x=>x.id!==nid);
-  if(!_local)await deleteDoc(doc(db,'notifications',nid));
+  if(!_local) await deleteDoc(doc(db,'notifications',nid));
   upND();renderNP();
 }
 window.markAllRead=async function(){
@@ -964,8 +745,10 @@ window.markAllRead=async function(){
 window.clearAllNotifs=async function(){
   const myN=notifs.filter(n=>n.to===cu?.id);
   for(const n of myN){if(!_local)await deleteDoc(doc(db,'notifications',n.id));}
-  notifs=notifs.filter(n=>n.to!==cu?.id);upND();renderNP();
+  notifs=notifs.filter(n=>n.to!==cu?.id);
+  upND();renderNP();
 };
+
 function myNotifs(){return notifs.filter(n=>n.to===cu?.id);}
 function unreadCount(){return myNotifs().filter(n=>!n.read).length;}
 function upND(){
@@ -983,7 +766,10 @@ function renderNP(){
     return`<div class="npi ${n.read?'':'unread'}" id="npi-${n.id}">
       <div class="ni-top">
         <div class="ni-icon" style="background:${n.read?'var(--s3)':'rgba(240,62,95,.15)'};">${n.icon}</div>
-        <div class="ni-body"><div class="ni-title">${n.taskTitle||'Task'}</div><div class="ni-sub">${n.message}</div></div>
+        <div class="ni-body">
+          <div class="ni-title">${n.taskTitle||'Task'}</div>
+          <div class="ni-sub">${n.message}</div>
+        </div>
       </div>
       <div class="ni-foot">
         <div class="ni-time">🕐 ${n.time}</div>
@@ -996,9 +782,15 @@ function renderNP(){
     </div>`;}).join('');
 }
 window.goToTask=async function(taskId,nid){
-  await markNotifRead(nid);eid('npanel').classList.remove('open');
-  showV('tasks',document.querySelector('.ni'));resetFilters();
-  setTimeout(()=>{const el=eid('tw-'+taskId);if(el){el.scrollIntoView({behavior:'smooth',block:'center'});el.style.outline='2px solid var(--red)';setTimeout(()=>el.style.outline='',2000);}},300);
+  await markNotifRead(nid);
+  eid('npanel').classList.remove('open');
+  // Navigate to task
+  showV('tasks',document.querySelector('.ni'));
+  resetFilters();
+  setTimeout(()=>{
+    const el=document.getElementById('tw-'+taskId);
+    if(el){el.scrollIntoView({behavior:'smooth',block:'center'});el.style.outline='2px solid var(--red)';setTimeout(()=>el.style.outline='',2000);}
+  },300);
 };
 window.markNotifRead=markNotifRead;
 window.deleteNotif=deleteNotif;
@@ -1028,40 +820,17 @@ window.doLogin=function(){
   if(!u||u.pass!==pass){eid('lerr').style.display='block';return;}
   cu=u;
   eid('loginScreen').style.display='none';eid('app').style.display='block';
-  upSbU();buildSidebar();rebuildDropdowns();applyPermissionUI();
+  upSbU();buildSidebar();rebuildDropdowns();
   showV('dashboard',document.querySelector('.ni'));
   upND();renderNP();
-  requestPush();
-  goOnline();
-  presenceInterval=setInterval(goOnline,30000);
-  setTimeout(checkDeadlines,3000);
   toast('Welcome, '+u.name+' 👋','ok');
-  logActivity('login','','','Logged in');
 };
-window.doLogout=async function(){
-  await goOffline();
-  if(presenceInterval){clearInterval(presenceInterval);presenceInterval=null;}
-  // Stop any running timers
-  Object.keys(activeTimers).forEach(id=>stopTimer(id,true));
-  cu=null;window._selUid=null;bulkMode=false;selectedTasks.clear();
+window.doLogout=function(){
+  cu=null;window._selUid=null;
   eid('app').style.display='none';eid('loginScreen').style.display='flex';
   eid('pwSec').classList.remove('show');
   document.querySelectorAll('.pb').forEach(b=>b.classList.remove('sel'));
 };
-
-function applyPermissionUI(){
-  // Owner/Manager can add tasks and users; others cannot see those buttons
-  const showManage=canManage();
-  const el=(id,v)=>{const e=eid(id);if(e)e.style.display=v?'':'none';};
-  el('btnAddTask',showManage);
-  el('btnAddUser',canAddUser());
-  el('btnBulk',showManage);
-  el('secAddBtn',canManageSettings());
-  el('teamAddBtn',canAddUser());
-  el('manageUsersNav',canAddUser());
-  el('addUserBtn',canAddUser());
-}
-
 function upSbU(){
   if(!cu)return;
   const av=eid('sbAv');
@@ -1074,13 +843,9 @@ function upSbU(){
 // ══ SIDEBAR ══
 function buildSidebar(){
   const sn=eid('secNav');
-  if(sn)sn.innerHTML=sections.map(s=>`<div class="ni" onclick="secF('${s.id}',this)"><span class="ic">${s.icon}</span>${s.name}${canManageSettings()?`<span class="ni-del" onclick="event.stopPropagation();delSection('${s.id}')">✕</span>`:''}</div>`).join('');
+  if(sn)sn.innerHTML=sections.map(s=>`<div class="ni" onclick="secF('${s.id}',this)"><span class="ic">${s.icon}</span>${s.name}<span class="ni-del" onclick="event.stopPropagation();delSection('${s.id}')">✕</span></div>`).join('');
   const tn=eid('teamNav');
-  if(tn)tn.innerHTML=users.map(u=>{
-    const online=presenceMap[u.id];
-    const onlineDot=`<span class="online-dot${online?.online?'':' off'}" style="margin-left:auto;margin-right:${canAddUser()?'18px':'2px'}"></span>`;
-    return`<div class="ni" onclick="assF('${u.id}',this)"><span style="width:16px;height:16px;border-radius:4px;background:${h2r(u.color||'#f03e5f',.25)};color:${u.color||'#f03e5f'};font-size:9px;font-weight:700;display:inline-flex;align-items:center;justify-content:center;flex-shrink:0">${u.emoji||u.name[0]}</span>${u.name}'s Tasks${onlineDot}${canAddUser()?`<span class="ni-del" onclick="event.stopPropagation();delUser('${u.id}')">✕</span>`:''}</div>`;
-  }).join('');
+  if(tn)tn.innerHTML=users.map(u=>`<div class="ni" onclick="assF('${u.id}',this)"><span style="width:16px;height:16px;border-radius:4px;background:${h2r(u.color||'#f03e5f',.25)};color:${u.color||'#f03e5f'};font-size:9px;font-weight:700;display:inline-flex;align-items:center;justify-content:center;flex-shrink:0">${u.emoji||u.name[0]}</span>${u.name}'s Tasks<span class="ni-del" onclick="event.stopPropagation();delUser('${u.id}')">✕</span></div>`).join('');
 }
 
 // ══ DROPDOWNS ══
@@ -1095,10 +860,6 @@ function rebuildDropdowns(){
   el('tSt',statuses.map(s=>`<option value="${s.id}">${s.name}</option>`).join(''));
   el('tAs',users.map(u=>`<option value="${u.id}">${u.name} (${u.role})</option>`).join(''));
   el('uR',roles.map(r=>`<option>${r}</option>`).join(''));
-  el('bulkStatusSel',`<option value="">Status পরিবর্তন করুন</option>`+statuses.map(s=>`<option value="${s.id}">${s.name}</option>`).join(''));
-  el('bulkAssigneeSel',`<option value="">Assignee পরিবর্তন করুন</option>`+users.map(u=>`<option value="${u.id}">${u.name}</option>`).join(''));
-  el('ganttFilter',`<option value="">All Sections</option>`+sections.map(s=>`<option value="${s.id}">${s.icon} ${s.name}</option>`).join(''));
-  el('alUserFilter',`<option value="">All Users</option>`+users.map(u=>`<option value="${u.id}">${u.name}</option>`).join(''));
 }
 
 // ══ VIEWS ══
@@ -1108,23 +869,16 @@ window.showV=function(v,el){
   eid('view-'+v)?.classList.add('active');
   document.querySelectorAll('.ni').forEach(n=>n.classList.remove('active'));
   if(el)el.classList.add('active');
-  const titles={dashboard:'Dashboard',tasks:'All Tasks',kanban:'Kanban Board',starred:'⭐ Starred Tasks',calendar:'📅 Calendar',gantt:'📐 Gantt View',analytics:'📊 Analytics',activity:'📋 Activity Log',users:'Team Management',settings:'⚙️ Settings'};
+  const titles={dashboard:'Dashboard',tasks:'All Tasks',kanban:'Kanban Board',users:'Team Management',settings:'⚙️ Settings'};
   const vt=eid('vt');if(vt)vt.textContent=titles[v]||'Tasks';
-  // Show/hide bulk button
-  const bb=eid('btnBulk');if(bb)bb.style.display=(v==='tasks'&&canManage())?'':'none';
-  if(bulkMode&&v!=='tasks')cancelBulk();
   if(v==='tasks'){resetFilters();renderT();}
-  if(v==='kanban')renderK();if(v==='users')renderU();if(v==='dashboard')renderD();
-  if(v==='settings')renderSettings();if(v==='starred')renderStarred();
-  if(v==='calendar')renderCalendar();if(v==='gantt')renderGantt();
-  if(v==='analytics')renderAnalytics();if(v==='activity')renderActivity();
+  if(v==='kanban')renderK();if(v==='users')renderU();if(v==='dashboard')renderD();if(v==='settings')renderSettings();
   closeMob();
 };
 function resetFilters(){
   ['si','pf','sf2','af'].forEach(id=>{const e=eid(id);if(e)e.value='';});
   document.querySelectorAll('.ft').forEach(f=>f.classList.remove('active'));
   document.querySelector('.ft')?.classList.add('active');
-  filt={status:'all',section:null,assignee:null};
 }
 window.secF=function(s,el){
   filt={status:'all',section:s,assignee:null};cv='tasks';
@@ -1132,7 +886,7 @@ window.secF=function(s,el){
   eid('view-tasks').classList.add('active');
   document.querySelectorAll('.ni').forEach(n=>n.classList.remove('active'));if(el)el.classList.add('active');
   const sec=secById(s);const vt=eid('vt');if(vt)vt.textContent=sec.icon+' '+sec.name;
-  resetFilters();const sf=eid('sf2');if(sf)sf.value=s;filt.section=s;
+  resetFilters();const sf=eid('sf2');if(sf)sf.value=s;
   renderT();closeMob();
 };
 window.assF=function(a,el){
@@ -1141,7 +895,7 @@ window.assF=function(a,el){
   eid('view-tasks').classList.add('active');
   document.querySelectorAll('.ni').forEach(n=>n.classList.remove('active'));if(el)el.classList.add('active');
   const vt=eid('vt');if(vt)vt.textContent=(users.find(u=>u.id===a)?.name||a)+"'s Tasks";
-  resetFilters();const af=eid('af');if(af)af.value=a;filt.assignee=a;
+  resetFilters();const af=eid('af');if(af)af.value=a;
   renderT();closeMob();
 };
 
@@ -1151,22 +905,13 @@ function renderAll(){
   const cnt=tasks.filter(t=>t.status!=='done').length;
   const nc=eid('nc');if(nc)nc.textContent=cnt;
   upND();
-  if(cv==='dashboard')renderD();if(cv==='tasks')renderT();if(cv==='kanban')renderK();
-  if(cv==='users')renderU();if(cv==='settings')renderSettings();
-  if(cv==='starred')renderStarred();if(cv==='calendar')renderCalendar();
-  if(cv==='gantt')renderGantt();if(cv==='analytics')renderAnalytics();
+  if(cv==='dashboard')renderD();if(cv==='tasks')renderT();if(cv==='kanban')renderK();if(cv==='users')renderU();if(cv==='settings')renderSettings();
 }
 
 // ══ DASHBOARD ══
 function renderD(){
   const tot=tasks.length,dn=tasks.filter(t=>t.status==='done').length,pr=tasks.filter(t=>t.status==='progress').length,bl=tasks.filter(t=>t.status==='blocked').length,td=tasks.filter(t=>t.status==='todo').length;
-  const ov=tasks.filter(t=>isOverdue(t)).length;
-  const sg=eid('sg');if(sg)sg.innerHTML=`
-    <div class="sc" style="border-top-color:#f03e5f"><div class="sv">${tot}</div><div class="sl">Total</div></div>
-    <div class="sc" style="border-top-color:#22d47a"><div class="sv">${dn}</div><div class="sl">Done</div></div>
-    <div class="sc" style="border-top-color:#4d8eff"><div class="sv">${pr}</div><div class="sl">In Progress</div></div>
-    <div class="sc" style="border-top-color:#f5a623"><div class="sv">${td}</div><div class="sl">To Do</div></div>
-    <div class="sc" style="border-top-color:${ov>0?'#f03e5f':'#22d47a'}"><div class="sv" style="color:${ov>0?'var(--red)':'var(--green)'}">${ov}</div><div class="sl">Overdue</div></div>`;
+  const sg=eid('sg');if(sg)sg.innerHTML=`<div class="sc" style="border-top-color:#f03e5f"><div class="sv">${tot}</div><div class="sl">Total</div></div><div class="sc" style="border-top-color:#22d47a"><div class="sv">${dn}</div><div class="sl">Done</div></div><div class="sc" style="border-top-color:#4d8eff"><div class="sv">${pr}</div><div class="sl">In Progress</div></div><div class="sc" style="border-top-color:#f5a623"><div class="sv">${td}</div><div class="sl">To Do</div></div><div class="sc" style="border-top-color:${bl>0?'#f03e5f':'#22d47a'}"><div class="sv" style="color:${bl>0?'var(--red)':'var(--green)'}">${bl}</div><div class="sl">Blocked</div></div>`;
   const dSec=eid('dSec');if(dSec)dSec.innerHTML=sections.map(s=>{const st=tasks.filter(t=>t.section===s.id),sd=st.filter(t=>t.status==='done').length,pct=st.length?Math.round(sd/st.length*100):0;return`<div class="pr"><div class="pl"><span>${s.icon} ${s.name}</span><span style="color:var(--t3)">${sd}/${st.length}</span></div><div class="prb"><div class="prf" style="width:${pct}%;background:${s.color}"></div></div></div>`;}).join('');
   const dTm=eid('dTm');if(dTm)dTm.innerHTML=users.map(u=>{const at=tasks.filter(t=>t.assignee===u.id),ad=at.filter(t=>t.status==='done').length,pp=at.length?Math.round(ad/at.length*100):0;return`<div class="ap"><div style="width:34px;height:34px;border-radius:9px;background:${h2r(u.color||'#f03e5f',.2)};color:${u.color||'#f03e5f'};display:flex;align-items:center;justify-content:center;font-size:13px;font-weight:700;flex-shrink:0">${u.emoji||u.name[0]}</div><div class="api"><div class="apn">${u.name} <span style="font-size:10px;color:var(--t3)">${at.filter(t=>t.status!=='done').length} pending</span></div><div class="apb"><div class="apf" style="width:${pp}%;background:${u.color||'#f03e5f'}"></div></div></div><div class="apc">${ad}/${at.length}</div></div>`;}).join('');
   const tl=[['Day 1','Setup, C1/C2/C3','#f03e5f'],['Day 4','Campaign A LIVE 🚀','#22d47a'],['Day 7','Data review','#8d96b8'],['Day 8','Winner + Campaign B','#f03e5f'],['Day 14–15','Mid optimization','#f5a623'],['Day 21','Lookalike','#4d8eff'],['Day 30','Report + Phase 2','#22d47a']];
@@ -1202,383 +947,95 @@ function renderT(){
   tl.innerHTML=list.map(t=>{
     const sec=secById(t.section),pri=priById(t.priority),sta=staById(t.status);
     const u=users.find(u=>u.id===t.assignee);
-    const sbd=(t.subtasks||[]).filter(s=>s.done).length,sbt=(t.subtasks||[]).length;
-    const cmtCnt=(t.comments||[]).length;
-    const ie=exp.has(t.id),uc=u?.color||'#8d96b8';
-    const starred=t.starred;
-    const blocked=isBlocked(t);
-    const overdue=isOverdue(t);
-    const dueToday=isDueToday(t);
-    const timerRunning=activeTimers[t.id];
-    const timeSpent=t.timeSpent||0;
-    const canEdit=canEditTask(t);
-    const canDel=canDeleteTask();
-    const isSel=selectedTasks.has(t.id);
-
-    return`<div id="tw-${t.id}" class="${isSel?'bulk-active-row':''}">
-      <div class="tr ${t.status==='done'?'done-r':''} ${ie?'exp':''} ${blocked?'blocked-r':''} ${overdue?'overdue-r':''}" data-id="${t.id}" onclick="tExp('${t.id}')">
+    const sbd=(t.subtasks||[]).filter(s=>s.done).length,sbt=(t.subtasks||[]).length,ie=exp.has(t.id),uc=u?.color||'#8d96b8';
+    return`<div id="tw-${t.id}">
+      <div class="tr ${t.status==='done'?'done-r':''} ${ie?'exp':''}" data-id="${t.id}" onclick="tExp('${t.id}')">
+        <div class="chk ${t.status==='done'?'ck':''}" onclick="event.stopPropagation();tDone('${t.id}')"></div>
         <div>
-          ${bulkMode
-            ?`<input type="checkbox" class="sel-chk" ${isSel?'checked':''} onclick="event.stopPropagation();toggleSel('${t.id}')">`
-            :`<div class="chk ${t.status==='done'?'ck':''}" onclick="event.stopPropagation();${(isOwner()||canManage()||isOwnTask(t))?`tDone('${t.id}')`:``}"${(!isOwner()&&!canManage()&&!isOwnTask(t))?' style="opacity:.3;cursor:not-allowed"':''}></div>`}
-        </div>
-        <div><button class="star-btn ${starred?'active':''}" onclick="event.stopPropagation();toggleStar('${t.id}')">${starred?'⭐':'☆'}</button></div>
-        <div>
-          <div class="tt ${t.status==='done'?'done':''}">${blocked?`<span class="dep-badge">🔒 Blocked</span> `:''}${t.title}</div>
+          <div class="tt ${t.status==='done'?'done':''}">${t.title}</div>
           <div class="tm">
-            ${t.dueDate?`<span style="font-size:10px;color:${overdue?'var(--red)':dueToday?'var(--gold)':'var(--t3)'}">📅 ${t.dueDate}${overdue?` <span class="ov-badge">Overdue</span>`:dueToday?` <span class="today-badge">Today</span>`:''}</span>`:(t.due?`<span style="font-size:10px;color:var(--t3)">📅 ${t.due}</span>`:'')}
+            ${t.due?`<span style="font-size:10px;color:var(--t3)">📅 ${t.due}</span>`:''}
             ${sbt?`<span class="sc2">📋 ${sbd}/${sbt}</span>`:''}
-            ${cmtCnt?`<span class="sc2">💬 ${cmtCnt}</span>`:''}
-            ${(timeSpent||timerRunning)?`<span class="timer-disp ${timerRunning?'running':''}">⏱ ${timerRunning?`running`:`${fmtTime(timeSpent)}`}</span>`:''}
           </div>
         </div>
         <div><span class="tag" style="background:${h2r(sec.color,.15)};color:${sec.color};border:1px solid ${h2r(sec.color,.3)}">${sec.icon} ${sec.name}</span></div>
         <div><span class="pb2" style="background:${h2r(pri.color,.15)};color:${pri.color};border-color:${h2r(pri.color,.3)}">${pri.name}</span></div>
-        <div>
-          ${canEdit
-            ?`<select class="fs" style="padding:3px 7px;font-size:10px;background:${h2r(sta.color,.15)};color:${sta.color};border-color:${h2r(sta.color,.3)}" onchange="event.stopPropagation();quickStatus('${t.id}',this.value)" onclick="event.stopPropagation()">
-                ${statuses.map(s=>`<option value="${s.id}" ${s.id===t.status?'selected':''}>${s.name}</option>`).join('')}
-              </select>`
-            :`<span class="sb3" style="background:${h2r(sta.color,.15)};color:${sta.color};border-color:${h2r(sta.color,.3)}">${sta.name}</span>`}
-        </div>
+        <div><span class="sb3" style="background:${h2r(sta.color,.15)};color:${sta.color};border-color:${h2r(sta.color,.3)}">${sta.name}</span></div>
         <div class="ac"><div style="width:20px;height:20px;border-radius:5px;background:${h2r(uc,.2)};color:${uc};display:flex;align-items:center;justify-content:center;font-size:9px;font-weight:700;flex-shrink:0">${u?.emoji||u?.name[0]||'?'}</div><span>${u?.name||t.assignee}</span></div>
-        <div class="ra" onclick="event.stopPropagation()">
-          ${canEdit?`<button class="rb" onclick="editT('${t.id}')">✏️</button>`:''}
-          ${!activeTimers[t.id]?`<button class="rb" onclick="startTimer('${t.id}')" title="Start timer">▶</button>`:`<button class="rb" style="color:var(--green)" onclick="stopTimer('${t.id}')" title="Stop timer">⏹</button>`}
-          ${canDel?`<button class="rb dl" onclick="delT('${t.id}')">🗑</button>`:''}
-        </div>
+        <div class="ra" onclick="event.stopPropagation()"><button class="rb" onclick="editT('${t.id}')">✏️</button><button class="rb dl" onclick="delT('${t.id}')">🗑</button></div>
       </div>
-      <div class="sp ${ie?'open':''}" id="sp-${t.id}">
-        <div class="sp-tabs">
-          <button class="sp-tab active" onclick="setTab('${t.id}','sub',this)">📋 Subtasks (${sbt})</button>
-          <button class="sp-tab" onclick="setTab('${t.id}','cmt',this)">💬 Comments (${cmtCnt})</button>
-          <button class="sp-tab" onclick="setTab('${t.id}','time',this)">⏱ Time</button>
-          ${(t.dependencies&&t.dependencies.length)||canManage()?`<button class="sp-tab" onclick="setTab('${t.id}','dep',this)">🔗 Deps</button>`:''}
-        </div>
-        <div class="sp-panel active" id="tab-sub-${t.id}">
-          ${(t.subtasks||[]).map(s=>`<div class="str"><div class="chk ${s.done?'ck':''}" onclick="${(isOwner()||canManage()||isOwnTask(t))?`tSub('${t.id}','${s.id}')`:``}"${(!isOwner()&&!canManage()&&!isOwnTask(t))?' style="opacity:.3;cursor:not-allowed"':''}></div><div class="stxt ${s.done?'done':''}">${s.text}</div>${canEdit?`<button class="rb dl" onclick="dSub('${t.id}','${s.id}')">✕</button>`:''}</div>`).join('')}
-          ${canEdit?`<div class="add-s"><input type="text" placeholder="New sub-task..." id="ns-${t.id}" onkeydown="if(event.key==='Enter')aSub('${t.id}')"/><button class="btn bg bxs" onclick="aSub('${t.id}')">Add</button></div>`:'<div style="font-size:11px;color:var(--t3);padding:6px 0">No permission to add subtasks here.</div>'}
-        </div>
-        <div class="sp-panel" id="tab-cmt-${t.id}">
-          ${renderCommentsHTML(t)}
-        </div>
-        <div class="sp-panel" id="tab-time-${t.id}">
-          ${renderTimeHTML(t)}
-        </div>
-        ${(t.dependencies&&t.dependencies.length)||canManage()?`<div class="sp-panel" id="tab-dep-${t.id}">${renderDepsHTML(t)}</div>`:''}
-      </div>
-    </div>`;
-  }).join('');
+      ${sbt||ie?`<div class="sp ${ie?'open':''}" id="sp-${t.id}">
+        ${(t.subtasks||[]).map(s=>`<div class="str"><div class="chk ${s.done?'ck':''}" onclick="tSub('${t.id}','${s.id}')"></div><div class="stxt ${s.done?'done':''}">${s.text}</div><button class="rb dl" onclick="dSub('${t.id}','${s.id}')">✕</button></div>`).join('')}
+        <div class="add-s"><input type="text" placeholder="New sub-task..." id="ns-${t.id}" onkeydown="if(event.key==='Enter')aSub('${t.id}')"/><button class="btn bg bxs" onclick="aSub('${t.id}')">Add</button></div>
+      </div>`:''}
+    </div>`;}).join('');
 }
-
-window.setTab=function(tid,tab,el){
-  const panel=eid('sp-'+tid);if(!panel)return;
-  panel.querySelectorAll('.sp-tab').forEach(t=>t.classList.remove('active'));
-  el.classList.add('active');
-  panel.querySelectorAll('.sp-panel').forEach(p=>p.classList.remove('active'));
-  const target=eid(`tab-${tab}-${tid}`);if(target)target.classList.add('active');
-};
-window.tExp=function(id){
-  if(bulkMode){toggleSel(id);return;}
-  if(exp.has(id))exp.delete(id);else exp.add(id);
-  renderT();
-};
-window.quickStatus=async function(id,newStatus){
-  const t=tasks.find(t=>t.id===id);if(!t)return;
-  if(!canEditTask(t)){toast('Permission নেই','err');return;}
-  if(isBlocked(t)&&newStatus==='progress'){toast('এই task block আছে! Dependency শেষ করুন।','err');return;}
-  const old=t.status;t.status=newStatus;
-  if(newStatus==='done')t.completedAt=Date.now();
-  await saveTaskFS(t);
-  await logActivity('status_changed',t.id,t.title,`${old} → ${newStatus}`);
-  if(newStatus==='done')await sendNotif(t.assignee,'completed',t.id,t.title,cu?.name||'Someone');
-  toast('Status updated ✓','ok');
-};
+window.tExp=function(id){if(exp.has(id))exp.delete(id);else exp.add(id);renderT();};
 window.tDone=async function(id){
   const t=tasks.find(t=>t.id===id);if(!t)return;
-  if(!canEditTask(t)){toast('Permission নেই','err');return;}
   const wasD=t.status==='done';t.status=wasD?'todo':'done';
-  if(!wasD)t.completedAt=Date.now();else delete t.completedAt;
   await saveTaskFS(t);
-  await logActivity('status_changed',t.id,t.title,t.status==='done'?'Marked done':'Reopened');
-  if(!wasD)await sendNotif(t.assignee,'completed',t.id,t.title,cu?.name||'Someone');
+  if(!wasD) await sendNotif(t.assignee,'completed',t.id,t.title,cu?.name||'Someone');
   toast(t.status==='done'?'Task completed ✓':'Task reopened','ok');
 };
 window.tSub=async function(tid,sid){
   const t=tasks.find(t=>t.id===tid);if(!t)return;
-  if(!canEditTask(t)){toast('Permission নেই','err');return;}
   const s=(t.subtasks||[]).find(s=>s.id===sid);if(!s)return;
   s.done=!s.done;await saveTaskFS(t);
-  if(s.done){await logActivity('subtask_done',t.id,t.title,s.text);await sendNotif(t.assignee,'subtask',t.id,t.title,cu?.name||'Someone');}
 };
 window.aSub=async function(tid){
   const inp=eid('ns-'+tid);const txt=inp?.value.trim();if(!txt)return;
   const t=tasks.find(t=>t.id===tid);if(!t)return;
-  if(!canEditTask(t)){toast('Permission নেই','err');return;}
   if(!t.subtasks)t.subtasks=[];
   t.subtasks.push({id:tid+'_'+Date.now(),text:txt,done:false});
   await saveTaskFS(t);
-  await logActivity('subtask_done',t.id,t.title,'Added: '+txt);
   await sendNotif(t.assignee,'subtask',t.id,t.title,cu?.name||'Someone');
   inp.value='';toast('Sub-task added!','ok');
 };
 window.dSub=async function(tid,sid){
   const t=tasks.find(t=>t.id===tid);if(!t)return;
-  if(!canEditTask(t)){toast('Permission নেই','err');return;}
   if(!confirm('Delete sub-task?'))return;
   t.subtasks=(t.subtasks||[]).filter(s=>s.id!==sid);await saveTaskFS(t);
 };
 window.delT=async function(id){
-  if(!canDeleteTask()){toast('শুধু Owner delete করতে পারবে','err');return;}
   const t=tasks.find(t=>t.id===id);if(!t)return;
   if(!confirm('Task delete করবেন?'))return;
-  await logActivity('task_deleted',id,t.title,'');
   await sendNotif(t.assignee,'deleted',t.id,t.title,cu?.name||'Someone');
   await deleteTaskFS(id);toast('Task deleted','info');
 };
 
-// ══ STAR ══
-window.toggleStar=async function(id){
-  const t=tasks.find(t=>t.id===id);if(!t)return;
-  t.starred=!t.starred;
-  await saveTaskFS(t);
-  await logActivity('starred',t.id,t.title,t.starred?'Starred':'Unstarred');
-  toast(t.starred?'⭐ Starred!':'Removed star','ok');
-};
-function renderStarred(){
-  const sl=eid('starredList');if(!sl)return;
-  const list=tasks.filter(t=>t.starred);
-  if(!list.length){sl.innerHTML=`<div style="text-align:center;padding:48px 20px;color:var(--t3)">⭐ No starred tasks yet</div>`;return;}
-  sl.innerHTML=list.map(t=>{
-    const sec=secById(t.section),pri=priById(t.priority),sta=staById(t.status);
-    const u=users.find(u=>u.id===t.assignee),uc=u?.color||'#8d96b8';
-    return`<div class="tr" onclick="editT('${t.id}')">
-      <div><div class="chk ${t.status==='done'?'ck':''}" onclick="event.stopPropagation();tDone('${t.id}')"></div></div>
-      <div><button class="star-btn active" onclick="event.stopPropagation();toggleStar('${t.id}')">⭐</button></div>
-      <div><div class="tt ${t.status==='done'?'done':''}">${t.title}</div><div class="tm">${t.due?`<span style="font-size:10px;color:var(--t3)">📅 ${t.due}</span>`:''}</div></div>
-      <div><span class="tag" style="background:${h2r(sec.color,.15)};color:${sec.color};border:1px solid ${h2r(sec.color,.3)}">${sec.icon} ${sec.name}</span></div>
-      <div><span class="pb2" style="background:${h2r(pri.color,.15)};color:${pri.color};border-color:${h2r(pri.color,.3)}">${pri.name}</span></div>
-      <div><span class="sb3" style="background:${h2r(sta.color,.15)};color:${sta.color};border-color:${h2r(sta.color,.3)}">${sta.name}</span></div>
-      <div class="ac"><div style="width:20px;height:20px;border-radius:5px;background:${h2r(uc,.2)};color:${uc};display:flex;align-items:center;justify-content:center;font-size:9px;font-weight:700">${u?.emoji||u?.name[0]||'?'}</div><span>${u?.name||t.assignee}</span></div>
-      <div></div>
-    </div>`;
-  }).join('');
-}
-
-// ══ COMMENTS ══
-function renderCommentsHTML(t){
-  const comments=t.comments||[];
-  const cmtList=comments.map(c=>{
-    const cu2=users.find(u=>u.id===c.userId);
-    const col=cu2?.color||'#8d96b8';
-    const textHtml=c.text.replace(/@(\w+)/g,'<span class="mention">@$1</span>');
-    return`<div class="cm-item">
-      <div class="cm-av" style="background:${h2r(col,.2)};color:${col}">${cu2?.emoji||cu2?.name[0]||'?'}</div>
-      <div class="cm-body">
-        <div class="cm-bubble">
-          <div class="cm-name" style="color:${col}">${c.userName} <span style="color:var(--t3);font-weight:400">${c.time}</span></div>
-          <div class="cm-text">${textHtml}</div>
-        </div>
-      </div>
-    </div>`;
-  }).join('');
-
-  // Check who is typing
-  const typingUsers=Object.entries(presenceMap).filter(([uid,p])=>p.typing===t.id&&uid!==cu?.id).map(([uid])=>users.find(u=>u.id===uid)?.name).filter(Boolean);
-  const typingHtml=typingUsers.length?`<div class="cm-typing">✍️ ${typingUsers.join(', ')} typing...</div>`:'<div class="cm-typing"></div>';
-
-  return`<div id="cmt-list-${t.id}">${cmtList||'<div style="font-size:11px;color:var(--t3);padding:6px 0">No comments yet. Be the first!</div>'}</div>
-  ${typingHtml}
-  <div class="cm-input-area">
-    <textarea class="cm-ta" id="cmt-in-${t.id}" placeholder="Write a comment... Use @name to mention" onfocus="setTyping('${t.id}',true)" onblur="setTyping('${t.id}',false)" onkeydown="if(event.key==='Enter'&&!event.shiftKey){event.preventDefault();addComment('${t.id}');}"></textarea>
-    <button class="btn br bxs" onclick="addComment('${t.id}')">Send</button>
-  </div>
-  <div class="cm-hint">Enter = Send, Shift+Enter = New line, @name = Mention</div>`;
-}
-window.addComment=async function(tid){
-  const inp=eid('cmt-in-'+tid);const txt=inp?.value.trim();if(!txt)return;
-  const t=tasks.find(t=>t.id===tid);if(!t)return;
-  const mentions=extractMentions(txt);
-  const comment={id:'c_'+Date.now()+'_'+Math.random().toString(36).slice(2,5),userId:cu.id,userName:cu.name,text:txt,timestamp:Date.now(),time:tsNow(),mentions};
-  if(!t.comments)t.comments=[];
-  t.comments.push(comment);
-  await saveTaskFS(t);
-  await logActivity('comment_added',t.id,t.title,txt.slice(0,60));
-  // Notify assignee and mentioned users
-  const toNotify=new Set([t.assignee,...mentions]);
-  for(const uid of toNotify){
-    if(mentions.includes(uid))await sendNotif(uid,'mention',t.id,t.title,cu.name,txt);
-    else if(uid!==cu.id)await sendNotif(uid,'comment',t.id,t.title,cu.name,txt);
-  }
-  setTyping(tid,false);
-  inp.value='';toast('Comment added!','ok');
-};
-function extractMentions(text){
-  const matches=text.match(/@(\w+)/g)||[];
-  return matches.map(m=>{
-    const name=m.slice(1).toLowerCase();
-    const u=users.find(u=>u.name.toLowerCase().startsWith(name)||u.id===name||u.uid===name);
-    return u?.id;
-  }).filter(Boolean);
-}
-
-// ══ TIME TRACKING ══
-function renderTimeHTML(t){
-  const ts=t.timeSpent||0;
-  const tlog=t.timeLog||[];
-  const isRunning=!!activeTimers[t.id];
-  return`<div style="display:flex;align-items:center;gap:10px;margin-bottom:12px;">
-    <div class="timer-disp ${isRunning?'running':''}">⏱ Total: ${fmtTime(ts)}${isRunning?' (running)':''}</div>
-    ${isRunning
-      ?`<button class="btn bxs" style="background:rgba(240,62,95,.15);border:1px solid var(--red);color:var(--red)" onclick="stopTimer('${t.id}')">⏹ Stop Timer</button>`
-      :`<button class="btn bg bxs" onclick="startTimer('${t.id}')">▶ Start Timer</button>`}
-  </div>
-  ${tlog.length?`<div style="margin-top:8px;font-size:10px;color:var(--t3);margin-bottom:5px;text-transform:uppercase;letter-spacing:1px">Log</div>
-  ${tlog.slice(-5).reverse().map(e=>`<div class="time-log-entry"><span>${users.find(u=>u.id===e.userId)?.name||e.userId}</span><span>${e.time}</span><span style="color:var(--text);font-weight:600">${fmtTime(e.duration)}</span></div>`).join('')}`:'<div style="font-size:11px;color:var(--t3)">No time logs yet.</div>'}`;
-}
-window.startTimer=async function(id){
-  if(activeTimers[id]){toast('Timer already running','err');return;}
-  activeTimers[id]=Date.now();
-  const t=tasks.find(t=>t.id===id);
-  await logActivity('timer_started',id,t?.title||'','');
-  toast('⏱ Timer started!','ok');renderT();
-};
-window.stopTimer=async function(id,silent=false){
-  if(!activeTimers[id])return;
-  const elapsed=Math.floor((Date.now()-activeTimers[id])/1000);
-  delete activeTimers[id];
-  const t=tasks.find(t=>t.id===id);if(!t)return;
-  t.timeSpent=(t.timeSpent||0)+elapsed;
-  if(!t.timeLog)t.timeLog=[];
-  t.timeLog.push({userId:cu?.id,time:tsNow(),duration:elapsed});
-  await saveTaskFS(t);
-  await logActivity('timer_stopped',id,t.title,fmtTime(elapsed));
-  if(!silent)toast(`⏹ Stopped: ${fmtTime(elapsed)}`,  'ok');
-  renderT();
-};
-
-// ══ DEPENDENCIES ══
-function renderDepsHTML(t){
-  const deps=t.dependencies||[];
-  const depsHtml=deps.map(depId=>{
-    const dep=tasks.find(x=>x.id===depId);if(!dep)return'';
-    const done=dep.status==='done';
-    return`<div class="dep-row"><div class="dep-status" style="background:${done?'var(--green)':'var(--red)'}"></div><span style="flex:1;font-size:12px">${dep.title}</span><span style="font-size:10px;color:${done?'var(--green)':'var(--red)'}">${done?'✓ Done':'Pending'}</span></div>`;
-  }).join('');
-  return`<div>${depsHtml||'<div style="font-size:11px;color:var(--t3)">No dependencies</div>'}</div>
-  ${canManage()?`<div style="display:flex;gap:7px;margin-top:10px;"><input type="text" id="dep-in-${t.id}" placeholder="Task ID to add dependency" style="flex:1;background:var(--s2);border:1px solid var(--bd2);border-radius:7px;padding:5px 9px;color:var(--text);font-size:11px;outline:none;font-family:var(--font);" onkeydown="if(event.key==='Enter')addDep('${t.id}')"><button class="btn bg bxs" onclick="addDep('${t.id}')">Add</button></div>`:''}`;
-}
-window.addDep=async function(tid){
-  const inp=eid('dep-in-'+tid);const depId=inp?.value.trim();if(!depId)return;
-  const t=tasks.find(t=>t.id===tid);if(!t)return;
-  const dep=tasks.find(x=>x.id===depId);
-  if(!dep){toast('Task ID not found!','err');return;}
-  if(!t.dependencies)t.dependencies=[];
-  if(t.dependencies.includes(depId)){toast('Already added!','err');return;}
-  t.dependencies.push(depId);
-  await saveTaskFS(t);inp.value='';toast('Dependency added!','ok');
-};
-
-// ══ BULK ACTIONS ══
-window.toggleBulkMode=function(){
-  if(!canManage()){toast('Permission নেই','err');return;}
-  bulkMode=!bulkMode;selectedTasks.clear();
-  const btn=eid('btnBulk');if(btn)btn.textContent=bulkMode?'✓ Done':'☐ Select';
-  eid('bulkBar')?.classList.toggle('show',false);
-  renderT();
-};
-window.toggleSel=function(id){
-  if(selectedTasks.has(id))selectedTasks.delete(id);else selectedTasks.add(id);
-  updateBulkBar();renderT();
-};
-function updateBulkBar(){
-  const n=selectedTasks.size;
-  const bar=eid('bulkBar');if(bar)bar.classList.toggle('show',n>0);
-  const bc=eid('bulkCount');if(bc)bc.textContent=`${n} selected`;
-  const dBtn=eid('bulkDeleteBtn');if(dBtn)dBtn.style.display=canDeleteTask()?'':'none';
-}
-window.bulkChangeStatus=async function(){
-  const ns=eid('bulkStatusSel')?.value;if(!ns){toast('Status সিলেক্ট করুন','err');return;}
-  let count=0;
-  for(const id of selectedTasks){
-    const t=tasks.find(t=>t.id===id);if(!t)continue;
-    t.status=ns;if(ns==='done')t.completedAt=Date.now();
-    await saveTaskFS(t);count++;
-  }
-  await logActivity('bulk_action','','',`${count} tasks → ${ns}`);
-  toast(`${count} tasks updated ✓`,'ok');cancelBulk();
-};
-window.bulkChangeAssignee=async function(){
-  const na=eid('bulkAssigneeSel')?.value;if(!na){toast('Assignee সিলেক্ট করুন','err');return;}
-  let count=0;
-  for(const id of selectedTasks){
-    const t=tasks.find(t=>t.id===id);if(!t)continue;
-    const oldA=t.assignee;t.assignee=na;
-    await saveTaskFS(t);
-    if(oldA!==na)await sendNotif(na,'assigned',t.id,t.title,cu.name);
-    count++;
-  }
-  await logActivity('bulk_action','','',`${count} tasks assigned to ${users.find(u=>u.id===na)?.name}`);
-  toast(`${count} tasks reassigned ✓`,'ok');cancelBulk();
-};
-window.bulkDelete=async function(){
-  if(!canDeleteTask()){toast('Permission নেই','err');return;}
-  if(!confirm(`${selectedTasks.size} task delete করবেন?`))return;
-  for(const id of selectedTasks){
-    const t=tasks.find(t=>t.id===id);
-    await logActivity('task_deleted',id,t?.title||'','Bulk delete');
-    await deleteTaskFS(id);
-  }
-  toast(`${selectedTasks.size} tasks deleted`,'info');cancelBulk();
-};
-window.cancelBulk=function(){
-  bulkMode=false;selectedTasks.clear();
-  const btn=eid('btnBulk');if(btn)btn.textContent='☐ Select';
-  eid('bulkBar')?.classList.remove('show');
-  renderT();
-};
-
 // ══ TASK MODAL ══
-window.openM=function(n){
-  if(n==='task'&&!canManage()){toast('Permission নেই — Owner/Manager only','err');return;}
-  if(n==='user'&&!canAddUser()){toast('Permission নেই — Owner only','err');return;}
-  rebuildDropdowns();eid('mo-'+n).classList.add('open');
-};
+window.openM=function(n){rebuildDropdowns();eid('mo-'+n).classList.add('open');};
 window.closeM=function(n){
   eid('mo-'+n).classList.remove('open');
-  if(n==='task'){['eid','tT','tD','tDu','tDueDate','tDep'].forEach(id=>{const e=eid(id);if(e)e.value='';});eid('mdT').textContent='Add New Task';}
+  if(n==='task'){['eid','tT','tD','tDu'].forEach(id=>{const e=eid(id);if(e)e.value='';});eid('mdT').textContent='Add New Task';}
   if(n==='user'){['uEid','uN','uI','uP','uEm','uCl'].forEach(id=>{const e=eid(id);if(e)e.value='';});eid('uMdT').textContent='Add New User';}
 };
 window.editT=function(id){
-  if(!canManage()&&!isOwnTask(tasks.find(t=>t.id===id))){toast('Permission নেই','err');return;}
   const t=tasks.find(t=>t.id===id);if(!t)return;rebuildDropdowns();
   eid('eid').value=id;eid('tT').value=t.title;eid('tD').value=t.desc||'';
   eid('tSc').value=t.section;eid('tPr').value=t.priority;eid('tSt').value=t.status;
-  eid('tDu').value=t.due||'';eid('tDueDate').value=t.dueDate||'';
-  eid('tPh').value=t.phase||'Phase 1';eid('tAs').value=t.assignee;
-  eid('tDep').value=(t.dependencies||[]).join(',');
+  eid('tDu').value=t.due||'';eid('tPh').value=t.phase||'Phase 1';eid('tAs').value=t.assignee;
   eid('mdT').textContent='Edit Task';eid('mo-task').classList.add('open');
 };
 window.saveTask=async function(){
-  if(!canManage()){toast('Permission নেই','err');return;}
   const title=eid('tT').value.trim();if(!title){toast('Title required!','err');return;}
-  const editId=eid('eid').value,newAssignee=eid('tAs').value;
-  const depRaw=eid('tDep').value.trim();
-  const dependencies=depRaw?depRaw.split(',').map(s=>s.trim()).filter(Boolean):[];
-  const data={title,desc:eid('tD').value.trim(),section:eid('tSc').value,assignee:newAssignee,priority:eid('tPr').value,status:eid('tSt').value,due:eid('tDu').value.trim(),dueDate:eid('tDueDate').value||null,phase:eid('tPh').value,dependencies};
+  const editId=eid('eid').value;
+  const newAssignee=eid('tAs').value;
+  const data={title,desc:eid('tD').value.trim(),section:eid('tSc').value,assignee:newAssignee,priority:eid('tPr').value,status:eid('tSt').value,due:eid('tDu').value.trim(),phase:eid('tPh').value};
   if(editId){
-    const t=tasks.find(t=>t.id===editId);const oldAssignee=t?.assignee;
+    const t=tasks.find(t=>t.id===editId);
+    const oldAssignee=t?.assignee;
     if(t){Object.assign(t,data);await saveTaskFS(t);}
-    await logActivity('task_updated',editId,title,'');
-    if(oldAssignee!==newAssignee)await sendNotif(newAssignee,'assigned',editId,title,cu?.name||'Someone');
+    // Notify if assignee changed
+    if(oldAssignee!==newAssignee) await sendNotif(newAssignee,'assigned',editId,title,cu?.name||'Someone');
     else await sendNotif(newAssignee,'updated',editId,title,cu?.name||'Someone');
     toast('Task updated ✓','ok');
   }else{
     const id='t'+Date.now();
     const maxOrd=tasks.reduce((m,t)=>Math.max(m,t.order||0),0);
-    const newTask={id,...data,subtasks:[],comments:[],timeSpent:0,timeLog:[],starred:false,order:maxOrd+1};
+    const newTask={id,...data,subtasks:[],order:maxOrd+1};
     await saveTaskFS(newTask);
-    await logActivity('task_created',id,title,'');
     await sendNotif(newAssignee,'assigned',id,title,cu?.name||'Someone');
     toast('Task added ✓','ok');
   }
@@ -1587,34 +1044,28 @@ window.saveTask=async function(){
 
 // ══ USER MODAL ══
 window.editUser=function(id){
-  if(!canAddUser()){toast('Permission নেই','err');return;}
   const u=users.find(u=>u.id===id);if(!u)return;rebuildDropdowns();
   eid('uEid').value=id;eid('uN').value=u.name;eid('uI').value=u.uid;eid('uP').value=u.pass;
   eid('uR').value=u.role;eid('uEm').value=u.emoji||'';eid('uCl').value=u.color||'';
   eid('uMdT').textContent='Edit User';eid('mo-user').classList.add('open');
 };
 window.saveUser=async function(){
-  if(!canAddUser()){toast('Permission নেই','err');return;}
   const n=eid('uN').value.trim(),uid=eid('uI').value.trim(),pass=eid('uP').value.trim();
   const role=eid('uR').value,emoji=eid('uEm').value.trim()||'👤',color=eid('uCl').value.trim()||'#4d8eff';
   if(!n||!uid||!pass){toast('Name, ID & Password required!','err');return;}
   const editId=eid('uEid').value;
   if(editId){const u=users.find(u=>u.id===editId);if(u)Object.assign(u,{name:n,uid,pass,role,emoji,color});toast('User updated ✓','ok');}
-  else{if(users.find(u=>u.uid===uid)){toast('User ID exists!','err');return;}users.push({id:uid,uid,pass,name:n,role,emoji,color});await logActivity('user_added','',n,'');toast('User added: '+n,'ok');}
+  else{if(users.find(u=>u.uid===uid)){toast('User ID exists!','err');return;}users.push({id:uid,uid,pass,name:n,role,emoji,color});toast('User added: '+n,'ok');}
   await saveConfig();closeM('user');
 };
 window.delUser=async function(id){
-  if(!canAddUser()){toast('Permission নেই','err');return;}
   if(id===cu?.id){toast('নিজেকে delete করা যাবে না!','err');return;}
   if(!confirm('User delete করবেন?'))return;
-  const u=users.find(u=>u.id===id);
-  users=users.filter(u=>u.id!==id);
-  await logActivity('user_deleted','',u?.name||id,'');
-  await saveConfig();toast('User removed','info');
+  users=users.filter(u=>u.id!==id);await saveConfig();toast('User removed','info');
 };
 function renderU(){
   const ul=eid('ul');if(!ul)return;
-  ul.innerHTML=users.map(u=>`<div class="ur"><div><div style="width:34px;height:34px;border-radius:9px;background:${h2r(u.color||'#f03e5f',.2)};color:${u.color||'#f03e5f'};display:flex;align-items:center;justify-content:center;font-size:14px;font-weight:700">${u.emoji||u.name[0]}</div></div><div><div style="font-weight:600">${u.name}</div><div style="font-size:11px;color:var(--t3)">${u.role}</div></div><div style="font-size:11px"><code style="font-family:var(--mono);background:var(--s2);padding:2px 6px;border-radius:4px">${u.uid}</code> / <code style="font-family:var(--mono);background:var(--s2);padding:2px 6px;border-radius:4px">${u.pass}</code></div><div><span class="tag" style="background:var(--s3);color:var(--t2);border:1px solid var(--bd2)">${u.role}</span></div><div style="display:flex;gap:4px">${u.id!==cu?.id&&canAddUser()?`<button class="rb" onclick="editUser('${u.id}')">✏️</button><button class="rb dl" onclick="delUser('${u.id}')">🗑</button>`:'<span style="font-size:10px;color:var(--t3)">You</span>'}</div></div>`).join('');
+  ul.innerHTML=users.map(u=>`<div class="ur"><div><div style="width:34px;height:34px;border-radius:9px;background:${h2r(u.color||'#f03e5f',.2)};color:${u.color||'#f03e5f'};display:flex;align-items:center;justify-content:center;font-size:14px;font-weight:700">${u.emoji||u.name[0]}</div></div><div><div style="font-weight:600">${u.name}</div><div style="font-size:11px;color:var(--t3)">${u.role}</div></div><div style="font-size:11px"><code style="font-family:var(--mono);background:var(--s2);padding:2px 6px;border-radius:4px">${u.uid}</code> / <code style="font-family:var(--mono);background:var(--s2);padding:2px 6px;border-radius:4px">${u.pass}</code></div><div><span class="tag" style="background:var(--s3);color:var(--t2);border:1px solid var(--bd2)">${u.role}</span></div><div style="display:flex;gap:4px">${u.id!==cu?.id?`<button class="rb" onclick="editUser('${u.id}')">✏️</button><button class="rb dl" onclick="delUser('${u.id}')">🗑</button>`:'<span style="font-size:10px;color:var(--t3)">You</span>'}</div></div>`).join('');
 }
 
 // ══ KANBAN ══
@@ -1626,233 +1077,20 @@ function renderK(){
   kb.style.gridTemplateColumns=`repeat(${Math.min(statuses.length,4)},1fr)`;
   kb.innerHTML=statuses.slice(0,4).map(col=>{
     const ct=list.filter(t=>t.status===col.id);
-    return`<div class="kc"><div class="kch"><div class="kct" style="color:${col.color}">${col.name}</div><span class="kcc">${ct.length}</span></div><div class="kcb">${ct.length?ct.map(t=>{const u=users.find(u=>u.id===t.assignee),pri=priById(t.priority),uc=u?.color||'#8d96b8';return`<div class="kcd" onclick="editT('${t.id}')"><div class="kct2">${isBlocked(t)?'🔒 ':''}${t.title}</div><div class="kcf"><span class="pb2" style="font-size:9px;padding:2px 6px;background:${h2r(pri.color,.15)};color:${pri.color};border-color:${h2r(pri.color,.3)}">${pri.name}</span><div class="ac"><div style="width:18px;height:18px;border-radius:4px;background:${h2r(uc,.2)};color:${uc};display:flex;align-items:center;justify-content:center;font-size:8px;font-weight:700">${u?.emoji||u?.name[0]||'?'}</div><span style="font-size:10px">${u?.name||t.assignee}</span></div></div></div>`;}).join(''):`<div style="text-align:center;padding:18px;color:var(--t3);font-size:12px">No tasks</div>`}</div></div>`;
-  }).join('');
-}
-
-// ══ CALENDAR ══
-function renderCalendar(){
-  const DAYS=['Sun','Mon','Tue','Wed','Thu','Fri','Sat'];
-  const MONTHS=['January','February','March','April','May','June','July','August','September','October','November','December'];
-  const title=eid('calTitle');if(title)title.textContent=`${MONTHS[calMonth]} ${calYear}`;
-  const header=eid('calHeader');
-  if(header)header.innerHTML=DAYS.map(d=>`<div class="cal-day-label">${d}</div>`).join('');
-  const first=new Date(calYear,calMonth,1).getDay();
-  const total=new Date(calYear,calMonth+1,0).getDate();
-  const today=new Date();
-  const grid=eid('calGrid');if(!grid)return;
-  let cells='';
-  // Previous month padding
-  const prevTotal=new Date(calYear,calMonth,0).getDate();
-  for(let i=first-1;i>=0;i--){
-    cells+=`<div class="cal-cell other-month"><div class="cal-day-num">${prevTotal-i}</div></div>`;
-  }
-  // Current month
-  for(let d=1;d<=total;d++){
-    const dateStr=`${calYear}-${String(calMonth+1).padStart(2,'0')}-${String(d).padStart(2,'0')}`;
-    const isToday=today.getDate()===d&&today.getMonth()===calMonth&&today.getFullYear()===calYear;
-    const dayTasks=tasks.filter(t=>t.dueDate===dateStr);
-    const pillsHtml=dayTasks.slice(0,3).map(t=>{const sec=secById(t.section);return`<span class="cal-task-pill" style="background:${h2r(sec.color,.2)};color:${sec.color}" title="${t.title}">${t.title.slice(0,15)}${t.title.length>15?'…':''}</span>`;}).join('');
-    const more=dayTasks.length>3?`<div class="cal-more">+${dayTasks.length-3} more</div>`:'';
-    cells+=`<div class="cal-cell ${isToday?'today':''} ${dayTasks.length?'has-tasks':''}" onclick="calDayClick('${dateStr}')">
-      <div class="cal-day-num">${d}</div>${pillsHtml}${more}
-    </div>`;
-  }
-  // Next month padding
-  const totalCells=Math.ceil((first+total)/7)*7;
-  let nextD=1;
-  for(let i=first+total;i<totalCells;i++){cells+=`<div class="cal-cell other-month"><div class="cal-day-num">${nextD++}</div></div>`;}
-  grid.innerHTML=cells;
-}
-window.calPrev=function(){calMonth--;if(calMonth<0){calMonth=11;calYear--;}renderCalendar();};
-window.calNext=function(){calMonth++;if(calMonth>11){calMonth=0;calYear++;}renderCalendar();};
-window.calDayClick=function(dateStr){
-  const dayTasks=tasks.filter(t=>t.dueDate===dateStr);
-  if(!dayTasks.length){toast('এই দিনে কোনো task নেই','info');return;}
-  // Switch to tasks view filtered by that date
-  showV('tasks',document.querySelector('.ni'));
-  // Highlight tasks with this date
-  setTimeout(()=>{
-    const el=document.querySelector(`[data-date="${dateStr}"]`);
-    if(el)el.scrollIntoView({behavior:'smooth',block:'center'});
-  },300);
-};
-
-// ══ GANTT ══
-function parseDay(due){
-  if(!due)return null;
-  const m1=due.match(/Day\s*(\d+)/i);
-  const m2=due.match(/Day\s*(\d+)\s*[–\-]\s*(\d+)/i);
-  if(m2)return{s:parseInt(m2[1]),e:parseInt(m2[2])};
-  if(m1)return{s:parseInt(m1[1]),e:parseInt(m1[1])};
-  return null;
-}
-function renderGantt(){
-  const gc=eid('ganttContainer');if(!gc)return;
-  const filterSec=eid('ganttFilter')?.value||'';
-  let list=tasks.filter(t=>t.due&&parseDay(t.due));
-  if(filterSec)list=list.filter(t=>t.section===filterSec);
-  const DAYS=30;
-  // Header
-  let hdrHtml=`<div class="gantt-header-row">`;
-  for(let i=1;i<=DAYS;i++)hdrHtml+=`<div class="gantt-day-hdr">${i}</div>`;
-  hdrHtml+='</div>';
-  // Rows
-  let rowsHtml=list.map(t=>{
-    const p=parseDay(t.due);if(!p)return'';
-    const sec=secById(t.section);
-    const left=((p.s-1)/DAYS*100).toFixed(1);
-    const width=Math.max(1,(p.e-p.s+1))/DAYS*100;
-    const label=t.title.slice(0,20)+(t.title.length>20?'…':'');
-    return`<div class="gantt-row">
-      <div class="gantt-label" title="${t.title}">${sec.icon} ${label}</div>
-      <div class="gantt-track">
-        <div class="gantt-bar" style="left:${left}%;width:${width}%;background:${sec.color}" onclick="editT('${t.id}')" title="${t.title} (Day ${p.s}–${p.e})">${label}</div>
-      </div>
-    </div>`;
-  }).join('');
-  if(!list.length)rowsHtml='<div style="text-align:center;padding:40px;color:var(--t3)">No tasks with day-based due dates found</div>';
-  gc.innerHTML=`<div style="background:var(--s1);border:1px solid var(--bd);border-radius:13px;padding:16px;">${hdrHtml}<div>${rowsHtml}</div></div>`;
-}
-
-// ══ ANALYTICS ══
-function renderAnalytics(){
-  const ac=eid('analyticsContent');if(!ac)return;
-  const tot=tasks.length,dn=tasks.filter(t=>t.status==='done').length,pr=tasks.filter(t=>t.status==='progress').length,ov=tasks.filter(t=>isOverdue(t)).length;
-  const pct=tot?Math.round(dn/tot*100):0;
-  // Summary
-  const summary=`<div class="an-grid" style="grid-template-columns:repeat(4,1fr);margin-bottom:16px">
-    <div class="an-card" style="text-align:center"><div style="font-size:28px;font-weight:800;color:var(--text)">${tot}</div><div style="font-size:11px;color:var(--t3)">Total Tasks</div></div>
-    <div class="an-card" style="text-align:center"><div style="font-size:28px;font-weight:800;color:var(--green)">${dn}</div><div style="font-size:11px;color:var(--t3)">Completed</div></div>
-    <div class="an-card" style="text-align:center"><div style="font-size:28px;font-weight:800;color:var(--blue)">${pr}</div><div style="font-size:11px;color:var(--t3)">In Progress</div></div>
-    <div class="an-card" style="text-align:center"><div style="font-size:28px;font-weight:800;color:${ov?'var(--red)':'var(--green)'}">${ov}</div><div style="font-size:11px;color:var(--t3)">Overdue</div></div>
-  </div>`;
-  // Per person
-  const maxT=Math.max(1,...users.map(u=>tasks.filter(t=>t.assignee===u.id).length));
-  const perPerson=`<div class="an-card">
-    <h3>👥 Performance Per Person</h3>
-    ${users.map(u=>{
-      const at=tasks.filter(t=>t.assignee===u.id);
-      const ad=at.filter(t=>t.status==='done').length;
-      const pct2=at.length?Math.round(ad/at.length*100):0;
-      const ts=at.reduce((s,t)=>s+(t.timeSpent||0),0);
-      return`<div class="an-bar-row">
-        <div class="an-bar-label">${u.emoji||u.name[0]} ${u.name}</div>
-        <div class="an-bar-track"><div class="an-bar-fill" style="width:${at.length?at.length/maxT*100:0}%;background:${u.color||'#4d8eff'}"></div></div>
-        <div class="an-bar-val">${ad}/${at.length} (${pct2}%)</div>
-      </div>
-      <div style="font-size:10px;color:var(--t3);margin-bottom:8px;padding-left:93px">Time: ${fmtTime(ts)}</div>`;
-    }).join('')}
-  </div>`;
-  // Per section
-  const maxS=Math.max(1,...sections.map(s=>tasks.filter(t=>t.section===s.id).length));
-  const perSection=`<div class="an-card">
-    <h3>🏷 Section Breakdown</h3>
-    ${sections.map(s=>{
-      const st=tasks.filter(t=>t.section===s.id);
-      const sd=st.filter(t=>t.status==='done').length;
-      const pct3=st.length?Math.round(sd/st.length*100):0;
-      return`<div class="an-bar-row">
-        <div class="an-bar-label">${s.icon} ${s.name}</div>
-        <div class="an-bar-track"><div class="an-bar-fill" style="width:${st.length?st.length/maxS*100:0}%;background:${s.color}"></div></div>
-        <div class="an-bar-val">${sd}/${st.length} · ${pct3}%</div>
-      </div>`;
-    }).join('')}
-  </div>`;
-  // SVG completion chart (activity based)
-  const now=Date.now();
-  const days=14;
-  const dayMs=86400000;
-  const buckets=Array.from({length:days},(,i)=>{
-    const dayStart=now-(days-1-i)*dayMs;
-    const dayEnd=dayStart+dayMs;
-    return activityLogs.filter(al=>al.action==='status_changed'&&al.details&&al.details.includes('done')&&al.timestamp>=dayStart&&al.timestamp<dayEnd).length;
-  });
-  const maxB=Math.max(1,...buckets);
-  const svgW=380,svgH=100,padL=20,padB=20;
-  const chartW=svgW-padL-10,chartH=svgH-padB-10;
-  const barW=chartW/days-2;
-  const svgBars=buckets.map((b,i)=>{
-    const bh=b/maxB*chartH;
-    const x=padL+i*(chartW/days);
-    const y=10+chartH-bh;
-    return`<rect x="${x}" y="${y}" width="${barW}" height="${bh}" rx="2" fill="${b?'var(--green)':'var(--s3)'}"/>`;
-  }).join('');
-  const svgLabels=Array.from({length:4},(_,i)=>Math.floor(i*days/3)).map(i=>{
-    const d=new Date(now-(days-1-i)*dayMs);
-    return`<text x="${padL+i*(chartW/days)+barW/2}" y="${svgH}" fill="var(--t3)" font-size="8" text-anchor="middle">${d.getDate()}/${d.getMonth()+1}</text>`;
-  }).join('');
-  const trendChart=`<div class="an-card">
-    <h3>📈 Completion Trend (Last 14 days)</h3>
-    <div class="an-svg-wrap">
-      <svg viewBox="0 0 ${svgW} ${svgH}" xmlns="http://www.w3.org/2000/svg" style="width:100%;height:auto">
-        ${svgBars}${svgLabels}
-        <text x="${padL}" y="16" fill="var(--t3)" font-size="8">Tasks completed per day</text>
-      </svg>
-    </div>
-  </div>`;
-  // Priority breakdown
-  const maxP=Math.max(1,...priorities.map(p=>tasks.filter(t=>t.priority===p.id).length));
-  const priBrk=`<div class="an-card">
-    <h3>🔴 Priority Breakdown</h3>
-    ${priorities.map(p=>{
-      const pt=tasks.filter(t=>t.priority===p.id);
-      const pd=pt.filter(t=>t.status==='done').length;
-      return`<div class="an-bar-row">
-        <div class="an-bar-label">${p.name}</div>
-        <div class="an-bar-track"><div class="an-bar-fill" style="width:${pt.length?pt.length/maxP*100:0}%;background:${p.color}"></div></div>
-        <div class="an-bar-val">${pd}/${pt.length}</div>
-      </div>`;
-    }).join('')}
-  </div>`;
-  ac.innerHTML=summary+`<div class="an-grid">${perPerson}${perSection}${trendChart}${priBrk}</div>`;
-}
-
-// ══ EXPORT ══
-window.exportCSV=function(){
-  const headers=['ID','Title','Description','Section','Assignee','Priority','Status','Due Date','Phase','Time Spent (s)','Comments'];
-  const rows=tasks.map(t=>[t.id,`"${t.title.replace(/"/g,'""')}"`,`"${(t.desc||'').replace(/"/g,'""')}"`,secById(t.section).name,users.find(u=>u.id===t.assignee)?.name||t.assignee,priById(t.priority).name,staById(t.status).name,t.dueDate||t.due||'',t.phase||'',t.timeSpent||0,(t.comments||[]).length]);
-  const csv=[headers.join(','),...rows.map(r=>r.join(','))].join('\n');
-  const a=document.createElement('a');a.href='data:text/csv;charset=utf-8,\uFEFF'+encodeURIComponent(csv);a.download='printute_tasks_'+new Date().toISOString().slice(0,10)+'.csv';a.click();
-  toast('CSV exported! ✓','ok');
-};
-window.exportPDF=function(){window.print();};
-
-// ══ ACTIVITY LOG VIEW ══
-function renderActivity(){
-  const al=eid('activityList');if(!al)return;
-  let list=[...activityLogs];
-  const userF=eid('alUserFilter')?.value;
-  const actionF=eid('alActionFilter')?.value;
-  if(userF)list=list.filter(a=>a.userId===userF);
-  if(actionF)list=list.filter(a=>a.action===actionF);
-  if(!list.length){al.innerHTML=`<div style="text-align:center;padding:48px 20px;color:var(--t3)">📋 No activity recorded yet</div>`;return;}
-  al.innerHTML=list.slice(0,100).map(a=>{
-    const u=users.find(u=>u.id===a.userId);
-    const col=u?.color||'#8d96b8';
-    return`<div class="al-item">
-      <div class="al-icon" style="color:${col}">${AL_ICONS[a.action]||'📌'}</div>
-      <div class="al-body">
-        <div class="al-title"><span style="color:${col};font-weight:700">${a.userName||'?'}</span> — ${AL_LABELS[a.action]||a.action}${a.taskTitle?`: <span style="color:var(--text)">${a.taskTitle}</span>`:''}</div>
-        ${a.details?`<div class="al-sub">${a.details}</div>`:''}
-      </div>
-      <div class="al-time">${a.time}</div>
-    </div>`;
+    return`<div class="kc"><div class="kch"><div class="kct" style="color:${col.color}">${col.name}</div><span class="kcc">${ct.length}</span></div><div class="kcb">${ct.length?ct.map(t=>{const u=users.find(u=>u.id===t.assignee),pri=priById(t.priority),uc=u?.color||'#8d96b8';return`<div class="kcd" onclick="editT('${t.id}')"><div class="kct2">${t.title}</div><div class="kcf"><span class="pb2" style="font-size:9px;padding:2px 6px;background:${h2r(pri.color,.15)};color:${pri.color};border-color:${h2r(pri.color,.3)}">${pri.name}</span><div class="ac"><div style="width:18px;height:18px;border-radius:4px;background:${h2r(uc,.2)};color:${uc};display:flex;align-items:center;justify-content:center;font-size:8px;font-weight:700">${u?.emoji||u?.name[0]||'?'}</div><span style="font-size:10px">${u?.name||t.assignee}</span></div></div></div>`;}).join(''):`<div style="text-align:center;padding:18px;color:var(--t3);font-size:12px">No tasks</div>`}</div></div>`;
   }).join('');
 }
 
 // ══ SETTINGS ══
 function renderSettings(){
   const g=eid('setGrid');if(!g)return;
-  const showAdd=canManageSettings();
   g.innerHTML=`
-    <div class="set-card"><h3>🏷 Sections ${showAdd?`<button class="btn bg bxs" onclick="openQuick('section')">+ Add</button>`:''}</h3>${sections.map(s=>`<div class="set-item"><span style="font-size:16px">${s.icon}</span><span class="si-nm">${s.name}</span><span class="si-color" style="background:${s.color}"></span>${showAdd?`<button class="si-del" onclick="delSection('${s.id}')">✕</button>`:''}</div>`).join('')}</div>
-    <div class="set-card"><h3>📊 Statuses ${showAdd?`<button class="btn bg bxs" onclick="openQuick('status')">+ Add</button>`:''}</h3>${statuses.map(s=>`<div class="set-item"><span class="si-nm">${s.name}</span><span class="si-color" style="background:${s.color}"></span>${showAdd?`<button class="si-del" onclick="delStatus('${s.id}')">✕</button>`:''}</div>`).join('')}</div>
-    <div class="set-card"><h3>🔴 Priorities ${showAdd?`<button class="btn bg bxs" onclick="openQuick('priority')">+ Add</button>`:''}</h3>${priorities.map(p=>`<div class="set-item"><span class="si-nm">${p.name}</span><span class="si-color" style="background:${p.color}"></span>${showAdd?`<button class="si-del" onclick="delPriority('${p.id}')">✕</button>`:''}</div>`).join('')}</div>
-    <div class="set-card"><h3>👤 Roles ${showAdd?`<button class="btn bg bxs" onclick="openQuick('role')">+ Add</button>`:''}</h3>${roles.map(r=>`<div class="set-item"><span class="si-nm">${r}</span>${showAdd?`<button class="si-del" onclick="delRole('${r}')">✕</button>`:''}</div>`).join('')}</div>`;
+    <div class="set-card"><h3>🏷 Sections <button class="btn bg bxs" onclick="openQuick('section')">+ Add</button></h3>${sections.map(s=>`<div class="set-item"><span style="font-size:16px">${s.icon}</span><span class="si-nm">${s.name}</span><span class="si-color" style="background:${s.color}"></span><button class="si-del" onclick="delSection('${s.id}')">✕</button></div>`).join('')}</div>
+    <div class="set-card"><h3>📊 Statuses <button class="btn bg bxs" onclick="openQuick('status')">+ Add</button></h3>${statuses.map(s=>`<div class="set-item"><span class="si-nm">${s.name}</span><span class="si-color" style="background:${s.color}"></span><button class="si-del" onclick="delStatus('${s.id}')">✕</button></div>`).join('')}</div>
+    <div class="set-card"><h3>🔴 Priorities <button class="btn bg bxs" onclick="openQuick('priority')">+ Add</button></h3>${priorities.map(p=>`<div class="set-item"><span class="si-nm">${p.name}</span><span class="si-color" style="background:${p.color}"></span><button class="si-del" onclick="delPriority('${p.id}')">✕</button></div>`).join('')}</div>
+    <div class="set-card"><h3>👤 Roles <button class="btn bg bxs" onclick="openQuick('role')">+ Add</button></h3>${roles.map(r=>`<div class="set-item"><span class="si-nm">${r}</span><button class="si-del" onclick="delRole('${r}')">✕</button></div>`).join('')}</div>`;
 }
 window.openQuick=function(type){
-  if(!canManageSettings()){toast('Permission নেই','err');return;}
   document.getElementById('qType').value=type;
   const titles={section:'Add Section',status:'Add Status',priority:'Add Priority',role:'Add Role'};
   eid('qMdT').textContent=titles[type]||'Add Item';
@@ -1862,7 +1100,6 @@ window.openQuick=function(type){
   eid('mo-quick').classList.add('open');
 };
 window.saveQuick=async function(){
-  if(!canManageSettings()){toast('Permission নেই','err');return;}
   const type=eid('qType').value,name=eid('qName').value.trim();if(!name){toast('Name required!','err');return;}
   const icon=eid('qIcon').value.trim()||'📁',color=eid('qColor').value.trim()||'#4d8eff';
   const id=name.toLowerCase().replace(/\s+/g,'_').replace(/[^a-z0-9_]/g,'')+'_'+Date.now();
@@ -1872,10 +1109,10 @@ window.saveQuick=async function(){
   else if(type==='role'){if(!roles.includes(name))roles.push(name);}
   await saveConfig();closeM('quick');toast(name+' added!','ok');
 };
-window.delSection=async function(id){if(!canManageSettings()){toast('Permission নেই','err');return;}if(tasks.find(t=>t.section===id)){toast('Tasks আছে!','err');return;}if(!confirm('Delete?'))return;sections=sections.filter(s=>s.id!==id);await saveConfig();};
-window.delStatus=async function(id){if(!canManageSettings()){toast('Permission নেই','err');return;}if(tasks.find(t=>t.status===id)){toast('Tasks আছে!','err');return;}if(!confirm('Delete?'))return;statuses=statuses.filter(s=>s.id!==id);await saveConfig();};
-window.delPriority=async function(id){if(!canManageSettings()){toast('Permission নেই','err');return;}if(tasks.find(t=>t.priority===id)){toast('Tasks আছে!','err');return;}if(!confirm('Delete?'))return;priorities=priorities.filter(p=>p.id!==id);await saveConfig();};
-window.delRole=async function(r){if(!canManageSettings()){toast('Permission নেই','err');return;}if(users.find(u=>u.role===r)){toast('Users আছে!','err');return;}if(!confirm('Delete?'))return;roles=roles.filter(x=>x!==r);await saveConfig();};
+window.delSection=async function(id){if(tasks.find(t=>t.section===id)){toast('Tasks আছে!','err');return;}if(!confirm('Delete?'))return;sections=sections.filter(s=>s.id!==id);await saveConfig();};
+window.delStatus=async function(id){if(tasks.find(t=>t.status===id)){toast('Tasks আছে!','err');return;}if(!confirm('Delete?'))return;statuses=statuses.filter(s=>s.id!==id);await saveConfig();};
+window.delPriority=async function(id){if(tasks.find(t=>t.priority===id)){toast('Tasks আছে!','err');return;}if(!confirm('Delete?'))return;priorities=priorities.filter(p=>p.id!==id);await saveConfig();};
+window.delRole=async function(r){if(users.find(u=>u.role===r)){toast('Users আছে!','err');return;}if(!confirm('Delete?'))return;roles=roles.filter(x=>x!==r);await saveConfig();};
 
 // ══ TOAST ══
 let tTimer;
@@ -1885,11 +1122,7 @@ window.toast=function(msg,type='ok'){const el=eid('toast');el.textContent=msg;el
 window.toggleMob=function(){eid('sidebar').classList.toggle('open');eid('mobOv').classList.toggle('open');};
 window.closeMob=function(){eid('sidebar')?.classList.remove('open');eid('mobOv')?.classList.remove('open');};
 
-// ══ MODAL CLOSE ON BACKDROP ══
 document.querySelectorAll('.mo').forEach(mo=>mo.addEventListener('click',e=>{if(e.target===mo)mo.classList.remove('open');}));
-
-// ══ WINDOW UNLOAD ══
-window.addEventListener('beforeunload',()=>{Object.keys(activeTimers).forEach(id=>stopTimer(id,true));goOffline();});
 
 initFirebase();
 </script>

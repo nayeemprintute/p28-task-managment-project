@@ -355,6 +355,13 @@ input[type="date"].fg-date{color-scheme:dark;}
 /* ══ MEMBER RESTRICTED OVERLAY ══ */
 .restricted{pointer-events:none;opacity:.5;}
 .member-badge{font-size:9px;padding:2px 6px;border-radius:10px;background:rgba(77,142,255,.15);color:var(--blue);border:1px solid rgba(77,142,255,.3);margin-left:6px;}
+/* ══ PERMISSION ROLE INDICATOR ══ */
+.role-chip{display:inline-flex;align-items:center;gap:4px;font-size:9px;font-weight:700;padding:2px 7px;border-radius:10px;letter-spacing:.5px;text-transform:uppercase;}
+.role-chip.owner{background:rgba(240,62,95,.15);color:var(--red);border:1px solid rgba(240,62,95,.3);}
+.role-chip.member{background:rgba(77,142,255,.12);color:var(--blue);border:1px solid rgba(77,142,255,.25);}
+.perm-bar{display:none;background:rgba(77,142,255,.08);border-bottom:1px solid rgba(77,142,255,.2);padding:5px 16px;font-size:11px;color:var(--blue);align-items:center;gap:6px;flex-shrink:0;}
+.perm-bar.show{display:flex;}
+.view-only-tag{display:inline-flex;align-items:center;gap:3px;font-size:9px;font-weight:700;padding:1px 6px;border-radius:4px;background:rgba(77,142,255,.15);color:var(--blue);border:1px solid rgba(77,142,255,.3);}
 </style>
 </head>
 <body>
@@ -437,6 +444,10 @@ input[type="date"].fg-date{color-scheme:dark;}
             🔔<span class="unread-badge" id="nbadge"></span>
           </button>
         </div>
+      </div>
+      <!-- Permission info bar for non-owners -->
+      <div class="perm-bar" id="permBar">
+        🔒 <strong id="permRoleName"></strong> Mode — শুধু নিজের task edit/delete করতে পারবেন। Task তৈরি, user management এবং settings শুধু Owner এর জন্য।
       </div>
       <div class="ct">
         <div class="view active" id="view-dashboard">
@@ -703,6 +714,21 @@ let sections=[],statuses=[],priorities=[],roles=[],users=[],tasks=[],notifs=[];
 let cu=null,filt={status:'all',section:null,assignee:null},sortAsc=true,sortF='due',exp=new Set(),cv='dashboard';
 let _local=false;
 
+// ══ PERMISSIONS ══
+// isOwner: শুধুমাত্র Owner role সব কিছু করতে পারবে
+const isOwner = () => cu?.role === 'Owner';
+// isMyTask: নিজের task কিনা
+const isMyTask = t => t?.assignee === cu?.id;
+// canActOnTask: Owner অথবা নিজের task — edit/delete/toggle করতে পারবে
+const canActOnTask = t => isOwner() || isMyTask(t);
+// canCreate: শুধু Owner নতুন task/user/category তৈরি করতে পারবে
+const canCreate = () => isOwner();
+// canManageSystem: শুধু Owner settings/users manage করতে পারবে
+const canManageSystem = () => isOwner();
+// দেখানোর জন্য permission denied toast
+const permDenied = () => toast('🔒 Permission নেই! শুধুমাত্র Owner এই কাজটি করতে পারবেন।', 'err');
+const permDeniedTask = () => toast('🔒 শুধু নিজের task edit/delete করতে পারবেন।', 'err');
+
 // ══ HELPERS ══
 const h2r=(h,a)=>{const r=parseInt(h.slice(1,3),16),g=parseInt(h.slice(3,5),16),b=parseInt(h.slice(5,7),16);return`rgba(${r},${g},${b},${a})`;};
 const secById=id=>sections.find(s=>s.id===id)||{name:id,icon:'📁',color:'#8d96b8'};
@@ -902,11 +928,46 @@ window.doLogin=function(){
   if(!u||u.pass!==pass){eid('lerr').style.display='block';return;}
   cu=u;
   eid('loginScreen').style.display='none';eid('app').style.display='block';
-  upSbU();buildSidebar();rebuildDropdowns();
+  upSbU();buildSidebar();rebuildDropdowns();applyPermUI();
   showV('dashboard',document.querySelector('.ni'));
   upND();renderNP();
   toast('Welcome, '+u.name+' 👋','ok');
 };
+
+// ══ PERMISSION UI ══
+// Login এর পরে role অনুযায়ী UI hide/show করে
+function applyPermUI(){
+  const owner = isOwner();
+  // Topbar buttons
+  const btnTask = document.querySelector('.tb-act .btn.bg.bsm');
+  if(btnTask) btnTask.style.display = owner ? '' : 'none';
+  const btnUser = document.querySelector('.tb-act .btn.br.bsm');
+  if(btnUser) btnUser.style.display = owner ? '' : 'none';
+  // Sidebar — Section ＋ add button
+  const secAdd = document.querySelector('.ngl-add[onclick*="openQuick"]');
+  if(secAdd) secAdd.style.display = owner ? '' : 'none';
+  // Sidebar — Team ＋ add button
+  const teamAdd = document.querySelector('.ngl-add[onclick*="openM"]');
+  if(teamAdd) teamAdd.style.display = owner ? '' : 'none';
+  // Sidebar — Manage Users nav item
+  const manageUsers = document.querySelector('.ni[onclick*="showV(\'users\'"]');
+  if(manageUsers) manageUsers.style.display = owner ? '' : 'none';
+  // Sidebar — Settings nav item
+  const settingsNav = document.querySelector('.ni[onclick*="showV(\'settings\'"]');
+  if(settingsNav) settingsNav.style.display = owner ? '' : 'none';
+  // Permission bar (non-owner info strip)
+  const permBar = document.getElementById('permBar');
+  if(permBar){
+    permBar.classList.toggle('show', !owner);
+    const pn = document.getElementById('permRoleName');
+    if(pn) pn.textContent = cu?.role || '';
+  }
+  // Role chip in sidebar user area
+  const rl = document.getElementById('sbRl');
+  if(rl){
+    rl.innerHTML = `${cu?.role} <span class="role-chip ${owner?'owner':'member'}">${owner?'👑 Full Access':'👁 Limited'}</span>`;
+  }
+}
 window.doLogout=function(){
   cu=null;window._selUid=null;
   eid('app').style.display='none';eid('loginScreen').style.display='flex';
@@ -925,9 +986,10 @@ function upSbU(){
 // ══ SIDEBAR ══
 function buildSidebar(){
   const sn=eid('secNav');
-  if(sn)sn.innerHTML=sections.map(s=>`<div class="ni" onclick="secF('${s.id}',this)"><span class="ic">${s.icon}</span>${s.name}<span class="ni-del" onclick="event.stopPropagation();delSection('${s.id}')">✕</span></div>`).join('');
+  const delBtn=(fn,id)=>isOwner()?`<span class="ni-del" onclick="event.stopPropagation();${fn}('${id}')">✕</span>`:'';
+  if(sn)sn.innerHTML=sections.map(s=>`<div class="ni" onclick="secF('${s.id}',this)"><span class="ic">${s.icon}</span>${s.name}${delBtn('delSection',s.id)}</div>`).join('');
   const tn=eid('teamNav');
-  if(tn)tn.innerHTML=users.map(u=>`<div class="ni" onclick="assF('${u.id}',this)"><span style="width:16px;height:16px;border-radius:4px;background:${h2r(u.color||'#f03e5f',.25)};color:${u.color||'#f03e5f'};font-size:9px;font-weight:700;display:inline-flex;align-items:center;justify-content:center;flex-shrink:0">${u.emoji||u.name[0]}</span>${u.name}'s Tasks<span class="ni-del" onclick="event.stopPropagation();delUser('${u.id}')">✕</span></div>`).join('');
+  if(tn)tn.innerHTML=users.map(u=>`<div class="ni" onclick="assF('${u.id}',this)"><span style="width:16px;height:16px;border-radius:4px;background:${h2r(u.color||'#f03e5f',.25)};color:${u.color||'#f03e5f'};font-size:9px;font-weight:700;display:inline-flex;align-items:center;justify-content:center;flex-shrink:0">${u.emoji||u.name[0]}</span>${u.name}'s Tasks${delBtn('delUser',u.id)}</div>`).join('');
 }
 
 // ══ DROPDOWNS ══
@@ -953,6 +1015,12 @@ window.showV=function(v,el){
   if(el)el.classList.add('active');
   const titles={dashboard:'Dashboard',tasks:'All Tasks',kanban:'Kanban Board',users:'Team Management',settings:'⚙️ Settings',starred:'⭐ Starred Tasks',calendar:'🗓 Calendar',gantt:'📊 Timeline/Gantt',report:'📈 Reports',daily:'📅 Daily Tasks'};
   const vt=eid('vt');if(vt)vt.textContent=titles[v]||'Tasks';
+  // Non-owner protected pages
+  if(!isOwner()&&(v==='users'||v==='settings')){
+    toast('🔒 এই section শুধুমাত্র Owner দেখতে পারবেন।','err');
+    showV('dashboard',document.querySelector('.ni'));
+    return;
+  }
   if(v==='tasks'){resetFilters();renderT();}
   if(v==='kanban')renderK();
   if(v==='users')renderU();
@@ -1049,7 +1117,7 @@ function renderT(){
     const sbd=(t.subtasks||[]).filter(s=>s.done).length,sbt=(t.subtasks||[]).length,ie=exp.has(t.id),uc=u?.color||'#8d96b8';
     return`<div id="tw-${t.id}">
       <div class="tr ${t.status==='done'?'done-r':''} ${ie?'exp':''}" data-id="${t.id}" onclick="tExp('${t.id}')">
-        <div class="chk ${t.status==='done'?'ck':''}" onclick="event.stopPropagation();tDone('${t.id}')"></div>
+        <div class="chk ${t.status==='done'?'ck':''}" onclick="event.stopPropagation();${canActOnTask(t)?`tDone('${t.id}')`:'permDeniedTask()'}" style="${!canActOnTask(t)?'opacity:.35;cursor:not-allowed':''}"></div>
         <div>
           <div class="tt ${t.status==='done'?'done':''}">${t.title}</div>
           <div class="tm">
@@ -1061,17 +1129,26 @@ function renderT(){
         <div><span class="pb2" style="background:${h2r(pri.color,.15)};color:${pri.color};border-color:${h2r(pri.color,.3)}">${pri.name}</span></div>
         <div><span class="sb3" style="background:${h2r(sta.color,.15)};color:${sta.color};border-color:${h2r(sta.color,.3)}">${sta.name}</span></div>
         <div class="ac"><div style="width:20px;height:20px;border-radius:5px;background:${h2r(uc,.2)};color:${uc};display:flex;align-items:center;justify-content:center;font-size:9px;font-weight:700;flex-shrink:0">${u?.emoji||u?.name[0]||'?'}</div><span>${u?.name||t.assignee}</span></div>
-        <div class="ra" onclick="event.stopPropagation()"><button class="rb ${isStarred(t.id)?'starred':'star-btn'}" style="${isStarred(t.id)?'color:var(--gold)':''}" onclick="toggleStar('${t.id}',event)">★</button><button class="rb" onclick="editT('${t.id}')">✏️</button><button class="rb dl" onclick="delT('${t.id}')">🗑</button></div>
+        <div class="ra" onclick="event.stopPropagation()">
+          <button class="rb ${isStarred(t.id)?'starred':'star-btn'}" style="${isStarred(t.id)?'color:var(--gold)':''}" onclick="toggleStar('${t.id}',event)">★</button>
+          ${canActOnTask(t)?`<button class="rb" onclick="editT('${t.id}')">✏️</button>`:''}
+          ${canActOnTask(t)?`<button class="rb dl" onclick="delT('${t.id}')">🗑</button>`:''}
+        </div>
       </div>
       ${sbt||ie?`<div class="sp ${ie?'open':''}" id="sp-${t.id}">
-        ${(t.subtasks||[]).map(s=>`<div class="str"><div class="chk ${s.done?'ck':''}" onclick="tSub('${t.id}','${s.id}')"></div><div class="stxt ${s.done?'done':''}">${s.text}</div><button class="rb dl" onclick="dSub('${t.id}','${s.id}')">✕</button></div>`).join('')}
-        <div class="add-s"><input type="text" placeholder="New sub-task..." id="ns-${t.id}" onkeydown="if(event.key==='Enter')aSub('${t.id}')"/><button class="btn bg bxs" onclick="aSub('${t.id}')">Add</button></div>
+        ${(t.subtasks||[]).map(s=>`<div class="str">
+          <div class="chk ${s.done?'ck':''}" onclick="${canActOnTask(t)?`tSub('${t.id}','${s.id}')`:'permDeniedTask()'}" style="${!canActOnTask(t)?'opacity:.35;cursor:not-allowed':''}"></div>
+          <div class="stxt ${s.done?'done':''}">${s.text}</div>
+          ${canActOnTask(t)?`<button class="rb dl" onclick="dSub('${t.id}','${s.id}')">✕</button>`:''}
+        </div>`).join('')}
+        ${canActOnTask(t)?`<div class="add-s"><input type="text" placeholder="New sub-task..." id="ns-${t.id}" onkeydown="if(event.key==='Enter')aSub('${t.id}')"/><button class="btn bg bxs" onclick="aSub('${t.id}')">Add</button></div>`:'<div style="font-size:11px;color:var(--t3);padding:6px 0 4px">👁 View only — এই task আপনার না</div>'}
       </div>`:''}
     </div>`;}).join('');
 }
 window.tExp=function(id){if(exp.has(id))exp.delete(id);else exp.add(id);renderT();};
 window.tDone=async function(id){
   const t=tasks.find(t=>t.id===id);if(!t)return;
+  if(!canActOnTask(t)){permDeniedTask();return;}
   const wasD=t.status==='done';t.status=wasD?'todo':'done';
   await saveTaskFS(t);
   if(!wasD) await sendNotif(t.assignee,'completed',t.id,t.title,cu?.name||'Someone');
@@ -1079,12 +1156,14 @@ window.tDone=async function(id){
 };
 window.tSub=async function(tid,sid){
   const t=tasks.find(t=>t.id===tid);if(!t)return;
+  if(!canActOnTask(t)){permDeniedTask();return;}
   const s=(t.subtasks||[]).find(s=>s.id===sid);if(!s)return;
   s.done=!s.done;await saveTaskFS(t);
 };
 window.aSub=async function(tid){
   const inp=eid('ns-'+tid);const txt=inp?.value.trim();if(!txt)return;
   const t=tasks.find(t=>t.id===tid);if(!t)return;
+  if(!canActOnTask(t)){permDeniedTask();return;}
   if(!t.subtasks)t.subtasks=[];
   t.subtasks.push({id:tid+'_'+Date.now(),text:txt,done:false});
   await saveTaskFS(t);
@@ -1093,31 +1172,42 @@ window.aSub=async function(tid){
 };
 window.dSub=async function(tid,sid){
   const t=tasks.find(t=>t.id===tid);if(!t)return;
+  if(!canActOnTask(t)){permDeniedTask();return;}
   if(!confirm('Delete sub-task?'))return;
   t.subtasks=(t.subtasks||[]).filter(s=>s.id!==sid);await saveTaskFS(t);
 };
 window.delT=async function(id){
   const t=tasks.find(t=>t.id===id);if(!t)return;
+  if(!canActOnTask(t)){permDeniedTask();return;}
   if(!confirm('Task delete করবেন?'))return;
   await sendNotif(t.assignee,'deleted',t.id,t.title,cu?.name||'Someone');
   await deleteTaskFS(id);toast('Task deleted','info');
 };
 
 // ══ TASK MODAL ══
-window.openM=function(n){rebuildDropdowns();eid('mo-'+n).classList.add('open');};
+window.openM=function(n){
+  if(n==='task'&&!canCreate()){permDenied();return;}
+  if(n==='user'&&!canManageSystem()){permDenied();return;}
+  rebuildDropdowns();eid('mo-'+n).classList.add('open');
+};
 window.closeM=function(n){
   eid('mo-'+n).classList.remove('open');
   if(n==='task'){['eid','tT','tD','tDu'].forEach(id=>{const e=eid(id);if(e)e.value='';});eid('mdT').textContent='Add New Task';}
   if(n==='user'){['uEid','uN','uI','uP','uEm','uCl'].forEach(id=>{const e=eid(id);if(e)e.value='';});eid('uMdT').textContent='Add New User';}
 };
 window.editT=function(id){
-  const t=tasks.find(t=>t.id===id);if(!t)return;rebuildDropdowns();
+  const t=tasks.find(t=>t.id===id);if(!t)return;
+  if(!canActOnTask(t)){permDeniedTask();return;}
+  rebuildDropdowns();
   eid('eid').value=id;eid('tT').value=t.title;eid('tD').value=t.desc||'';
   eid('tSc').value=t.section;eid('tPr').value=t.priority;eid('tSt').value=t.status;
   eid('tDu').value=t.due||'';eid('tPh').value=t.phase||'Phase 1';eid('tAs').value=t.assignee;
   eid('mdT').textContent='Edit Task';eid('mo-task').classList.add('open');
 };
 window.saveTask=async function(){
+  const editId_check=eid('eid').value;
+  if(!editId_check&&!canCreate()){permDenied();return;} // new task = owner only
+  if(editId_check){const t_check=tasks.find(t=>t.id===editId_check);if(!canActOnTask(t_check)){permDeniedTask();return;}}
   const title=eid('tT').value.trim();if(!title){toast('Title required!','err');return;}
   const editId=eid('eid').value;
   const newAssignee=eid('tAs').value;
@@ -1143,12 +1233,14 @@ window.saveTask=async function(){
 
 // ══ USER MODAL ══
 window.editUser=function(id){
+  if(!canManageSystem()){permDenied();return;}
   const u=users.find(u=>u.id===id);if(!u)return;rebuildDropdowns();
   eid('uEid').value=id;eid('uN').value=u.name;eid('uI').value=u.uid;eid('uP').value=u.pass;
   eid('uR').value=u.role;eid('uEm').value=u.emoji||'';eid('uCl').value=u.color||'';
   eid('uMdT').textContent='Edit User';eid('mo-user').classList.add('open');
 };
 window.saveUser=async function(){
+  if(!canManageSystem()){permDenied();return;}
   const n=eid('uN').value.trim(),uid=eid('uI').value.trim(),pass=eid('uP').value.trim();
   const role=eid('uR').value,emoji=eid('uEm').value.trim()||'👤',color=eid('uCl').value.trim()||'#4d8eff';
   if(!n||!uid||!pass){toast('Name, ID & Password required!','err');return;}
@@ -1158,13 +1250,14 @@ window.saveUser=async function(){
   await saveConfig();closeM('user');
 };
 window.delUser=async function(id){
+  if(!canManageSystem()){permDenied();return;}
   if(id===cu?.id){toast('নিজেকে delete করা যাবে না!','err');return;}
   if(!confirm('User delete করবেন?'))return;
   users=users.filter(u=>u.id!==id);await saveConfig();toast('User removed','info');
 };
 function renderU(){
   const ul=eid('ul');if(!ul)return;
-  ul.innerHTML=users.map(u=>`<div class="ur"><div><div style="width:34px;height:34px;border-radius:9px;background:${h2r(u.color||'#f03e5f',.2)};color:${u.color||'#f03e5f'};display:flex;align-items:center;justify-content:center;font-size:14px;font-weight:700">${u.emoji||u.name[0]}</div></div><div><div style="font-weight:600">${u.name}</div><div style="font-size:11px;color:var(--t3)">${u.role}</div></div><div style="font-size:11px"><code style="font-family:var(--mono);background:var(--s2);padding:2px 6px;border-radius:4px">${u.uid}</code> / <code style="font-family:var(--mono);background:var(--s2);padding:2px 6px;border-radius:4px">${u.pass}</code></div><div><span class="tag" style="background:var(--s3);color:var(--t2);border:1px solid var(--bd2)">${u.role}</span></div><div style="display:flex;gap:4px">${u.id!==cu?.id?`<button class="rb" onclick="editUser('${u.id}')">✏️</button><button class="rb dl" onclick="delUser('${u.id}')">🗑</button>`:'<span style="font-size:10px;color:var(--t3)">You</span>'}</div></div>`).join('');
+  ul.innerHTML=users.map(u=>`<div class="ur"><div><div style="width:34px;height:34px;border-radius:9px;background:${h2r(u.color||'#f03e5f',.2)};color:${u.color||'#f03e5f'};display:flex;align-items:center;justify-content:center;font-size:14px;font-weight:700">${u.emoji||u.name[0]}</div></div><div><div style="font-weight:600">${u.name}</div><div style="font-size:11px;color:var(--t3)">${u.role}</div></div><div style="font-size:11px"><code style="font-family:var(--mono);background:var(--s2);padding:2px 6px;border-radius:4px">${u.uid}</code> / <code style="font-family:var(--mono);background:var(--s2);padding:2px 6px;border-radius:4px">${u.pass}</code></div><div><span class="tag" style="background:var(--s3);color:var(--t2);border:1px solid var(--bd2)">${u.role}</span></div><div style="display:flex;gap:4px">${u.id===cu?.id?'<span style="font-size:10px;color:var(--t3)">You</span>':isOwner()?`<button class="rb" onclick="editUser('${u.id}')">✏️</button><button class="rb dl" onclick="delUser('${u.id}')">🗑</button>`:'<span style="font-size:10px;color:var(--t3)">—</span>'}</div></div>`).join('');
 }
 
 // ══ KANBAN ══
@@ -1184,12 +1277,13 @@ function renderK(){
 function renderSettings(){
   const g=eid('setGrid');if(!g)return;
   g.innerHTML=`
-    <div class="set-card"><h3>🏷 Sections <button class="btn bg bxs" onclick="openQuick('section')">+ Add</button></h3>${sections.map(s=>`<div class="set-item"><span style="font-size:16px">${s.icon}</span><span class="si-nm">${s.name}</span><span class="si-color" style="background:${s.color}"></span><button class="si-del" onclick="delSection('${s.id}')">✕</button></div>`).join('')}</div>
-    <div class="set-card"><h3>📊 Statuses <button class="btn bg bxs" onclick="openQuick('status')">+ Add</button></h3>${statuses.map(s=>`<div class="set-item"><span class="si-nm">${s.name}</span><span class="si-color" style="background:${s.color}"></span><button class="si-del" onclick="delStatus('${s.id}')">✕</button></div>`).join('')}</div>
-    <div class="set-card"><h3>🔴 Priorities <button class="btn bg bxs" onclick="openQuick('priority')">+ Add</button></h3>${priorities.map(p=>`<div class="set-item"><span class="si-nm">${p.name}</span><span class="si-color" style="background:${p.color}"></span><button class="si-del" onclick="delPriority('${p.id}')">✕</button></div>`).join('')}</div>
-    <div class="set-card"><h3>👤 Roles <button class="btn bg bxs" onclick="openQuick('role')">+ Add</button></h3>${roles.map(r=>`<div class="set-item"><span class="si-nm">${r}</span><button class="si-del" onclick="delRole('${r}')">✕</button></div>`).join('')}</div>`;
+    <div class="set-card"><h3>🏷 Sections ${isOwner()?'<button class="btn bg bxs" onclick="openQuick(\'section\')">+ Add</button>':''}</h3>${sections.map(s=>`<div class="set-item"><span style="font-size:16px">${s.icon}</span><span class="si-nm">${s.name}</span><span class="si-color" style="background:${s.color}"></span>${isOwner()?`<button class="si-del" onclick="delSection('${s.id}')">✕</button>`:''}</div>`).join('')}</div>
+    <div class="set-card"><h3>📊 Statuses ${isOwner()?'<button class="btn bg bxs" onclick="openQuick(\'status\')">+ Add</button>':''}</h3>${statuses.map(s=>`<div class="set-item"><span class="si-nm">${s.name}</span><span class="si-color" style="background:${s.color}"></span>${isOwner()?`<button class="si-del" onclick="delStatus('${s.id}')">✕</button>`:''}</div>`).join('')}</div>
+    <div class="set-card"><h3>🔴 Priorities ${isOwner()?'<button class="btn bg bxs" onclick="openQuick(\'priority\')">+ Add</button>':''}</h3>${priorities.map(p=>`<div class="set-item"><span class="si-nm">${p.name}</span><span class="si-color" style="background:${p.color}"></span>${isOwner()?`<button class="si-del" onclick="delPriority('${p.id}')">✕</button>`:''}</div>`).join('')}</div>
+    <div class="set-card"><h3>👤 Roles ${isOwner()?'<button class="btn bg bxs" onclick="openQuick(\'role\')">+ Add</button>':''}</h3>${roles.map(r=>`<div class="set-item"><span class="si-nm">${r}</span>${isOwner()?`<button class="si-del" onclick="delRole('${r}')">✕</button>`:''}</div>`).join('')}</div>`;
 }
 window.openQuick=function(type){
+  if(!canManageSystem()){permDenied();return;}
   document.getElementById('qType').value=type;
   const titles={section:'Add Section',status:'Add Status',priority:'Add Priority',role:'Add Role'};
   eid('qMdT').textContent=titles[type]||'Add Item';
@@ -1199,6 +1293,7 @@ window.openQuick=function(type){
   eid('mo-quick').classList.add('open');
 };
 window.saveQuick=async function(){
+  if(!canManageSystem()){permDenied();return;}
   const type=eid('qType').value,name=eid('qName').value.trim();if(!name){toast('Name required!','err');return;}
   const icon=eid('qIcon').value.trim()||'📁',color=eid('qColor').value.trim()||'#4d8eff';
   const id=name.toLowerCase().replace(/\s+/g,'_').replace(/[^a-z0-9_]/g,'')+'_'+Date.now();
@@ -1208,10 +1303,10 @@ window.saveQuick=async function(){
   else if(type==='role'){if(!roles.includes(name))roles.push(name);}
   await saveConfig();closeM('quick');toast(name+' added!','ok');
 };
-window.delSection=async function(id){if(tasks.find(t=>t.section===id)){toast('Tasks আছে!','err');return;}if(!confirm('Delete?'))return;sections=sections.filter(s=>s.id!==id);await saveConfig();};
-window.delStatus=async function(id){if(tasks.find(t=>t.status===id)){toast('Tasks আছে!','err');return;}if(!confirm('Delete?'))return;statuses=statuses.filter(s=>s.id!==id);await saveConfig();};
-window.delPriority=async function(id){if(tasks.find(t=>t.priority===id)){toast('Tasks আছে!','err');return;}if(!confirm('Delete?'))return;priorities=priorities.filter(p=>p.id!==id);await saveConfig();};
-window.delRole=async function(r){if(users.find(u=>u.role===r)){toast('Users আছে!','err');return;}if(!confirm('Delete?'))return;roles=roles.filter(x=>x!==r);await saveConfig();};
+window.delSection=async function(id){if(!canManageSystem()){permDenied();return;}if(tasks.find(t=>t.section===id)){toast('Tasks আছে!','err');return;}if(!confirm('Delete?'))return;sections=sections.filter(s=>s.id!==id);await saveConfig();};
+window.delStatus=async function(id){if(!canManageSystem()){permDenied();return;}if(tasks.find(t=>t.status===id)){toast('Tasks আছে!','err');return;}if(!confirm('Delete?'))return;statuses=statuses.filter(s=>s.id!==id);await saveConfig();};
+window.delPriority=async function(id){if(!canManageSystem()){permDenied();return;}if(tasks.find(t=>t.priority===id)){toast('Tasks আছে!','err');return;}if(!confirm('Delete?'))return;priorities=priorities.filter(p=>p.id!==id);await saveConfig();};
+window.delRole=async function(r){if(!canManageSystem()){permDenied();return;}if(users.find(u=>u.role===r)){toast('Users আছে!','err');return;}if(!confirm('Delete?'))return;roles=roles.filter(x=>x!==r);await saveConfig();};
 
 // ══ TOAST ══
 let tTimer;
@@ -1235,13 +1330,13 @@ function renderStarred(){
   el.innerHTML=list.map(t=>{
     const sec=secById(t.section),pri=priById(t.priority),sta=staById(t.status),u=users.find(u=>u.id===t.assignee),uc=u?.color||'#8d96b8';
     return`<div class="tr ${t.status==='done'?'done-r':''}" onclick="editT('${t.id}')">
-      <div class="chk ${t.status==='done'?'ck':''}" onclick="event.stopPropagation();tDone('${t.id}')"></div>
+      <div class="chk ${t.status==='done'?'ck':''}" onclick="event.stopPropagation();${canActOnTask(t)?`tDone('${t.id}')`:'permDeniedTask()'}" style="${!canActOnTask(t)?'opacity:.35;cursor:not-allowed':''}"></div>
       <div><div class="tt ${t.status==='done'?'done':''}">${t.title}</div><div class="tm">${t.due?`<span style="font-size:10px;color:var(--t3)">📅 ${t.due}</span>`:''}</div></div>
       <div><span class="tag" style="background:${h2r(sec.color,.15)};color:${sec.color};border:1px solid ${h2r(sec.color,.3)}">${sec.icon} ${sec.name}</span></div>
       <div><span class="pb2" style="background:${h2r(pri.color,.15)};color:${pri.color};border-color:${h2r(pri.color,.3)}">${pri.name}</span></div>
       <div><span class="sb3" style="background:${h2r(sta.color,.15)};color:${sta.color};border-color:${h2r(sta.color,.3)}">${sta.name}</span></div>
       <div class="ac"><div style="width:20px;height:20px;border-radius:5px;background:${h2r(uc,.2)};color:${uc};display:flex;align-items:center;justify-content:center;font-size:9px;font-weight:700;flex-shrink:0">${u?.emoji||u?.name[0]||'?'}</div><span>${u?.name||t.assignee}</span></div>
-      <div class="ra" onclick="event.stopPropagation()"><button class="rb" style="color:var(--gold)" onclick="toggleStar('${t.id}',event)">★</button><button class="rb" onclick="editT('${t.id}')">✏️</button><button class="rb dl" onclick="delT('${t.id}')">🗑</button></div>
+      <div class="ra" onclick="event.stopPropagation()"><button class="rb" style="color:var(--gold)" onclick="toggleStar('${t.id}',event)">★</button>${canActOnTask(t)?`<button class="rb" onclick="editT('${t.id}')">✏️</button><button class="rb dl" onclick="delT('${t.id}')">🗑</button>`:''}</div>
     </div>`;}).join('');
 }
 
@@ -1551,6 +1646,7 @@ function renderDtTask(t, idx, userId, dateStr){
 }
 
 window.dtAdd=async function(userId, dateStr){
+  if(!isOwner()&&userId!==cu?.id){toast('🔒 শুধু নিজের daily task add করতে পারবেন।','err');return;}
   const inp=eid('dtin-'+userId);if(!inp)return;
   const text=inp.value.trim();if(!text)return;
   const key=dateStr+'_'+userId;
@@ -1564,6 +1660,7 @@ window.dtAdd=async function(userId, dateStr){
 };
 
 window.dtToggle=async function(userId, dateStr, idx){
+  if(!isOwner()&&userId!==cu?.id){toast('🔒 শুধু নিজের daily task update করতে পারবেন।','err');return;}
   const key=dateStr+'_'+userId;
   const ts=[...(dtData[key]||[])];
   if(!ts[idx])return;
@@ -1573,6 +1670,7 @@ window.dtToggle=async function(userId, dateStr, idx){
 };
 
 window.dtDel=async function(userId, dateStr, idx){
+  if(!isOwner()&&userId!==cu?.id){toast('🔒 শুধু নিজের daily task delete করতে পারবেন।','err');return;}
   if(!confirm('এই task মুছবেন?'))return;
   const key=dateStr+'_'+userId;
   const ts=[...(dtData[key]||[])];
@@ -1583,6 +1681,7 @@ window.dtDel=async function(userId, dateStr, idx){
 };
 
 window.dtNote=async function(userId, dateStr, idx){
+  if(!isOwner()&&userId!==cu?.id){toast('🔒 শুধু নিজের daily task edit করতে পারবেন।','err');return;}
   const key=dateStr+'_'+userId;
   const ts=[...(dtData[key]||[])];
   if(!ts[idx])return;

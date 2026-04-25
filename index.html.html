@@ -545,11 +545,15 @@ input[type="date"].fg-date{color-scheme:dark;}
         <!-- ══ DAILY TASKS VIEW ══ -->
         <div class="view" id="view-daily">
           <div class="dt-header">
-            <div><div style="font-weight:700;font-size:16px">📅 Daily Tasks</div><div style="color:var(--t3);font-size:12px" id="dtSubLabel">আজকের কাজ</div></div>
+            <div>
+              <div style="font-weight:700;font-size:16px">📅 Daily Tasks</div>
+              <div style="color:var(--t3);font-size:12px" id="dtSubLabel">আজকের কাজের তালিকা</div>
+            </div>
             <div class="dt-date-nav">
               <button class="dt-date-btn" onclick="dtNav(-1)">‹</button>
-              <div class="dt-date-label" id="dtDateLabel">Day 1</div>
+              <div class="dt-date-label" id="dtDateLabel" style="min-width:160px;text-align:center;font-size:14px;font-weight:700"></div>
               <button class="dt-date-btn" onclick="dtNav(1)">›</button>
+              <button class="dt-date-btn" onclick="dtGoToday()" style="font-size:11px;padding:5px 9px;">আজ</button>
             </div>
           </div>
           <div class="dt-stats" id="dtStats"></div>
@@ -958,7 +962,7 @@ window.showV=function(v,el){
   if(v==='calendar'){calMonth=calMonth||(new Date().getMonth());calYear=calYear||(new Date().getFullYear());renderCal();}
   if(v==='gantt')renderGantt();
   if(v==='report'){rptTab=rptTab||'overview';renderReport();}
-  if(v==='daily'){dtDay=dtDay||1;renderDaily();}
+  if(v==='daily'){initDailyDate();renderDaily();}
   closeMob();
 };
 function resetFilters(){
@@ -1397,71 +1401,204 @@ function renderReport(){
 }
 
 // ══ DAILY TASKS ══
-let dtDay=1,dtUser=null;
-const MAX_DAYS=30;
-window.dtNav=function(d){dtDay=Math.max(1,Math.min(MAX_DAYS,dtDay+d));renderDaily();};
-function renderDaily(){
-  const lbl=eid('dtDateLabel');if(lbl)lbl.textContent=`Day ${dtDay}`;
-  const sub=eid('dtSubLabel');if(sub)sub.textContent=`Day ${dtDay} এর tasks`;
+// dailyTasks structure in Firestore: collection 'dailyTasks', doc id = 'YYYY-MM-DD_userId'
+// Each doc: { date, userId, tasks: [{id, text, done, assignee, priority, note}] }
+
+let dtDate = new Date(); // current date being viewed
+let dtUser = null;
+let dtData = {}; // key: 'YYYY-MM-DD_userId' → tasks array (in-memory cache)
+
+function dtDateKey(date, userId){ 
+  const d=date instanceof Date?date:new Date(date);
+  return d.toISOString().slice(0,10)+'_'+userId; 
+}
+function dtFmtDate(date){
+  const d=date instanceof Date?date:new Date(date);
+  const days=['রবিবার','সোমবার','মঙ্গলবার','বুধবার','বৃহস্পতিবার','শুক্রবার','শনিবার'];
+  const months=['জানুয়ারি','ফেব্রুয়ারি','মার্চ','এপ্রিল','মে','জুন','জুলাই','আগস্ট','সেপ্টেম্বর','অক্টোবর','নভেম্বর','ডিসেম্বর'];
+  return`${days[d.getDay()]}, ${d.getDate()} ${months[d.getMonth()]} ${d.getFullYear()}`;
+}
+function dtIsToday(date){
+  const t=new Date(),d=new Date(date);
+  return t.toDateString()===d.toDateString();
+}
+function dtDateStr(date){
+  const d=new Date(date);
+  return d.toISOString().slice(0,10);
+}
+
+function initDailyDate(){
+  dtDate=new Date();
+  if(!dtUser)dtUser=cu?.id||'all';
+}
+
+window.dtNav=function(delta){
+  const d=new Date(dtDate);d.setDate(d.getDate()+delta);dtDate=d;renderDaily();
+};
+window.dtGoToday=function(){dtDate=new Date();renderDaily();};
+window.dtSetUser=function(uid){dtUser=uid;renderDaily();};
+
+async function loadDtDoc(dateStr, userId){
+  const key=dateStr+'_'+userId;
+  if(dtData[key]!==undefined)return dtData[key];
+  if(_local){dtData[key]=dtData[key]||[];return dtData[key];}
+  try{
+    const snap=await getDoc(doc(db,'dailyTasks',key));
+    dtData[key]=snap.exists()?(snap.data().tasks||[]):[];
+  }catch(e){dtData[key]=[];}
+  return dtData[key];
+}
+
+async function saveDtDoc(dateStr, userId, tasksList){
+  const key=dateStr+'_'+userId;
+  dtData[key]=tasksList;
+  if(_local)return;
+  try{await setDoc(doc(db,'dailyTasks',key),{date:dateStr,userId,tasks:tasksList,updatedAt:Date.now()});}catch(e){console.error(e);}
+}
+
+async function renderDaily(){
+  const dateStr=dtDateStr(dtDate);
+  const lbl=eid('dtDateLabel');
+  if(lbl){
+    lbl.textContent=dtFmtDate(dtDate);
+    lbl.style.color=dtIsToday(dtDate)?'var(--red)':'var(--text)';
+  }
+  const sub=eid('dtSubLabel');
+  if(sub)sub.textContent=dtIsToday(dtDate)?'আজকের কাজের তালিকা':`${dateStr} এর কাজের তালিকা`;
+
   // User tabs
   const utabs=eid('dtUserTabs');
   if(utabs){
-    if(!dtUser)dtUser='all';
-    utabs.innerHTML=`<div class="dt-user-tab ${dtUser==='all'?'active':''}" onclick="dtSetUser('all')">👥 All</div>`+users.map(u=>`<div class="dt-user-tab ${dtUser===u.id?'active':''}" onclick="dtSetUser('${u.id}')" style="${dtUser===u.id?`background:${h2r(u.color||'#f03e5f',.15)};border-color:${u.color||'#f03e5f'};color:${u.color||'#f03e5f'}`:''}">
+    if(!dtUser)dtUser=cu?.id||'all';
+    const isOwnerOrManager=cu?.role==='Owner'||cu?.role==='Manager';
+    let tabHtml='';
+    if(isOwnerOrManager){
+      tabHtml+=`<div class="dt-user-tab ${dtUser==='all'?'active':''}" onclick="dtSetUser('all')">👥 সবার</div>`;
+    }
+    tabHtml+=users.map(u=>`<div class="dt-user-tab ${dtUser===u.id?'active':''}" onclick="dtSetUser('${u.id}')" style="${dtUser===u.id?`background:${h2r(u.color||'#f03e5f',.15)};border-color:${u.color||'#f03e5f'};color:${u.color||'#f03e5f'}`:''}">
       ${u.emoji||u.name[0]} ${u.name}</div>`).join('');
+    utabs.innerHTML=tabHtml;
   }
-  // Get tasks for this day
-  let dayTasks=tasks.filter(t=>{const p=parseDayNum(t.due);if(!p)return false;return dtDay>=p[0]&&dtDay<=p[1];});
-  if(dtUser&&dtUser!=='all')dayTasks=dayTasks.filter(t=>t.assignee===dtUser);
-  // Stats
-  const tot=dayTasks.length,dn=dayTasks.filter(t=>t.status==='done').length,pr=dayTasks.filter(t=>t.status==='progress').length,bl=dayTasks.filter(t=>t.status==='blocked').length;
-  const pct=tot?Math.round(dn/tot*100):0;
+
+  const cont=eid('dtContent');if(!cont)return;
+  cont.innerHTML=`<div style="text-align:center;padding:28px;color:var(--t3)"><div class="spin" style="margin:0 auto 10px"></div>লোড হচ্ছে...</div>`;
+
+  // Determine which users to show
+  const showUsers=(dtUser==='all')?users:[users.find(u=>u.id===dtUser)].filter(Boolean);
+  
+  // Load all docs
+  await Promise.all(showUsers.map(u=>loadDtDoc(dateStr,u.id)));
+
+  // Stats across shown users
+  let allT=[],allD=0;
+  showUsers.forEach(u=>{
+    const key=dateStr+'_'+u.id;
+    const ts=dtData[key]||[];
+    allT=allT.concat(ts.map(t=>({...t,_userId:u.id})));
+    allD+=ts.filter(t=>t.done).length;
+  });
+  const tot=allT.length,pct=tot?Math.round(allD/tot*100):0;
   const stats=eid('dtStats');
   if(stats)stats.innerHTML=`
-    <div class="dt-stat"><div class="dsv">${tot}</div><div class="dsl">Total</div><div class="dt-prog-bar"><div class="dt-prog-fill" style="width:100%"></div></div></div>
-    <div class="dt-stat"><div class="dsv" style="color:var(--green)">${dn}</div><div class="dsl">Done</div><div class="dt-prog-bar"><div class="dt-prog-fill" style="width:${pct}%"></div></div></div>
-    <div class="dt-stat"><div class="dsv" style="color:var(--blue)">${pr}</div><div class="dsl">In Progress</div></div>
-    <div class="dt-stat"><div class="dsv" style="color:${bl>0?'var(--red)':'var(--t3)'}">${bl}</div><div class="dsl">Blocked</div></div>`;
-  const cont=eid('dtContent');if(!cont)return;
-  if(!dayTasks.length){cont.innerHTML=`<div style="text-align:center;padding:40px;color:var(--t3)">📭 Day ${dtDay}-এ কোনো task নেই</div>`;return;}
-  // Group by section
-  const bySection={};
-  dayTasks.forEach(t=>{if(!bySection[t.section])bySection[t.section]=[];bySection[t.section].push(t);});
-  cont.innerHTML=Object.entries(bySection).map(([secId,ts])=>{
-    const sec=secById(secId);
-    const doneCount=ts.filter(t=>t.status==='done').length;
-    return`<div class="dt-section">
-      <div class="dt-sec-head" onclick="this.nextElementSibling.style.display=this.nextElementSibling.style.display==='none'?'block':'none'">
-        <div class="dt-sec-title"><span style="color:${sec.color}">${sec.icon}</span> ${sec.name} <span class="dt-sec-count">${doneCount}/${ts.length}</span></div>
+    <div class="dt-stat"><div class="dsv">${tot}</div><div class="dsl">মোট</div><div class="dt-prog-bar"><div class="dt-prog-fill" style="width:100%;background:var(--blue)"></div></div></div>
+    <div class="dt-stat"><div class="dsv" style="color:var(--green)">${allD}</div><div class="dsl">সম্পন্ন</div><div class="dt-prog-bar"><div class="dt-prog-fill" style="width:${pct}%"></div></div></div>
+    <div class="dt-stat"><div class="dsv" style="color:var(--gold)">${tot-allD}</div><div class="dsl">বাকি</div><div class="dt-prog-bar"><div class="dt-prog-fill" style="width:${tot?Math.round((tot-allD)/tot*100):0}%;background:var(--gold)"></div></div></div>
+    <div class="dt-stat"><div class="dsv" style="color:${pct===100&&tot>0?'var(--green)':'var(--purple)'}">${pct}%</div><div class="dsl">অগ্রগতি</div><div class="dt-prog-bar"><div class="dt-prog-fill" style="width:${pct}%;background:var(--purple)"></div></div></div>`;
+
+  // Render per-user panels
+  if(!showUsers.length){cont.innerHTML=`<div style="text-align:center;padding:40px;color:var(--t3)">কোনো user নেই</div>`;return;}
+
+  cont.innerHTML=showUsers.map(u=>{
+    const key=dateStr+'_'+u.id;
+    const ts=dtData[key]||[];
+    const dn=ts.filter(t=>t.done).length;
+    const pct2=ts.length?Math.round(dn/ts.length*100):0;
+    return`<div class="dt-section" id="dts-${u.id}">
+      <div class="dt-sec-head">
+        <div class="dt-sec-title">
+          <div style="width:22px;height:22px;border-radius:6px;background:${h2r(u.color||'#f03e5f',.2)};color:${u.color||'#f03e5f'};display:flex;align-items:center;justify-content:center;font-size:11px;font-weight:700;flex-shrink:0">${u.emoji||u.name[0]}</div>
+          ${u.name}
+          <span class="dt-sec-count">${dn}/${ts.length}</span>
+          ${pct2===100&&ts.length>0?'<span style="font-size:11px;color:var(--green)">✓ সম্পন্ন</span>':''}
+        </div>
+        <div style="display:flex;align-items:center;gap:7px">
+          <div style="font-size:10px;color:var(--t3)">${pct2}%</div>
+          <div style="width:60px;height:4px;background:var(--s3);border-radius:2px;overflow:hidden"><div style="height:100%;width:${pct2}%;background:${u.color||'#f03e5f'};border-radius:2px;transition:width .4s"></div></div>
+        </div>
       </div>
       <div class="dt-tasks">
-        ${ts.map(t=>{
-          const pri=priById(t.priority),sta=staById(t.status),u=users.find(u=>u.id===t.assignee);
-          return`<div class="dt-task ${t.status==='done'?'done-t':''}" onclick="editT('${t.id}')">
-            <div class="chk ${t.status==='done'?'ck':''}" onclick="event.stopPropagation();tDone('${t.id}')"></div>
-            <div class="dt-task-title">${t.title}</div>
-            <span class="pb2" style="background:${h2r(pri.color,.15)};color:${pri.color};border-color:${h2r(pri.color,.3)};font-size:9px">${pri.name}</span>
-            <span class="sb3" style="background:${h2r(sta.color,.15)};color:${sta.color};border-color:${h2r(sta.color,.3)};font-size:9px">${sta.name}</span>
-            ${u?`<div class="ac" style="font-size:10px"><div style="width:16px;height:16px;border-radius:4px;background:${h2r(u.color||'#8d96b8',.2)};color:${u.color||'#8d96b8'};display:flex;align-items:center;justify-content:center;font-size:8px;font-weight:700">${u.emoji||u.name[0]}</div></div>`:''}
-          </div>`;}).join('')}
+        ${ts.length?ts.map((t,i)=>renderDtTask(t,i,u.id,dateStr)).join(''):'<div style="padding:10px 8px;font-size:12px;color:var(--t3)">এখনো কোনো task যোগ করা হয়নি</div>'}
         <div class="dt-add-row">
-          <input type="text" placeholder="Quick add task for Day ${dtDay}..." id="dta-${secId}" onkeydown="if(event.key==='Enter')dtAddTask('${secId}')"/>
-          <button class="btn bg bxs" onclick="dtAddTask('${secId}')">Add</button>
+          <input type="text" placeholder="নতুন daily task লিখুন..." id="dtin-${u.id}" 
+            onkeydown="if(event.key==='Enter')dtAdd('${u.id}','${dateStr}')"/>
+          <button class="btn br bxs" onclick="dtAdd('${u.id}','${dateStr}')">+ Add</button>
         </div>
       </div>
     </div>`;
   }).join('');
 }
-window.dtSetUser=function(uid){dtUser=uid;renderDaily();};
-window.dtAddTask=async function(secId){
-  const inp=eid('dta-'+secId);if(!inp)return;
-  const title=inp.value.trim();if(!title)return;
-  const id='t'+Date.now();
-  const maxOrd=tasks.reduce((m,t)=>Math.max(m,t.order||0),0);
-  const newTask={id,title,desc:'',section:secId,assignee:cu?.id||'naim',priority:'medium',status:'todo',due:`Day ${dtDay}`,phase:'Phase 1',subtasks:[],order:maxOrd+1};
-  await saveTaskFS(newTask);
-  inp.value='';toast('Task added ✓','ok');
+
+function renderDtTask(t, idx, userId, dateStr){
+  return`<div class="dt-task ${t.done?'done-t':''}" id="dtt-${userId}-${idx}">
+    <div class="chk ${t.done?'ck':''}" onclick="dtToggle('${userId}','${dateStr}',${idx})"></div>
+    <div class="dt-task-title" id="dtt-txt-${userId}-${idx}">${t.text}</div>
+    ${t.note?`<span style="font-size:10px;color:var(--t3);padding:2px 6px;background:var(--s2);border-radius:4px;max-width:120px;overflow:hidden;text-overflow:ellipsis;white-space:nowrap" title="${t.note}">📝 ${t.note}</span>`:''}
+    <div style="display:flex;gap:4px;opacity:0;transition:.15s" class="dt-task-actions">
+      <button class="rb" onclick="dtNote('${userId}','${dateStr}',${idx})" title="Note যোগ করুন">📝</button>
+      <button class="rb dl" onclick="dtDel('${userId}','${dateStr}',${idx})">✕</button>
+    </div>
+  </div>`;
+}
+
+window.dtAdd=async function(userId, dateStr){
+  const inp=eid('dtin-'+userId);if(!inp)return;
+  const text=inp.value.trim();if(!text)return;
+  const key=dateStr+'_'+userId;
+  const ts=[...(dtData[key]||[])];
+  ts.push({id:'dt'+Date.now(),text,done:false,note:'',createdAt:Date.now()});
+  await saveDtDoc(dateStr,userId,ts);
+  inp.value='';
+  // Re-render just this user's panel
+  renderDaily();
+  toast('Task যোগ হয়েছে ✓','ok');
 };
+
+window.dtToggle=async function(userId, dateStr, idx){
+  const key=dateStr+'_'+userId;
+  const ts=[...(dtData[key]||[])];
+  if(!ts[idx])return;
+  ts[idx]={...ts[idx],done:!ts[idx].done};
+  await saveDtDoc(dateStr,userId,ts);
+  renderDaily();
+};
+
+window.dtDel=async function(userId, dateStr, idx){
+  if(!confirm('এই task মুছবেন?'))return;
+  const key=dateStr+'_'+userId;
+  const ts=[...(dtData[key]||[])];
+  ts.splice(idx,1);
+  await saveDtDoc(dateStr,userId,ts);
+  renderDaily();
+  toast('Task মুছে গেছে','info');
+};
+
+window.dtNote=async function(userId, dateStr, idx){
+  const key=dateStr+'_'+userId;
+  const ts=[...(dtData[key]||[])];
+  if(!ts[idx])return;
+  const note=prompt('Note লিখুন (খালি রাখলে মুছে যাবে):',ts[idx].note||'');
+  if(note===null)return;
+  ts[idx]={...ts[idx],note:note.trim()};
+  await saveDtDoc(dateStr,userId,ts);
+  renderDaily();
+};
+
+// Show action buttons on hover via CSS (add to style)
+document.addEventListener('DOMContentLoaded',()=>{
+  const style=document.createElement('style');
+  style.textContent=`.dt-task:hover .dt-task-actions{opacity:1!important;}`;
+  document.head.appendChild(style);
+});
 
 initFirebase();
 </script>

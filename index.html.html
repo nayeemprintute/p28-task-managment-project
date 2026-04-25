@@ -1508,6 +1508,7 @@ function renderReport(){
 let dtDate = new Date(); // current date being viewed
 let dtUser = null;
 let dtData = {}; // key: 'YYYY-MM-DD_userId' → tasks array (in-memory cache)
+let recurData = {}; // key: userId → [{id, text, note}]
 
 function dtDateKey(date, userId){ 
   const d=date instanceof Date?date:new Date(date);
@@ -1540,24 +1541,6 @@ window.dtNav=function(delta){
 };
 window.dtGoToday=function(){dtDate=new Date();renderDaily();};
 window.dtSetUser=function(uid){dtUser=uid;renderDaily();};
-
-async function loadDtDoc(dateStr, userId){
-  const key=dateStr+'_'+userId;
-  if(dtData[key]!==undefined)return dtData[key];
-  if(_local){dtData[key]=dtData[key]||[];return dtData[key];}
-  try{
-    const snap=await getDoc(doc(db,'dailyTasks',key));
-    dtData[key]=snap.exists()?(snap.data().tasks||[]):[];
-  }catch(e){dtData[key]=[];}
-  return dtData[key];
-}
-
-async function saveDtDoc(dateStr, userId, tasksList){
-  const key=dateStr+'_'+userId;
-  dtData[key]=tasksList;
-  if(_local)return;
-  try{await setDoc(doc(db,'dailyTasks',key),{date:dateStr,userId,tasks:tasksList,updatedAt:Date.now()});}catch(e){console.error(e);}
-}
 
 async function renderDaily(){
   const dateStr=dtDateStr(dtDate);
@@ -1683,7 +1666,6 @@ function renderDtTask(t, idx, userId, dateStr, isRecurring=false){
 // ══ RECURRING TASKS ══
 // Stored in Firestore: collection 'recurringTasks', doc id = userId
 // Each doc: { userId, tasks: [{id, text, note}] }
-let recurData = {}; // key: userId → [{id, text, note}]
 // Completion status for recurring tasks stored per-date: key 'YYYY-MM-DD_userId' in dtData but with 'recurring' array
 // We store recurring done state inside daily doc: { ..., recurringDone: {taskId: bool} }
 

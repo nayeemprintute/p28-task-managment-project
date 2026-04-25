@@ -479,6 +479,84 @@ input[type="date"].fg-date{color-scheme:dark;}
           <div style="color:var(--t3);font-size:12px;margin-bottom:16px">Sections, Statuses, Priorities, Roles</div>
           <div class="set-grid" id="setGrid"></div>
         </div>
+
+        <!-- ══ STARRED TASKS VIEW ══ -->
+        <div class="view" id="view-starred">
+          <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:16px;">
+            <div><div style="font-weight:700;font-size:16px">⭐ Starred Tasks</div><div style="color:var(--t3);font-size:12px">তোমার starred ও pinned tasks</div></div>
+          </div>
+          <div class="tw">
+            <div class="th"><div></div><div>Task</div><div>Section</div><div>Priority</div><div>Status</div><div>Assignee</div><div></div></div>
+            <div id="starredList"></div>
+          </div>
+        </div>
+
+        <!-- ══ CALENDAR VIEW ══ -->
+        <div class="view" id="view-calendar">
+          <div class="cal-header">
+            <div style="font-weight:700;font-size:16px">🗓 Calendar</div>
+            <div style="display:flex;align-items:center;gap:9px;">
+              <button class="dt-date-btn" onclick="calNav(-1)">‹</button>
+              <div class="dt-date-label" id="calLabel">—</div>
+              <button class="dt-date-btn" onclick="calNav(1)">›</button>
+              <button class="dt-date-btn" onclick="calGoToday()">Today</button>
+            </div>
+          </div>
+          <div class="cal-grid" id="calDayLabels"></div>
+          <div class="cal-grid" id="calGrid" style="margin-top:3px;"></div>
+          <div id="calTaskDetail" style="display:none;margin-top:14px;background:var(--s1);border:1px solid var(--bd);border-radius:13px;padding:16px;">
+            <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:10px;">
+              <div style="font-weight:700;font-size:13px" id="calDetailLabel">Tasks</div>
+              <span style="cursor:pointer;color:var(--t3)" onclick="document.getElementById('calTaskDetail').style.display='none'">✕</span>
+            </div>
+            <div id="calDetailList"></div>
+          </div>
+        </div>
+
+        <!-- ══ GANTT / TIMELINE VIEW ══ -->
+        <div class="view" id="view-gantt">
+          <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:14px;">
+            <div><div style="font-weight:700;font-size:16px">📊 Timeline / Gantt</div><div style="color:var(--t3);font-size:12px">Task schedule ও phase overview</div></div>
+            <div style="display:flex;gap:7px;">
+              <select class="fs" id="ganttPhaseF" onchange="renderGantt()"><option value="">All Phases</option><option value="Phase 1">Phase 1</option><option value="Phase 2">Phase 2</option><option value="Both">Both</option></select>
+              <select class="fs" id="ganttSecF" onchange="renderGantt()"><option value="">All Sections</option></select>
+            </div>
+          </div>
+          <div style="background:var(--s1);border:1px solid var(--bd);border-radius:13px;padding:14px;">
+            <div class="gantt-wrap" id="ganttWrap"></div>
+          </div>
+        </div>
+
+        <!-- ══ REPORT VIEW ══ -->
+        <div class="view" id="view-report">
+          <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:14px;">
+            <div><div style="font-weight:700;font-size:16px">📈 Reports</div><div style="color:var(--t3);font-size:12px">Team ও task analytics</div></div>
+            <button class="btn bg bsm" onclick="renderReport()">🔄 Refresh</button>
+          </div>
+          <div class="rpt-tabs">
+            <div class="rpt-tab active" onclick="setRptTab('overview',this)">Overview</div>
+            <div class="rpt-tab" onclick="setRptTab('team',this)">Team</div>
+            <div class="rpt-tab" onclick="setRptTab('section',this)">Sections</div>
+            <div class="rpt-tab" onclick="setRptTab('priority',this)">Priority</div>
+          </div>
+          <div id="rptContent"></div>
+        </div>
+
+        <!-- ══ DAILY TASKS VIEW ══ -->
+        <div class="view" id="view-daily">
+          <div class="dt-header">
+            <div><div style="font-weight:700;font-size:16px">📅 Daily Tasks</div><div style="color:var(--t3);font-size:12px" id="dtSubLabel">আজকের কাজ</div></div>
+            <div class="dt-date-nav">
+              <button class="dt-date-btn" onclick="dtNav(-1)">‹</button>
+              <div class="dt-date-label" id="dtDateLabel">Day 1</div>
+              <button class="dt-date-btn" onclick="dtNav(1)">›</button>
+            </div>
+          </div>
+          <div class="dt-stats" id="dtStats"></div>
+          <div class="dt-user-tabs" id="dtUserTabs"></div>
+          <div id="dtContent"></div>
+        </div>
+
       </div>
     </div>
   </div>
@@ -869,10 +947,18 @@ window.showV=function(v,el){
   eid('view-'+v)?.classList.add('active');
   document.querySelectorAll('.ni').forEach(n=>n.classList.remove('active'));
   if(el)el.classList.add('active');
-  const titles={dashboard:'Dashboard',tasks:'All Tasks',kanban:'Kanban Board',users:'Team Management',settings:'⚙️ Settings'};
+  const titles={dashboard:'Dashboard',tasks:'All Tasks',kanban:'Kanban Board',users:'Team Management',settings:'⚙️ Settings',starred:'⭐ Starred Tasks',calendar:'🗓 Calendar',gantt:'📊 Timeline/Gantt',report:'📈 Reports',daily:'📅 Daily Tasks'};
   const vt=eid('vt');if(vt)vt.textContent=titles[v]||'Tasks';
   if(v==='tasks'){resetFilters();renderT();}
-  if(v==='kanban')renderK();if(v==='users')renderU();if(v==='dashboard')renderD();if(v==='settings')renderSettings();
+  if(v==='kanban')renderK();
+  if(v==='users')renderU();
+  if(v==='dashboard')renderD();
+  if(v==='settings')renderSettings();
+  if(v==='starred')renderStarred();
+  if(v==='calendar'){calMonth=calMonth||(new Date().getMonth());calYear=calYear||(new Date().getFullYear());renderCal();}
+  if(v==='gantt')renderGantt();
+  if(v==='report'){rptTab=rptTab||'overview';renderReport();}
+  if(v==='daily'){dtDay=dtDay||1;renderDaily();}
   closeMob();
 };
 function resetFilters(){
@@ -905,7 +991,16 @@ function renderAll(){
   const cnt=tasks.filter(t=>t.status!=='done').length;
   const nc=eid('nc');if(nc)nc.textContent=cnt;
   upND();
-  if(cv==='dashboard')renderD();if(cv==='tasks')renderT();if(cv==='kanban')renderK();if(cv==='users')renderU();if(cv==='settings')renderSettings();
+  if(cv==='dashboard')renderD();
+  if(cv==='tasks')renderT();
+  if(cv==='kanban')renderK();
+  if(cv==='users')renderU();
+  if(cv==='settings')renderSettings();
+  if(cv==='starred')renderStarred();
+  if(cv==='calendar')renderCal();
+  if(cv==='gantt')renderGantt();
+  if(cv==='report')renderReport();
+  if(cv==='daily')renderDaily();
 }
 
 // ══ DASHBOARD ══
@@ -962,7 +1057,7 @@ function renderT(){
         <div><span class="pb2" style="background:${h2r(pri.color,.15)};color:${pri.color};border-color:${h2r(pri.color,.3)}">${pri.name}</span></div>
         <div><span class="sb3" style="background:${h2r(sta.color,.15)};color:${sta.color};border-color:${h2r(sta.color,.3)}">${sta.name}</span></div>
         <div class="ac"><div style="width:20px;height:20px;border-radius:5px;background:${h2r(uc,.2)};color:${uc};display:flex;align-items:center;justify-content:center;font-size:9px;font-weight:700;flex-shrink:0">${u?.emoji||u?.name[0]||'?'}</div><span>${u?.name||t.assignee}</span></div>
-        <div class="ra" onclick="event.stopPropagation()"><button class="rb" onclick="editT('${t.id}')">✏️</button><button class="rb dl" onclick="delT('${t.id}')">🗑</button></div>
+        <div class="ra" onclick="event.stopPropagation()"><button class="rb ${isStarred(t.id)?'starred':'star-btn'}" style="${isStarred(t.id)?'color:var(--gold)':''}" onclick="toggleStar('${t.id}',event)">★</button><button class="rb" onclick="editT('${t.id}')">✏️</button><button class="rb dl" onclick="delT('${t.id}')">🗑</button></div>
       </div>
       ${sbt||ie?`<div class="sp ${ie?'open':''}" id="sp-${t.id}">
         ${(t.subtasks||[]).map(s=>`<div class="str"><div class="chk ${s.done?'ck':''}" onclick="tSub('${t.id}','${s.id}')"></div><div class="stxt ${s.done?'done':''}">${s.text}</div><button class="rb dl" onclick="dSub('${t.id}','${s.id}')">✕</button></div>`).join('')}
@@ -1123,6 +1218,250 @@ window.toggleMob=function(){eid('sidebar').classList.toggle('open');eid('mobOv')
 window.closeMob=function(){eid('sidebar')?.classList.remove('open');eid('mobOv')?.classList.remove('open');};
 
 document.querySelectorAll('.mo').forEach(mo=>mo.addEventListener('click',e=>{if(e.target===mo)mo.classList.remove('open');}));
+
+// ══ STARRED TASKS ══
+let starredIds=JSON.parse(localStorage.getItem('starredIds')||'[]');
+function saveStars(){localStorage.setItem('starredIds',JSON.stringify(starredIds));}
+window.toggleStar=function(id,e){if(e)e.stopPropagation();if(starredIds.includes(id))starredIds=starredIds.filter(x=>x!==id);else starredIds.push(id);saveStars();if(cv==='starred')renderStarred();else renderT();};
+function isStarred(id){return starredIds.includes(id);}
+function renderStarred(){
+  const el=eid('starredList');if(!el)return;
+  const list=tasks.filter(t=>starredIds.includes(t.id));
+  if(!list.length){el.innerHTML=`<div style="text-align:center;padding:48px 20px;color:var(--t3)">⭐ কোনো starred task নেই<br><span style="font-size:11px">All Tasks-এ গিয়ে task-এর পাশে ⭐ ক্লিক করো</span></div>`;return;}
+  el.innerHTML=list.map(t=>{
+    const sec=secById(t.section),pri=priById(t.priority),sta=staById(t.status),u=users.find(u=>u.id===t.assignee),uc=u?.color||'#8d96b8';
+    return`<div class="tr ${t.status==='done'?'done-r':''}" onclick="editT('${t.id}')">
+      <div class="chk ${t.status==='done'?'ck':''}" onclick="event.stopPropagation();tDone('${t.id}')"></div>
+      <div><div class="tt ${t.status==='done'?'done':''}">${t.title}</div><div class="tm">${t.due?`<span style="font-size:10px;color:var(--t3)">📅 ${t.due}</span>`:''}</div></div>
+      <div><span class="tag" style="background:${h2r(sec.color,.15)};color:${sec.color};border:1px solid ${h2r(sec.color,.3)}">${sec.icon} ${sec.name}</span></div>
+      <div><span class="pb2" style="background:${h2r(pri.color,.15)};color:${pri.color};border-color:${h2r(pri.color,.3)}">${pri.name}</span></div>
+      <div><span class="sb3" style="background:${h2r(sta.color,.15)};color:${sta.color};border-color:${h2r(sta.color,.3)}">${sta.name}</span></div>
+      <div class="ac"><div style="width:20px;height:20px;border-radius:5px;background:${h2r(uc,.2)};color:${uc};display:flex;align-items:center;justify-content:center;font-size:9px;font-weight:700;flex-shrink:0">${u?.emoji||u?.name[0]||'?'}</div><span>${u?.name||t.assignee}</span></div>
+      <div class="ra" onclick="event.stopPropagation()"><button class="rb" style="color:var(--gold)" onclick="toggleStar('${t.id}',event)">★</button><button class="rb" onclick="editT('${t.id}')">✏️</button><button class="rb dl" onclick="delT('${t.id}')">🗑</button></div>
+    </div>`;}).join('');
+}
+
+// ══ CALENDAR ══
+let calMonth=new Date().getMonth(),calYear=new Date().getFullYear();
+const MON=['January','February','March','April','May','June','July','August','September','October','November','December'];
+const DAY_L=['Sun','Mon','Tue','Wed','Thu','Fri','Sat'];
+window.calNav=function(d){calMonth+=d;if(calMonth>11){calMonth=0;calYear++;}if(calMonth<0){calMonth=11;calYear--;}renderCal();};
+window.calGoToday=function(){calMonth=new Date().getMonth();calYear=new Date().getFullYear();renderCal();};
+
+function parseDayNum(due){
+  // Parse "Day 1", "Day 3-5", "Day 1–3" etc. Returns [start, end]
+  if(!due)return null;
+  const m=due.match(/Day\s*(\d+)[–\-]?(\d*)/i);
+  if(!m)return null;
+  return[parseInt(m[1]),m[2]?parseInt(m[2]):parseInt(m[1])];
+}
+
+function renderCal(){
+  const lbl=eid('calLabel');if(lbl)lbl.textContent=MON[calMonth]+' '+calYear;
+  const dl=eid('calDayLabels');
+  if(dl)dl.innerHTML=DAY_L.map(d=>`<div class="cal-day-label">${d}</div>`).join('');
+  const grid=eid('calGrid');if(!grid)return;
+  const firstDay=new Date(calYear,calMonth,1).getDay();
+  const daysInMonth=new Date(calYear,calMonth+1,0).getDate();
+  const today=new Date();
+  // Build calendar cells
+  let cells='';
+  // Empty cells before first day
+  for(let i=0;i<firstDay;i++) cells+=`<div class="cal-cell other-month"></div>`;
+  for(let d=1;d<=daysInMonth;d++){
+    const isToday=d===today.getDate()&&calMonth===today.getMonth()&&calYear===today.getFullYear();
+    // Tasks due on day number d (map calendar date to day number in project)
+    const dayTasks=tasks.filter(t=>{
+      const p=parseDayNum(t.due);
+      if(!p)return false;
+      return d>=p[0]&&d<=p[1];
+    });
+    const dots=dayTasks.slice(0,3).map(t=>{
+      const pri=priById(t.priority);
+      return`<div class="cal-dot" style="background:${h2r(pri.color,.2)};color:${pri.color}">${t.title}</div>`;
+    }).join('');
+    const more=dayTasks.length>3?`<div style="font-size:9px;color:var(--t3)">+${dayTasks.length-3} more</div>`:'';
+    cells+=`<div class="cal-cell ${isToday?'today':''} ${dayTasks.length?'has-tasks':''}" onclick="calShowDay(${d})">
+      <div class="cal-dn">${d}</div>${dots}${more}
+    </div>`;
+  }
+  grid.innerHTML=cells;
+}
+window.calShowDay=function(d){
+  const dayTasks=tasks.filter(t=>{const p=parseDayNum(t.due);if(!p)return false;return d>=p[0]&&d<=p[1];});
+  const detail=eid('calTaskDetail');const lbl=eid('calDetailLabel');const list=eid('calDetailList');
+  if(!detail||!lbl||!list)return;
+  lbl.textContent=`Day ${d} — ${dayTasks.length} task(s)`;
+  if(!dayTasks.length){list.innerHTML=`<div style="color:var(--t3);font-size:12px;text-align:center;padding:12px">এই দিনে কোনো task নেই</div>`;detail.style.display='block';return;}
+  list.innerHTML=dayTasks.map(t=>{
+    const pri=priById(t.priority),sta=staById(t.status),u=users.find(u=>u.id===t.assignee);
+    return`<div style="display:flex;align-items:center;gap:9px;padding:8px 0;border-bottom:1px solid var(--bd);cursor:pointer" onclick="editT('${t.id}')">
+      <div class="chk ${t.status==='done'?'ck':''}" onclick="event.stopPropagation();tDone('${t.id}')"></div>
+      <div style="flex:1"><div style="font-size:13px;font-weight:500 ${t.status==='done'?';text-decoration:line-through;color:var(--t3)':''}">${t.title}</div><div style="font-size:10px;color:var(--t3)">${u?.name||''}</div></div>
+      <span class="pb2" style="background:${h2r(pri.color,.15)};color:${pri.color};border-color:${h2r(pri.color,.3)}">${pri.name}</span>
+      <span class="sb3" style="background:${h2r(sta.color,.15)};color:${sta.color};border-color:${h2r(sta.color,.3)}">${sta.name}</span>
+    </div>`;}).join('');
+  detail.style.display='block';
+};
+
+// ══ GANTT / TIMELINE ══
+function renderGantt(){
+  const wrap=eid('ganttWrap');if(!wrap)return;
+  const phF=eid('ganttPhaseF')?.value||'';
+  const secF=eid('ganttSecF')?.value||'';
+  // Populate section filter
+  const secFEl=eid('ganttSecF');
+  if(secFEl&&secFEl.options.length<=1)secFEl.innerHTML=`<option value="">All Sections</option>`+sections.map(s=>`<option value="${s.id}">${s.icon} ${s.name}</option>`).join('');
+  let list=[...tasks];
+  if(phF)list=list.filter(t=>t.phase===phF);
+  if(secF)list=list.filter(t=>t.section===secF);
+  // Find max day number
+  let maxDay=30;
+  list.forEach(t=>{const p=parseDayNum(t.due);if(p&&p[1]>maxDay)maxDay=p[1];});
+  const COLS=Math.min(maxDay,30);
+  const COL_W=40;
+  // Build header
+  let header=`<div class="gantt-header"><div class="gantt-task-col">Task</div><div class="gantt-days">`;
+  for(let i=1;i<=COLS;i++)header+=`<div class="gantt-day-head" style="min-width:${COL_W}px">D${i}</div>`;
+  header+=`</div></div>`;
+  // Build rows
+  let rows='';
+  if(!list.length){rows=`<div style="text-align:center;padding:24px;color:var(--t3)">কোনো task নেই</div>`;}
+  else{
+    list.forEach(t=>{
+      const p=parseDayNum(t.due);
+      const sec=secById(t.section),pri=priById(t.priority);
+      const barHTML=p?`<div class="gantt-bar" style="left:${(p[0]-1)*COL_W}px;width:${(p[1]-p[0]+1)*COL_W-4}px;background:${h2r(pri.color,.8)};border:1px solid ${pri.color}" onclick="editT('${t.id}')" title="${t.title}">${t.title}</div>`:'';
+      rows+=`<div class="gantt-row">
+        <div class="gantt-row-label" title="${t.title}"><span style="color:${sec.color}">${sec.icon}</span> ${t.title}</div>
+        <div class="gantt-row-bars" style="min-width:${COLS*COL_W}px">${barHTML}</div>
+      </div>`;
+    });
+  }
+  wrap.innerHTML=header+`<div style="overflow-x:auto">`+rows+`</div>`;
+}
+
+// ══ REPORT ══
+let rptTab='overview';
+window.setRptTab=function(tab,el){rptTab=tab;document.querySelectorAll('.rpt-tab').forEach(t=>t.classList.remove('active'));if(el)el.classList.add('active');renderReport();};
+function renderReport(){
+  const el=eid('rptContent');if(!el)return;
+  const tot=tasks.length,dn=tasks.filter(t=>t.status==='done').length,pr=tasks.filter(t=>t.status==='progress').length,bl=tasks.filter(t=>t.status==='blocked').length,td=tasks.filter(t=>t.status==='todo').length;
+  const pct=tot?Math.round(dn/tot*100):0;
+  if(rptTab==='overview'){
+    el.innerHTML=`
+    <div class="rpt-grid">
+      <div class="rpt-card"><h3>Overall Progress</h3>
+        <div style="text-align:center;padding:10px 0"><div style="font-size:42px;font-weight:800;color:var(--green)">${pct}%</div><div style="color:var(--t3);font-size:12px;margin-top:4px">Completion Rate</div></div>
+        <div class="prb" style="height:10px;border-radius:5px;margin-top:10px"><div class="prf" style="width:${pct}%;background:linear-gradient(90deg,#f03e5f,#9d6fff);border-radius:5px"></div></div>
+        <div style="display:flex;justify-content:space-around;margin-top:14px;font-size:12px">
+          <div style="text-align:center"><div style="font-size:18px;font-weight:800;color:var(--green)">${dn}</div><div style="color:var(--t3)">Done</div></div>
+          <div style="text-align:center"><div style="font-size:18px;font-weight:800;color:var(--blue)">${pr}</div><div style="color:var(--t3)">In Progress</div></div>
+          <div style="text-align:center"><div style="font-size:18px;font-weight:800;color:var(--t3)">${td}</div><div style="color:var(--t3)">To Do</div></div>
+          <div style="text-align:center"><div style="font-size:18px;font-weight:800;color:var(--red)">${bl}</div><div style="color:var(--t3)">Blocked</div></div>
+        </div>
+      </div>
+      <div class="rpt-card"><h3>Status Breakdown</h3>
+        ${statuses.map(s=>{const n=tasks.filter(t=>t.status===s.id).length,pp=tot?Math.round(n/tot*100):0;return`<div class="rpt-bar-row"><div class="rpt-bar-label">${s.name}</div><div class="rpt-bar-wrap"><div class="rpt-bar-fill" style="width:${pp}%;background:${s.color}"></div></div><div class="rpt-bar-val">${n}</div></div>`;}).join('')}
+      </div>
+    </div>
+    <div class="rpt-card" style="margin-bottom:14px"><h3>Summary</h3>
+      <div class="rpt-summary-row"><span>Total Tasks</span><strong>${tot}</strong></div>
+      <div class="rpt-summary-row"><span>Completed</span><strong style="color:var(--green)">${dn} (${pct}%)</strong></div>
+      <div class="rpt-summary-row"><span>Pending</span><strong style="color:var(--gold)">${tot-dn}</strong></div>
+      <div class="rpt-summary-row"><span>Blocked</span><strong style="color:${bl>0?'var(--red)':'var(--t3)'}">${bl}</strong></div>
+      <div class="rpt-summary-row"><span>Critical Tasks</span><strong>${tasks.filter(t=>t.priority==='critical').length}</strong></div>
+    </div>`;
+  }else if(rptTab==='team'){
+    el.innerHTML=`<div class="rpt-grid">`+users.map(u=>{
+      const ut=tasks.filter(t=>t.assignee===u.id),ud=ut.filter(t=>t.status==='done').length,upp=ut.length?Math.round(ud/ut.length*100):0;
+      return`<div class="rpt-card"><h3 style="display:flex;align-items:center;gap:7px"><div style="width:22px;height:22px;border-radius:6px;background:${h2r(u.color||'#f03e5f',.2)};color:${u.color||'#f03e5f'};display:flex;align-items:center;justify-content:center;font-size:11px;font-weight:700">${u.emoji||u.name[0]}</div>${u.name}</h3>
+        <div class="rpt-summary-row"><span>Assigned</span><strong>${ut.length}</strong></div>
+        <div class="rpt-summary-row"><span>Done</span><strong style="color:var(--green)">${ud}</strong></div>
+        <div class="rpt-summary-row"><span>Pending</span><strong style="color:var(--gold)">${ut.length-ud}</strong></div>
+        <div class="rpt-summary-row"><span>Completion</span><strong style="color:${u.color||'var(--text)'}">${upp}%</strong></div>
+        <div class="prb" style="height:6px;border-radius:3px;margin-top:8px"><div class="prf" style="width:${upp}%;background:${u.color||'#f03e5f'}"></div></div>
+      </div>`;}).join('')+`</div>`;
+  }else if(rptTab==='section'){
+    el.innerHTML=`<div class="rpt-card"><h3>Section Progress</h3>`+sections.map(s=>{
+      const st=tasks.filter(t=>t.section===s.id),sd=st.filter(t=>t.status==='done').length,pp=st.length?Math.round(sd/st.length*100):0;
+      return`<div class="rpt-bar-row"><div class="rpt-bar-label">${s.icon} ${s.name}</div><div class="rpt-bar-wrap"><div class="rpt-bar-fill" style="width:${pp}%;background:${s.color}"></div></div><div class="rpt-bar-val">${sd}/${st.length}</div></div>`;
+    }).join('')+`</div>`;
+  }else if(rptTab==='priority'){
+    el.innerHTML=`<div class="rpt-card"><h3>Priority Breakdown</h3>`+priorities.map(p=>{
+      const pt=tasks.filter(t=>t.priority===p.id),pd=pt.filter(t=>t.status==='done').length,pp=pt.length?Math.round(pd/pt.length*100):0;
+      return`<div class="rpt-bar-row"><div class="rpt-bar-label" style="color:${p.color}">${p.name}</div><div class="rpt-bar-wrap"><div class="rpt-bar-fill" style="width:${pp}%;background:${p.color}"></div></div><div class="rpt-bar-val">${pt.length}</div></div>
+      <div style="margin-bottom:8px;padding:0 0 0 0"><div class="prb" style="height:4px"><div class="prf" style="width:${pp}%;background:${p.color}"></div></div></div>`;
+    }).join('')+`</div>`;
+  }
+}
+
+// ══ DAILY TASKS ══
+let dtDay=1,dtUser=null;
+const MAX_DAYS=30;
+window.dtNav=function(d){dtDay=Math.max(1,Math.min(MAX_DAYS,dtDay+d));renderDaily();};
+function renderDaily(){
+  const lbl=eid('dtDateLabel');if(lbl)lbl.textContent=`Day ${dtDay}`;
+  const sub=eid('dtSubLabel');if(sub)sub.textContent=`Day ${dtDay} এর tasks`;
+  // User tabs
+  const utabs=eid('dtUserTabs');
+  if(utabs){
+    if(!dtUser)dtUser='all';
+    utabs.innerHTML=`<div class="dt-user-tab ${dtUser==='all'?'active':''}" onclick="dtSetUser('all')">👥 All</div>`+users.map(u=>`<div class="dt-user-tab ${dtUser===u.id?'active':''}" onclick="dtSetUser('${u.id}')" style="${dtUser===u.id?`background:${h2r(u.color||'#f03e5f',.15)};border-color:${u.color||'#f03e5f'};color:${u.color||'#f03e5f'}`:''}">
+      ${u.emoji||u.name[0]} ${u.name}</div>`).join('');
+  }
+  // Get tasks for this day
+  let dayTasks=tasks.filter(t=>{const p=parseDayNum(t.due);if(!p)return false;return dtDay>=p[0]&&dtDay<=p[1];});
+  if(dtUser&&dtUser!=='all')dayTasks=dayTasks.filter(t=>t.assignee===dtUser);
+  // Stats
+  const tot=dayTasks.length,dn=dayTasks.filter(t=>t.status==='done').length,pr=dayTasks.filter(t=>t.status==='progress').length,bl=dayTasks.filter(t=>t.status==='blocked').length;
+  const pct=tot?Math.round(dn/tot*100):0;
+  const stats=eid('dtStats');
+  if(stats)stats.innerHTML=`
+    <div class="dt-stat"><div class="dsv">${tot}</div><div class="dsl">Total</div><div class="dt-prog-bar"><div class="dt-prog-fill" style="width:100%"></div></div></div>
+    <div class="dt-stat"><div class="dsv" style="color:var(--green)">${dn}</div><div class="dsl">Done</div><div class="dt-prog-bar"><div class="dt-prog-fill" style="width:${pct}%"></div></div></div>
+    <div class="dt-stat"><div class="dsv" style="color:var(--blue)">${pr}</div><div class="dsl">In Progress</div></div>
+    <div class="dt-stat"><div class="dsv" style="color:${bl>0?'var(--red)':'var(--t3)'}">${bl}</div><div class="dsl">Blocked</div></div>`;
+  const cont=eid('dtContent');if(!cont)return;
+  if(!dayTasks.length){cont.innerHTML=`<div style="text-align:center;padding:40px;color:var(--t3)">📭 Day ${dtDay}-এ কোনো task নেই</div>`;return;}
+  // Group by section
+  const bySection={};
+  dayTasks.forEach(t=>{if(!bySection[t.section])bySection[t.section]=[];bySection[t.section].push(t);});
+  cont.innerHTML=Object.entries(bySection).map(([secId,ts])=>{
+    const sec=secById(secId);
+    const doneCount=ts.filter(t=>t.status==='done').length;
+    return`<div class="dt-section">
+      <div class="dt-sec-head" onclick="this.nextElementSibling.style.display=this.nextElementSibling.style.display==='none'?'block':'none'">
+        <div class="dt-sec-title"><span style="color:${sec.color}">${sec.icon}</span> ${sec.name} <span class="dt-sec-count">${doneCount}/${ts.length}</span></div>
+      </div>
+      <div class="dt-tasks">
+        ${ts.map(t=>{
+          const pri=priById(t.priority),sta=staById(t.status),u=users.find(u=>u.id===t.assignee);
+          return`<div class="dt-task ${t.status==='done'?'done-t':''}" onclick="editT('${t.id}')">
+            <div class="chk ${t.status==='done'?'ck':''}" onclick="event.stopPropagation();tDone('${t.id}')"></div>
+            <div class="dt-task-title">${t.title}</div>
+            <span class="pb2" style="background:${h2r(pri.color,.15)};color:${pri.color};border-color:${h2r(pri.color,.3)};font-size:9px">${pri.name}</span>
+            <span class="sb3" style="background:${h2r(sta.color,.15)};color:${sta.color};border-color:${h2r(sta.color,.3)};font-size:9px">${sta.name}</span>
+            ${u?`<div class="ac" style="font-size:10px"><div style="width:16px;height:16px;border-radius:4px;background:${h2r(u.color||'#8d96b8',.2)};color:${u.color||'#8d96b8'};display:flex;align-items:center;justify-content:center;font-size:8px;font-weight:700">${u.emoji||u.name[0]}</div></div>`:''}
+          </div>`;}).join('')}
+        <div class="dt-add-row">
+          <input type="text" placeholder="Quick add task for Day ${dtDay}..." id="dta-${secId}" onkeydown="if(event.key==='Enter')dtAddTask('${secId}')"/>
+          <button class="btn bg bxs" onclick="dtAddTask('${secId}')">Add</button>
+        </div>
+      </div>
+    </div>`;
+  }).join('');
+}
+window.dtSetUser=function(uid){dtUser=uid;renderDaily();};
+window.dtAddTask=async function(secId){
+  const inp=eid('dta-'+secId);if(!inp)return;
+  const title=inp.value.trim();if(!title)return;
+  const id='t'+Date.now();
+  const maxOrd=tasks.reduce((m,t)=>Math.max(m,t.order||0),0);
+  const newTask={id,title,desc:'',section:secId,assignee:cu?.id||'naim',priority:'medium',status:'todo',due:`Day ${dtDay}`,phase:'Phase 1',subtasks:[],order:maxOrd+1};
+  await saveTaskFS(newTask);
+  inp.value='';toast('Task added ✓','ok');
+};
 
 initFirebase();
 </script>

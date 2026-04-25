@@ -354,6 +354,37 @@ input[type="date"].fg-date{color-scheme:dark;}
 
 /* ══ DAILY TASK EDIT INLINE ══ */
 .dt-task-edit-input{flex:1;background:var(--s2);border:1px solid var(--red);border-radius:6px;padding:4px 8px;color:var(--text);font-size:13px;outline:none;font-family:var(--font);}
+
+/* ══ INLINE EDIT MODAL (Daily Task) ══ */
+.iem{position:fixed;inset:0;background:rgba(0,0,0,.75);display:none;align-items:center;justify-content:center;z-index:1100;backdrop-filter:blur(6px);}
+.iem.open{display:flex;}
+.ied{background:var(--s1);border:1px solid var(--bd2);border-radius:16px;width:440px;max-width:calc(100vw - 24px);box-shadow:0 32px 64px rgba(0,0,0,.6);animation:ieSlide .18s ease;}
+@keyframes ieSlide{from{transform:translateY(-12px);opacity:0;}to{transform:translateY(0);opacity:1;}}
+.ieh{padding:18px 20px 0;display:flex;justify-content:space-between;align-items:center;}
+.iet{font-size:15px;font-weight:700;}
+.iec{background:var(--s2);border:1px solid var(--bd2);color:var(--t2);border-radius:7px;padding:4px 9px;cursor:pointer;font-size:14px;transition:.15s;line-height:1.4;}
+.iec:hover{color:var(--red);border-color:var(--red);}
+.ieb{padding:16px 20px 20px;display:flex;flex-direction:column;gap:11px;}
+.ie-row{display:flex;flex-direction:column;gap:5px;}
+.ie-lbl{font-size:10px;letter-spacing:1.5px;text-transform:uppercase;color:var(--t3);font-weight:600;}
+.ie-inp{width:100%;background:var(--s2);border:1px solid var(--bd2);border-radius:8px;padding:9px 12px;color:var(--text);font-family:var(--font);font-size:13px;outline:none;transition:border-color .2s;resize:none;}
+.ie-inp:focus{border-color:var(--red);}
+.ie-foot{display:flex;justify-content:flex-end;gap:7px;padding:0 20px 18px;}
+
+/* ══ BULK SELECT SYSTEM ══ */
+.bulk-bar{background:var(--s3);border:1px solid var(--bd2);border-radius:10px;padding:9px 14px;margin-bottom:10px;display:none;align-items:center;gap:10px;flex-wrap:wrap;}
+.bulk-bar.show{display:flex;}
+.bulk-count{font-size:12px;font-weight:700;color:var(--text);}
+.bulk-sep{width:1px;height:18px;background:var(--bd2);}
+.chk-all{width:16px;height:16px;border:2px solid var(--bd2);border-radius:4px;cursor:pointer;transition:all .2s;display:inline-flex;align-items:center;justify-content:center;flex-shrink:0;}
+.chk-all.ck{background:var(--blue);border-color:var(--blue);}
+.chk-all.ck::after{content:'✓';color:#fff;font-size:10px;font-weight:800;}
+.tr.selected{background:rgba(77,142,255,.08)!important;outline:1px solid rgba(77,142,255,.25);}
+.dt-task.selected{background:rgba(77,142,255,.1)!important;border-radius:8px;outline:1px solid rgba(77,142,255,.25);}
+/* bulk status select */
+.bulk-sel{background:var(--s2);border:1px solid var(--bd2);border-radius:7px;padding:5px 8px;color:var(--text);font-family:var(--font);font-size:12px;outline:none;cursor:pointer;}
+.bulk-sel option{background:var(--s2);}
+
 /* ══ RECURRING TASK ══ */
 .recurring-chip{font-size:9px;padding:2px 6px;border-radius:10px;background:rgba(157,111,255,.15);color:var(--purple);border:1px solid rgba(157,111,255,.3);flex-shrink:0;}
 .dt-recur-section{background:rgba(157,111,255,.06);border:1px dashed rgba(157,111,255,.3);border-radius:10px;padding:10px 8px;margin-top:6px;}
@@ -466,6 +497,19 @@ input[type="date"].fg-date{color-scheme:dark;}
           </div>
         </div>
         <div class="view" id="view-tasks">
+          <!-- Bulk Action Bar -->
+          <div class="bulk-bar" id="bulkBar">
+            <div class="chk-all" id="chkAll" onclick="toggleSelectAll()"></div>
+            <span class="bulk-count" id="bulkCount">0 selected</span>
+            <div class="bulk-sep"></div>
+            <select class="bulk-sel" id="bulkStatus" onchange="bulkChangeStatus()">
+              <option value="">— Status পরিবর্তন করুন —</option>
+            </select>
+            <button class="btn bg bxs" onclick="bulkMarkDone()">✓ Done করুন</button>
+            <button class="btn bg bxs" onclick="bulkMarkTodo()">↩ Reopen করুন</button>
+            <button class="btn bg bxs" style="color:var(--red);border-color:rgba(240,62,95,.4)" onclick="bulkDelete()">🗑 Delete করুন</button>
+            <button class="btn bg bxs" style="margin-left:auto" onclick="clearSelection()">✕ বাতিল</button>
+          </div>
           <div class="tlb">
             <div class="sb2"><span style="color:var(--t3)">🔍</span><input type="text" id="si" placeholder="Search tasks..." oninput="renderT()"/></div>
             <div class="fts" id="statusTabs"></div>
@@ -479,7 +523,7 @@ input[type="date"].fg-date{color-scheme:dark;}
             <div class="srt" id="srtBtn" onclick="toggleAsc()"><span>A→Z</span><span class="sa">▲</span></div>
           </div>
           <div class="tw">
-            <div class="th"><div></div><div>Task</div><div>Section</div><div>Priority</div><div>Status</div><div>Assignee</div><div></div></div>
+            <div class="th"><div><div class="chk-all" id="chkAllTh" onclick="toggleSelectAll()" title="সব select করুন"></div></div><div>Task</div><div>Section</div><div>Priority</div><div>Status</div><div>Assignee</div><div></div></div>
             <div id="tl"></div>
           </div>
         </div>
@@ -573,6 +617,14 @@ input[type="date"].fg-date{color-scheme:dark;}
               <button class="dt-date-btn" onclick="dtGoToday()" style="font-size:11px;padding:5px 9px;">আজ</button>
             </div>
           </div>
+          <!-- Daily Task Bulk Bar -->
+          <div class="bulk-bar" id="dtBulkBar">
+            <span class="bulk-count" id="dtBulkCount">0 selected</span>
+            <div class="bulk-sep"></div>
+            <button class="btn bg bxs" onclick="bulkDtMarkDone()">✓ Done করুন</button>
+            <button class="btn bg bxs" style="color:var(--red);border-color:rgba(240,62,95,.4)" onclick="bulkDtDelete()">🗑 Delete করুন</button>
+            <button class="btn bg bxs" style="margin-left:auto" onclick="clearDtSelection()">✕ বাতিল</button>
+          </div>
           <div class="dt-stats" id="dtStats"></div>
           <div class="dt-user-tabs" id="dtUserTabs"></div>
           <div id="dtContent"></div>
@@ -651,6 +703,34 @@ input[type="date"].fg-date{color-scheme:dark;}
       <div class="fg" id="qColorFg"><label>Color (hex)</label><input type="text" id="qColor" placeholder="#4d8eff"/></div>
     </div>
     <div class="mdf"><button class="btn bg" onclick="closeM('quick')">Cancel</button><button class="btn br" onclick="saveQuick()">Add</button></div>
+  </div>
+</div>
+
+<!-- INLINE EDIT MODAL (Daily Task) -->
+<div class="iem" id="iem">
+  <div class="ied">
+    <div class="ieh">
+      <div class="iet" id="iemTitle">Task Edit করুন</div>
+      <button class="iec" onclick="closeIEM()">✕</button>
+    </div>
+    <div class="ieb">
+      <input type="hidden" id="iemUserId"/>
+      <input type="hidden" id="iemDateStr"/>
+      <input type="hidden" id="iemIdx"/>
+      <input type="hidden" id="iemIsRecurring"/>
+      <div class="ie-row">
+        <div class="ie-lbl">Task</div>
+        <textarea class="ie-inp" id="iemText" rows="2" placeholder="Task লিখুন..."></textarea>
+      </div>
+      <div class="ie-row">
+        <div class="ie-lbl">Note (ঐচ্ছিক)</div>
+        <input class="ie-inp" type="text" id="iemNote" placeholder="Note লিখুন..."/>
+      </div>
+    </div>
+    <div class="ie-foot">
+      <button class="btn bg" onclick="closeIEM()">বাতিল</button>
+      <button class="btn br" onclick="saveIEM()">Save করুন</button>
+    </div>
   </div>
 </div>
 
@@ -1114,6 +1194,135 @@ window.setSt=function(s,el){filt.status=s;document.querySelectorAll('.ft').forEa
 window.changeSort=function(){sortF=eid('sortSel').value;renderT();};
 window.toggleAsc=function(){sortAsc=!sortAsc;eid('srtBtn').classList.toggle('asc',sortAsc);renderT();};
 
+// ══ BULK SELECTION STATE ══
+let selectedIds = new Set();
+
+function updateBulkBar(){
+  const bar=eid('bulkBar');
+  const cnt=eid('bulkCount');
+  const chkAll=eid('chkAll');
+  const chkAllTh=eid('chkAllTh');
+  const show=selectedIds.size>0;
+  if(bar)bar.classList.toggle('show',show);
+  if(cnt)cnt.textContent=`${selectedIds.size}টি selected`;
+  // Populate bulk status select
+  const bs=eid('bulkStatus');
+  if(bs&&bs.options.length<=1){
+    statuses.forEach(s=>{const o=document.createElement('option');o.value=s.id;o.textContent=s.name;bs.appendChild(o);});
+  }
+  // Select all checkbox state
+  const visibleIds=getF().map(t=>t.id);
+  const allSelected=visibleIds.length>0&&visibleIds.every(id=>selectedIds.has(id));
+  [chkAll,chkAllTh].forEach(el=>{if(el)el.classList.toggle('ck',allSelected);});
+}
+window.toggleTaskSelect=function(id,e){
+  e.stopPropagation();
+  if(selectedIds.has(id))selectedIds.delete(id);
+  else selectedIds.add(id);
+  updateBulkBar();
+  // Toggle row highlight
+  const row=document.querySelector(`[data-id="${id}"]`);
+  if(row)row.classList.toggle('selected',selectedIds.has(id));
+};
+window.toggleSelectAll=function(){
+  const visibleIds=getF().map(t=>t.id);
+  const allSelected=visibleIds.every(id=>selectedIds.has(id));
+  if(allSelected){visibleIds.forEach(id=>selectedIds.delete(id));}
+  else{visibleIds.forEach(id=>selectedIds.add(id));}
+  updateBulkBar();
+  renderT();
+};
+window.clearSelection=function(){selectedIds.clear();updateBulkBar();renderT();};
+window.bulkMarkDone=async function(){
+  if(!selectedIds.size)return;
+  for(const id of selectedIds){
+    const t=tasks.find(t=>t.id===id);
+    if(t&&canActOnTask(t)){t.status='done';await saveTaskFS(t);}
+  }
+  toast(`${selectedIds.size}টি task done করা হয়েছে ✓`,'ok');
+  selectedIds.clear();updateBulkBar();
+};
+window.bulkMarkTodo=async function(){
+  if(!selectedIds.size)return;
+  for(const id of selectedIds){
+    const t=tasks.find(t=>t.id===id);
+    if(t&&canActOnTask(t)){t.status='todo';await saveTaskFS(t);}
+  }
+  toast(`${selectedIds.size}টি task reopen করা হয়েছে`,'ok');
+  selectedIds.clear();updateBulkBar();
+};
+window.bulkChangeStatus=async function(){
+  const val=eid('bulkStatus')?.value;if(!val||!selectedIds.size)return;
+  const sta=staById(val);
+  for(const id of selectedIds){
+    const t=tasks.find(t=>t.id===id);
+    if(t&&canActOnTask(t)){t.status=val;await saveTaskFS(t);}
+  }
+  toast(`${selectedIds.size}টি task → ${sta.name} ✓`,'ok');
+  eid('bulkStatus').value='';
+  selectedIds.clear();updateBulkBar();
+};
+window.bulkDelete=async function(){
+  if(!selectedIds.size)return;
+  const canDel=[...selectedIds].filter(id=>{const t=tasks.find(t=>t.id===id);return t&&canActOnTask(t);});
+  if(!canDel.length){permDeniedTask();return;}
+  if(!confirm(`${canDel.length}টি task delete করবেন?`))return;
+  for(const id of canDel){
+    const t=tasks.find(t=>t.id===id);
+    if(t)await sendNotif(t.assignee,'deleted',t.id,t.title,cu?.name||'Someone');
+    await deleteTaskFS(id);
+  }
+  toast(`${canDel.length}টি task delete হয়েছে`,'info');
+  selectedIds.clear();updateBulkBar();
+};
+
+// ══ INLINE EDIT MODAL (Daily Task) ══
+window.openIEM=function(userId,dateStr,idx,isRecurring,text,note){
+  eid('iemUserId').value=userId;
+  eid('iemDateStr').value=dateStr;
+  eid('iemIdx').value=idx;
+  eid('iemIsRecurring').value=isRecurring?'1':'0';
+  eid('iemText').value=text||'';
+  eid('iemNote').value=note||'';
+  eid('iemTitle').textContent=isRecurring?'🔁 Recurring Task Edit':'📅 Daily Task Edit';
+  eid('iem').classList.add('open');
+  setTimeout(()=>eid('iemText').focus(),80);
+};
+window.closeIEM=function(){eid('iem').classList.remove('open');};
+window.saveIEM=async function(){
+  const userId=eid('iemUserId').value;
+  const dateStr=eid('iemDateStr').value;
+  const idx=parseInt(eid('iemIdx').value);
+  const isRecurring=eid('iemIsRecurring').value==='1';
+  const newText=eid('iemText').value.trim();
+  const newNote=eid('iemNote').value.trim();
+  if(!newText){toast('Task text খালি হতে পারবে না!','err');return;}
+  if(!isOwner()&&userId!==cu?.id){permDeniedTask();return;}
+  if(isRecurring){
+    const ts=[...(recurData[userId]||[])];
+    if(!ts[idx])return;
+    ts[idx]={...ts[idx],text:newText,note:newNote};
+    await saveRecurring(userId,ts);
+  }else{
+    const key=dateStr+'_'+userId;
+    const ts=[...(Array.isArray(dtData[key])?dtData[key]:[])];
+    if(!ts[idx])return;
+    ts[idx]={...ts[idx],text:newText,note:newNote};
+    await saveDtDoc(dateStr,userId,ts);
+  }
+  closeIEM();
+  renderDaily();
+  toast('Task updated ✓','ok');
+};
+// Close IEM on backdrop click
+document.addEventListener('DOMContentLoaded',()=>{
+  const iemEl=eid('iem');
+  if(iemEl)iemEl.addEventListener('click',e=>{if(e.target===iemEl)closeIEM();});
+  // Enter to save in IEM
+  const iemNote=eid('iemNote');
+  if(iemNote)iemNote.addEventListener('keydown',e=>{if(e.key==='Enter')saveIEM();});
+});
+
 function renderT(){
   const list=getF();const tl=eid('tl');if(!tl)return;
   if(!list.length){tl.innerHTML=`<div style="text-align:center;padding:48px 20px;color:var(--t3)">📭 No tasks found</div>`;return;}
@@ -1121,9 +1330,12 @@ function renderT(){
     const sec=secById(t.section),pri=priById(t.priority),sta=staById(t.status);
     const u=users.find(u=>u.id===t.assignee);
     const sbd=(t.subtasks||[]).filter(s=>s.done).length,sbt=(t.subtasks||[]).length,ie=exp.has(t.id),uc=u?.color||'#8d96b8';
+    const isSel=selectedIds.has(t.id);
     return`<div id="tw-${t.id}">
-      <div class="tr ${t.status==='done'?'done-r':''} ${ie?'exp':''}" data-id="${t.id}" onclick="tExp('${t.id}')">
-        <div class="chk ${t.status==='done'?'ck':''}" onclick="event.stopPropagation();${canActOnTask(t)?`tDone('${t.id}')`:'permDeniedTask()'}" style="${!canActOnTask(t)?'opacity:.35;cursor:not-allowed':''}"></div>
+      <div class="tr ${t.status==='done'?'done-r':''} ${ie?'exp':''} ${isSel?'selected':''}" data-id="${t.id}" onclick="tExp('${t.id}')">
+        <div onclick="event.stopPropagation()" style="display:flex;align-items:center;gap:4px;">
+          <div class="chk-all ${isSel?'ck':''}" onclick="toggleTaskSelect('${t.id}',event)" title="Select"></div>
+        </div>
         <div>
           <div class="tt ${t.status==='done'?'done':''}">${t.title}</div>
           <div class="tm">
@@ -1150,6 +1362,7 @@ function renderT(){
         ${canActOnTask(t)?`<div class="add-s"><input type="text" placeholder="New sub-task..." id="ns-${t.id}" onkeydown="if(event.key==='Enter')aSub('${t.id}')"/><button class="btn bg bxs" onclick="aSub('${t.id}')">Add</button></div>`:'<div style="font-size:11px;color:var(--t3);padding:6px 0 4px">👁 View only — এই task আপনার না</div>'}
       </div>`:''}
     </div>`;}).join('');
+  updateBulkBar();
 }
 window.tExp=function(id){if(exp.has(id))exp.delete(id);else exp.add(id);renderT();};
 window.tDone=async function(id){
@@ -1624,17 +1837,22 @@ async function renderDaily(){
       <div class="dt-tasks">
         ${rec.length?`<div class="dt-recur-section">
           <div class="dt-recur-head">🔁 Recurring Tasks <span style="font-size:9px;font-weight:400;color:var(--t3)">(প্রতিদিন)</span></div>
-          ${rec.map((t,i)=>`<div class="dt-task ${recurDone[t.id]?'done-t':''}" id="dtr-${u.id}-${i}">
-            <div class="chk ${recurDone[t.id]?'ck':''}" onclick="dtToggleRecurring('${u.id}','${dateStr}','${t.id}')"></div>
-            <div class="dt-task-title">${t.text}</div>
-            <span class="recurring-chip">🔁 প্রতিদিন</span>
-            ${t.note?`<span style="font-size:10px;color:var(--t3);padding:2px 6px;background:var(--s2);border-radius:4px;max-width:100px;overflow:hidden;text-overflow:ellipsis;white-space:nowrap" title="${t.note}">📝 ${t.note}</span>`:''}
-            <div style="display:flex;gap:4px;opacity:0;transition:.15s" class="dt-task-actions">
-              ${canEdit?`<button class="rb" onclick="dtEdit('${u.id}','${dateStr}',${i},true)" title="Edit করুন">✏️</button>`:''}
-              ${canEdit?`<button class="rb" onclick="dtNote('${u.id}','${dateStr}',${i},true)" title="Note যোগ করুন">📝</button>`:''}
-              ${canEdit?`<button class="rb dl" onclick="dtDel('${u.id}','${dateStr}',${i},true)">✕</button>`:''}
-            </div>
-          </div>`).join('')}
+          ${rec.map((t,i)=>{
+            const selKey=`${u.id}::r::${i}`;
+            const safeKey=selKey.replace(/[^a-zA-Z0-9]/g,'_');
+            const isSel=dtSelectedIds.has(selKey);
+            return`<div class="dt-task ${recurDone[t.id]?'done-t':''} ${isSel?'selected':''}" id="dtrow-${safeKey}">
+              <div class="chk-all ${isSel?'ck':''}" id="dtchk-${safeKey}" onclick="toggleDtSelect('${selKey}',event)" style="flex-shrink:0;margin-right:2px"></div>
+              <div class="chk ${recurDone[t.id]?'ck':''}" onclick="dtToggleRecurring('${u.id}','${dateStr}','${t.id}')"></div>
+              <div class="dt-task-title">${t.text}</div>
+              <span class="recurring-chip">🔁 প্রতিদিন</span>
+              ${t.note?`<span style="font-size:10px;color:var(--t3);padding:2px 6px;background:var(--s2);border-radius:4px;max-width:100px;overflow:hidden;text-overflow:ellipsis;white-space:nowrap" title="${t.note}">📝 ${t.note}</span>`:''}
+              <div style="display:flex;gap:4px;opacity:0;transition:.15s" class="dt-task-actions">
+                ${canEdit?`<button class="rb" onclick="dtEdit('${u.id}','${dateStr}',${i},true)" title="Edit করুন">✏️</button>`:''}
+                ${canEdit?`<button class="rb" onclick="dtNote('${u.id}','${dateStr}',${i},true)" title="Note যোগ করুন">📝</button>`:''}
+                ${canEdit?`<button class="rb dl" onclick="dtDel('${u.id}','${dateStr}',${i},true)">✕</button>`:''}
+              </div>
+            </div>`;}).join('')}
         </div>`:''}
         ${ts.length?ts.map((t,i)=>renderDtTask(t,i,u.id,dateStr,false)).join(''):''}
         ${!ts.length&&!rec.length?'<div style="padding:10px 8px;font-size:12px;color:var(--t3)">এখনো কোনো task যোগ করা হয়নি</div>':''}
@@ -1649,10 +1867,94 @@ async function renderDaily(){
   }).join('');
 }
 
+// ══ DAILY TASK BULK SELECTION ══
+let dtSelectedIds = new Set(); // 'userId_idx' format
+function updateDtBulkBar(){
+  const bar=eid('dtBulkBar');
+  if(!bar)return;
+  bar.classList.toggle('show',dtSelectedIds.size>0);
+  const cnt=eid('dtBulkCount');
+  if(cnt)cnt.textContent=`${dtSelectedIds.size}টি selected`;
+}
+window.toggleDtSelect=function(key,e){
+  e.stopPropagation();
+  if(dtSelectedIds.has(key))dtSelectedIds.delete(key);else dtSelectedIds.add(key);
+  updateDtBulkBar();
+  const el=eid('dtchk-'+key.replace(/[^a-zA-Z0-9]/g,'_'));
+  if(el)el.classList.toggle('ck',dtSelectedIds.has(key));
+  const row=eid('dtrow-'+key.replace(/[^a-zA-Z0-9]/g,'_'));
+  if(row)row.classList.toggle('selected',dtSelectedIds.has(key));
+};
+window.clearDtSelection=function(){dtSelectedIds.clear();updateDtBulkBar();renderDaily();};
+window.bulkDtMarkDone=async function(){
+  if(!dtSelectedIds.size)return;
+  // Parse keys and update
+  const dateStr=dtDateStr(dtDate);
+  const updates={};// userId → indices
+  for(const key of dtSelectedIds){
+    const parts=key.split('::');
+    if(parts.length<3)continue;
+    const userId=parts[0],type=parts[1],idx=parseInt(parts[2]);
+    if(!updates[userId])updates[userId]={daily:[],recurring:[]};
+    if(type==='r')updates[userId].recurring.push(idx);
+    else updates[userId].daily.push(idx);
+  }
+  for(const [userId,upd] of Object.entries(updates)){
+    if(upd.daily.length){
+      const k=dateStr+'_'+userId;
+      const ts=[...(Array.isArray(dtData[k])?dtData[k]:[])];
+      upd.daily.forEach(i=>{if(ts[i])ts[i]={...ts[i],done:true};});
+      await saveDtDoc(dateStr,userId,ts);
+    }
+    if(upd.recurring.length){
+      const rec=recurData[userId]||[];
+      for(const i of upd.recurring){if(rec[i])await setRecurDone(dateStr,userId,rec[i].id,true);}
+    }
+  }
+  toast(`${dtSelectedIds.size}টি daily task done ✓`,'ok');
+  dtSelectedIds.clear();updateDtBulkBar();renderDaily();
+};
+window.bulkDtDelete=async function(){
+  if(!dtSelectedIds.size)return;
+  const dateStr=dtDateStr(dtDate);
+  if(!confirm(`${dtSelectedIds.size}টি daily task delete করবেন?`))return;
+  const updates={};
+  for(const key of dtSelectedIds){
+    const parts=key.split('::');
+    if(parts.length<3)continue;
+    const userId=parts[0],type=parts[1],idx=parseInt(parts[2]);
+    if(!isOwner()&&userId!==cu?.id)continue;
+    if(!updates[userId])updates[userId]={daily:[],recurring:[]};
+    if(type==='r')updates[userId].recurring.push(idx);
+    else updates[userId].daily.push(idx);
+  }
+  for(const [userId,upd] of Object.entries(updates)){
+    if(upd.daily.length){
+      const k=dateStr+'_'+userId;
+      const ts=[...(Array.isArray(dtData[k])?dtData[k]:[])];
+      const toRemove=new Set(upd.daily);
+      const filtered=ts.filter((_,i)=>!toRemove.has(i));
+      await saveDtDoc(dateStr,userId,filtered);
+    }
+    if(upd.recurring.length){
+      const rec=[...(recurData[userId]||[])];
+      const toRemove=new Set(upd.recurring);
+      const filtered=rec.filter((_,i)=>!toRemove.has(i));
+      await saveRecurring(userId,filtered);
+    }
+  }
+  toast(`Daily tasks delete হয়েছে`,'info');
+  dtSelectedIds.clear();updateDtBulkBar();renderDaily();
+};
+
 function renderDtTask(t, idx, userId, dateStr, isRecurring=false){
-  return`<div class="dt-task ${t.done?'done-t':''}" id="dtt-${userId}-${idx}">
+  const selKey=`${userId}::${isRecurring?'r':'d'}::${idx}`;
+  const safeKey=selKey.replace(/[^a-zA-Z0-9]/g,'_');
+  const isSel=dtSelectedIds.has(selKey);
+  return`<div class="dt-task ${t.done?'done-t':''} ${isSel?'selected':''}" id="dtrow-${safeKey}">
+    <div class="chk-all ${isSel?'ck':''}" id="dtchk-${safeKey}" onclick="toggleDtSelect('${selKey}',event)" style="flex-shrink:0;margin-right:2px"></div>
     <div class="chk ${t.done?'ck':''}" onclick="dtToggle('${userId}','${dateStr}',${idx},${isRecurring})"></div>
-    <div class="dt-task-title" id="dtt-txt-${userId}-${idx}">${t.text}</div>
+    <div class="dt-task-title">${t.text}</div>
     ${isRecurring?`<span class="recurring-chip">🔁 প্রতিদিন</span>`:''}
     ${t.note?`<span style="font-size:10px;color:var(--t3);padding:2px 6px;background:var(--s2);border-radius:4px;max-width:120px;overflow:hidden;text-overflow:ellipsis;white-space:nowrap" title="${t.note}">📝 ${t.note}</span>`:''}
     <div style="display:flex;gap:4px;opacity:0;transition:.15s" class="dt-task-actions">
@@ -1794,30 +2096,16 @@ window.dtToggleRecurring=async function(userId, dateStr, taskId){
 };
 
 window.dtEdit=async function(userId, dateStr, idx, isRecurring){
-  if(!isOwner()&&userId!==cu?.id){toast('🔒 শুধু নিজের task edit করতে পারবেন।','err');return;}
+  if(!isOwner()&&userId!==cu?.id){permDeniedTask();return;}
   if(isRecurring){
-    // Edit recurring task
     const ts=recurData[userId]||[];
     const t=ts[idx];if(!t)return;
-    const newText=prompt('Task edit করুন:',t.text);
-    if(newText===null)return;
-    const trimmed=newText.trim();if(!trimmed){toast('Task text খালি হতে পারবে না!','err');return;}
-    ts[idx]={...t,text:trimmed};
-    await saveRecurring(userId,[...ts]);
-    renderDaily();
-    toast('Task updated ✓','ok');
+    openIEM(userId,dateStr,idx,true,t.text,t.note||'');
   }else{
-    // Edit daily task
     const key=dateStr+'_'+userId;
-    const ts=[...(dtData[key]||[])];
+    const ts=Array.isArray(dtData[key])?dtData[key]:[];
     if(!ts[idx])return;
-    const newText=prompt('Task edit করুন:',ts[idx].text);
-    if(newText===null)return;
-    const trimmed=newText.trim();if(!trimmed){toast('Task text খালি হতে পারবে না!','err');return;}
-    ts[idx]={...ts[idx],text:trimmed};
-    await saveDtDoc(dateStr,userId,ts);
-    renderDaily();
-    toast('Task updated ✓','ok');
+    openIEM(userId,dateStr,idx,false,ts[idx].text,ts[idx].note||'');
   }
 };
 

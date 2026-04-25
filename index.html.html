@@ -352,6 +352,12 @@ select.fs option{background:var(--s2);}
 /* ══ DATE PICKER ══ */
 input[type="date"].fg-date{color-scheme:dark;}
 
+/* ══ DAILY TASK EDIT INLINE ══ */
+.dt-task-edit-input{flex:1;background:var(--s2);border:1px solid var(--red);border-radius:6px;padding:4px 8px;color:var(--text);font-size:13px;outline:none;font-family:var(--font);}
+/* ══ RECURRING TASK ══ */
+.recurring-chip{font-size:9px;padding:2px 6px;border-radius:10px;background:rgba(157,111,255,.15);color:var(--purple);border:1px solid rgba(157,111,255,.3);flex-shrink:0;}
+.dt-recur-section{background:rgba(157,111,255,.06);border:1px dashed rgba(157,111,255,.3);border-radius:10px;padding:10px 8px;margin-top:6px;}
+.dt-recur-head{font-size:10px;font-weight:700;color:var(--purple);letter-spacing:1px;text-transform:uppercase;margin-bottom:7px;display:flex;align-items:center;gap:6px;}
 /* ══ MEMBER RESTRICTED OVERLAY ══ */
 .restricted{pointer-events:none;opacity:.5;}
 .member-badge{font-size:9px;padding:2px 6px;border-radius:10px;background:rgba(77,142,255,.15);color:var(--blue);border:1px solid rgba(77,142,255,.3);margin-left:6px;}
@@ -1523,11 +1529,13 @@ function dtDateStr(date){
 }
 
 function initDailyDate(){
-  dtDate=new Date();
+  // Only reset date if not already set (don't reset on re-visit)
+  if(!dtDate)dtDate=new Date();
   if(!dtUser)dtUser=cu?.id||'all';
 }
 
 window.dtNav=function(delta){
+  if(!dtDate)dtDate=new Date();
   const d=new Date(dtDate);d.setDate(d.getDate()+delta);dtDate=d;renderDaily();
 };
 window.dtGoToday=function(){dtDate=new Date();renderDaily();};
@@ -1581,16 +1589,21 @@ async function renderDaily(){
   // Determine which users to show
   const showUsers=(dtUser==='all')?users:[users.find(u=>u.id===dtUser)].filter(Boolean);
   
-  // Load all docs
-  await Promise.all(showUsers.map(u=>loadDtDoc(dateStr,u.id)));
+  // Load all docs + recurring
+  await Promise.all([
+    ...showUsers.map(u=>loadDtDoc(dateStr,u.id)),
+    ...showUsers.map(u=>loadRecurring(u.id))
+  ]);
 
-  // Stats across shown users
+  // Stats across shown users (include recurring)
   let allT=[],allD=0;
   showUsers.forEach(u=>{
     const key=dateStr+'_'+u.id;
     const ts=dtData[key]||[];
-    allT=allT.concat(ts.map(t=>({...t,_userId:u.id})));
-    allD+=ts.filter(t=>t.done).length;
+    const rec=recurData[u.id]||[];
+    const recurDone=getRecurDone(dateStr,u.id);
+    allT=allT.concat(ts,rec);
+    allD+=ts.filter(t=>t.done).length+rec.filter(t=>recurDone[t.id]).length;
   });
   const tot=allT.length,pct=tot?Math.round(allD/tot*100):0;
   const stats=eid('dtStats');
@@ -1606,15 +1619,19 @@ async function renderDaily(){
   cont.innerHTML=showUsers.map(u=>{
     const key=dateStr+'_'+u.id;
     const ts=dtData[key]||[];
-    const dn=ts.filter(t=>t.done).length;
-    const pct2=ts.length?Math.round(dn/ts.length*100):0;
+    const rec=recurData[u.id]||[];
+    const recurDone=getRecurDone(dateStr,u.id);
+    const dn=ts.filter(t=>t.done).length+rec.filter(t=>recurDone[t.id]).length;
+    const totalCount=ts.length+rec.length;
+    const pct2=totalCount?Math.round(dn/totalCount*100):0;
+    const canEdit=isOwner()||cu?.id===u.id;
     return`<div class="dt-section" id="dts-${u.id}">
       <div class="dt-sec-head">
         <div class="dt-sec-title">
           <div style="width:22px;height:22px;border-radius:6px;background:${h2r(u.color||'#f03e5f',.2)};color:${u.color||'#f03e5f'};display:flex;align-items:center;justify-content:center;font-size:11px;font-weight:700;flex-shrink:0">${u.emoji||u.name[0]}</div>
           ${u.name}
-          <span class="dt-sec-count">${dn}/${ts.length}</span>
-          ${pct2===100&&ts.length>0?'<span style="font-size:11px;color:var(--green)">✓ সম্পন্ন</span>':''}
+          <span class="dt-sec-count">${dn}/${totalCount}</span>
+          ${pct2===100&&totalCount>0?'<span style="font-size:11px;color:var(--green)">✓ সম্পন্ন</span>':''}
         </div>
         <div style="display:flex;align-items:center;gap:7px">
           <div style="font-size:10px;color:var(--t3)">${pct2}%</div>
@@ -1622,27 +1639,124 @@ async function renderDaily(){
         </div>
       </div>
       <div class="dt-tasks">
-        ${ts.length?ts.map((t,i)=>renderDtTask(t,i,u.id,dateStr)).join(''):'<div style="padding:10px 8px;font-size:12px;color:var(--t3)">এখনো কোনো task যোগ করা হয়নি</div>'}
-        <div class="dt-add-row">
-          <input type="text" placeholder="নতুন daily task লিখুন..." id="dtin-${u.id}" 
+        ${rec.length?`<div class="dt-recur-section">
+          <div class="dt-recur-head">🔁 Recurring Tasks <span style="font-size:9px;font-weight:400;color:var(--t3)">(প্রতিদিন)</span></div>
+          ${rec.map((t,i)=>`<div class="dt-task ${recurDone[t.id]?'done-t':''}" id="dtr-${u.id}-${i}">
+            <div class="chk ${recurDone[t.id]?'ck':''}" onclick="dtToggleRecurring('${u.id}','${dateStr}','${t.id}')"></div>
+            <div class="dt-task-title">${t.text}</div>
+            <span class="recurring-chip">🔁 প্রতিদিন</span>
+            ${t.note?`<span style="font-size:10px;color:var(--t3);padding:2px 6px;background:var(--s2);border-radius:4px;max-width:100px;overflow:hidden;text-overflow:ellipsis;white-space:nowrap" title="${t.note}">📝 ${t.note}</span>`:''}
+            <div style="display:flex;gap:4px;opacity:0;transition:.15s" class="dt-task-actions">
+              ${canEdit?`<button class="rb" onclick="dtEdit('${u.id}','${dateStr}',${i},true)" title="Edit করুন">✏️</button>`:''}
+              ${canEdit?`<button class="rb" onclick="dtNote('${u.id}','${dateStr}',${i},true)" title="Note যোগ করুন">📝</button>`:''}
+              ${canEdit?`<button class="rb dl" onclick="dtDel('${u.id}','${dateStr}',${i},true)">✕</button>`:''}
+            </div>
+          </div>`).join('')}
+        </div>`:''}
+        ${ts.length?ts.map((t,i)=>renderDtTask(t,i,u.id,dateStr,false)).join(''):''}
+        ${!ts.length&&!rec.length?'<div style="padding:10px 8px;font-size:12px;color:var(--t3)">এখনো কোনো task যোগ করা হয়নি</div>':''}
+        ${canEdit?`<div class="dt-add-row">
+          <input type="text" placeholder="আজকের জন্য task লিখুন..." id="dtin-${u.id}" 
             onkeydown="if(event.key==='Enter')dtAdd('${u.id}','${dateStr}')"/>
-          <button class="btn br bxs" onclick="dtAdd('${u.id}','${dateStr}')">+ Add</button>
-        </div>
+          <button class="btn br bxs" onclick="dtAdd('${u.id}','${dateStr}')">+ আজ</button>
+          <button class="btn bg bxs" onclick="dtAddRecurringPrompt('${u.id}')" title="প্রতিদিনের জন্য recurring task যোগ করুন" style="color:var(--purple);border-color:rgba(157,111,255,.4)">🔁 প্রতিদিন</button>
+        </div>`:'<div style="font-size:11px;color:var(--t3);padding:6px 8px">👁 View only</div>'}
       </div>
     </div>`;
   }).join('');
 }
 
-function renderDtTask(t, idx, userId, dateStr){
+function renderDtTask(t, idx, userId, dateStr, isRecurring=false){
   return`<div class="dt-task ${t.done?'done-t':''}" id="dtt-${userId}-${idx}">
-    <div class="chk ${t.done?'ck':''}" onclick="dtToggle('${userId}','${dateStr}',${idx})"></div>
+    <div class="chk ${t.done?'ck':''}" onclick="dtToggle('${userId}','${dateStr}',${idx},${isRecurring})"></div>
     <div class="dt-task-title" id="dtt-txt-${userId}-${idx}">${t.text}</div>
+    ${isRecurring?`<span class="recurring-chip">🔁 প্রতিদিন</span>`:''}
     ${t.note?`<span style="font-size:10px;color:var(--t3);padding:2px 6px;background:var(--s2);border-radius:4px;max-width:120px;overflow:hidden;text-overflow:ellipsis;white-space:nowrap" title="${t.note}">📝 ${t.note}</span>`:''}
     <div style="display:flex;gap:4px;opacity:0;transition:.15s" class="dt-task-actions">
-      <button class="rb" onclick="dtNote('${userId}','${dateStr}',${idx})" title="Note যোগ করুন">📝</button>
-      <button class="rb dl" onclick="dtDel('${userId}','${dateStr}',${idx})">✕</button>
+      <button class="rb" onclick="dtEdit('${userId}','${dateStr}',${idx},${isRecurring})" title="Edit করুন">✏️</button>
+      <button class="rb" onclick="dtNote('${userId}','${dateStr}',${idx},${isRecurring})" title="Note যোগ করুন">📝</button>
+      <button class="rb dl" onclick="dtDel('${userId}','${dateStr}',${idx},${isRecurring})">✕</button>
     </div>
   </div>`;
+}
+
+// ══ RECURRING TASKS ══
+// Stored in Firestore: collection 'recurringTasks', doc id = userId
+// Each doc: { userId, tasks: [{id, text, note}] }
+let recurData = {}; // key: userId → [{id, text, note}]
+// Completion status for recurring tasks stored per-date: key 'YYYY-MM-DD_userId' in dtData but with 'recurring' array
+// We store recurring done state inside daily doc: { ..., recurringDone: {taskId: bool} }
+
+async function loadRecurring(userId){
+  if(recurData[userId]!==undefined) return recurData[userId];
+  if(_local){recurData[userId]=recurData[userId]||[];return recurData[userId];}
+  try{
+    const snap=await getDoc(doc(db,'recurringTasks',userId));
+    recurData[userId]=snap.exists()?(snap.data().tasks||[]):[];
+  }catch(e){recurData[userId]=[];}
+  return recurData[userId];
+}
+async function saveRecurring(userId, tasksList){
+  recurData[userId]=tasksList;
+  if(_local)return;
+  try{await setDoc(doc(db,'recurringTasks',userId),{userId,tasks:tasksList,updatedAt:Date.now()});}catch(e){console.error(e);}
+}
+
+// Get recurring done state for a date+user (stored inside daily doc)
+function getRecurDone(dateStr, userId){
+  const key=dateStr+'_'+userId;
+  const doc2=dtData[key];
+  if(!doc2||!doc2._recurringDone) return {};
+  return doc2._recurringDone;
+}
+async function setRecurDone(dateStr, userId, taskId, done){
+  const key=dateStr+'_'+userId;
+  if(!dtData[key]) dtData[key]=[];
+  // Store recurring done state alongside daily tasks
+  if(!dtData[key]._recurringDone) dtData[key]._recurringDone={};
+  dtData[key]._recurringDone[taskId]=done;
+  // Save to Firestore — store the whole daily doc
+  if(!_local){
+    try{await setDoc(doc(db,'dailyTasks',key),{
+      date:dateStr,userId,
+      tasks:Array.isArray(dtData[key])?dtData[key]:[],
+      recurringDone:dtData[key]._recurringDone||{},
+      updatedAt:Date.now()
+    });}catch(e){console.error(e);}
+  }
+}
+
+// Override loadDtDoc to also load recurringDone
+async function loadDtDoc(dateStr, userId){
+  const key=dateStr+'_'+userId;
+  if(dtData[key]!==undefined)return dtData[key];
+  if(_local){dtData[key]=dtData[key]||[];return dtData[key];}
+  try{
+    const snap=await getDoc(doc(db,'dailyTasks',key));
+    if(snap.exists()){
+      const d=snap.data();
+      dtData[key]=d.tasks||[];
+      if(d.recurringDone) dtData[key]._recurringDone=d.recurringDone;
+    }else{
+      dtData[key]=[];
+    }
+  }catch(e){dtData[key]=[];}
+  return dtData[key];
+}
+
+// Override saveDtDoc to preserve recurringDone
+async function saveDtDoc(dateStr, userId, tasksList){
+  const key=dateStr+'_'+userId;
+  const prevRecurDone = (dtData[key]&&dtData[key]._recurringDone)||{};
+  dtData[key]=tasksList;
+  dtData[key]._recurringDone=prevRecurDone;
+  if(_local)return;
+  try{await setDoc(doc(db,'dailyTasks',key),{
+    date:dateStr,userId,
+    tasks:tasksList,
+    recurringDone:prevRecurDone,
+    updatedAt:Date.now()
+  });}catch(e){console.error(e);}
 }
 
 window.dtAdd=async function(userId, dateStr){
@@ -1650,16 +1764,83 @@ window.dtAdd=async function(userId, dateStr){
   const inp=eid('dtin-'+userId);if(!inp)return;
   const text=inp.value.trim();if(!text)return;
   const key=dateStr+'_'+userId;
-  const ts=[...(dtData[key]||[])];
+  const ts=[...(Array.isArray(dtData[key])?dtData[key]:[])];
   ts.push({id:'dt'+Date.now(),text,done:false,note:'',createdAt:Date.now()});
   await saveDtDoc(dateStr,userId,ts);
   inp.value='';
-  // Re-render just this user's panel
   renderDaily();
   toast('Task যোগ হয়েছে ✓','ok');
 };
+window.dtAddRecurringPrompt=async function(userId){
+  if(!isOwner()&&userId!==cu?.id){toast('🔒 শুধু নিজের recurring task add করতে পারবেন।','err');return;}
+  const inp=eid('dtin-'+userId);
+  let text=inp?.value.trim()||'';
+  if(!text) text=prompt('Recurring task লিখুন (প্রতিদিন দেখাবে):','');
+  if(!text||!text.trim())return;
+  const ts=[...(recurData[userId]||[])];
+  ts.push({id:'r'+Date.now(),text:text.trim(),note:''});
+  await saveRecurring(userId,ts);
+  if(inp)inp.value='';
+  renderDaily();
+  toast('Recurring task যোগ হয়েছে 🔁','ok');
+};
+window.dtAddRecurring=async function(userId){
+  if(!isOwner()&&userId!==cu?.id){toast('🔒 শুধু নিজের recurring task add করতে পারবেন।','err');return;}
+  const inp=eid('dtrin-'+userId);if(!inp)return;
+  const text=inp.value.trim();if(!text)return;
+  const ts=[...(recurData[userId]||[])];
+  ts.push({id:'r'+Date.now(),text,note:''});
+  await saveRecurring(userId,ts);
+  inp.value='';
+  renderDaily();
+  toast('Recurring task যোগ হয়েছে 🔁','ok');
+};
+window.dtDelRecurring=async function(userId, taskId){
+  if(!isOwner()&&userId!==cu?.id){toast('🔒 শুধু নিজের recurring task delete করতে পারবেন।','err');return;}
+  if(!confirm('এই recurring task মুছবেন? সব দিন থেকে উঠে যাবে।'))return;
+  const ts=(recurData[userId]||[]).filter(t=>t.id!==taskId);
+  await saveRecurring(userId,ts);
+  renderDaily();
+  toast('Recurring task মুছে গেছে','info');
+};
+window.dtToggleRecurring=async function(userId, dateStr, taskId){
+  if(!isOwner()&&userId!==cu?.id){toast('🔒 শুধু নিজের task update করতে পারবেন।','err');return;}
+  const done=getRecurDone(dateStr,userId);
+  const newDone=!done[taskId];
+  await setRecurDone(dateStr,userId,taskId,newDone);
+  renderDaily();
+};
 
-window.dtToggle=async function(userId, dateStr, idx){
+window.dtEdit=async function(userId, dateStr, idx, isRecurring){
+  if(!isOwner()&&userId!==cu?.id){toast('🔒 শুধু নিজের task edit করতে পারবেন।','err');return;}
+  if(isRecurring){
+    // Edit recurring task
+    const ts=recurData[userId]||[];
+    const t=ts[idx];if(!t)return;
+    const newText=prompt('Task edit করুন:',t.text);
+    if(newText===null)return;
+    const trimmed=newText.trim();if(!trimmed){toast('Task text খালি হতে পারবে না!','err');return;}
+    ts[idx]={...t,text:trimmed};
+    await saveRecurring(userId,[...ts]);
+    renderDaily();
+    toast('Task updated ✓','ok');
+  }else{
+    // Edit daily task
+    const key=dateStr+'_'+userId;
+    const ts=[...(dtData[key]||[])];
+    if(!ts[idx])return;
+    const newText=prompt('Task edit করুন:',ts[idx].text);
+    if(newText===null)return;
+    const trimmed=newText.trim();if(!trimmed){toast('Task text খালি হতে পারবে না!','err');return;}
+    ts[idx]={...ts[idx],text:trimmed};
+    await saveDtDoc(dateStr,userId,ts);
+    renderDaily();
+    toast('Task updated ✓','ok');
+  }
+};
+
+window.dtToggle=async function(userId, dateStr, idx, isRecurring=false){
+  if(isRecurring){await dtToggleRecurring(userId,dateStr,idx);return;}
   if(!isOwner()&&userId!==cu?.id){toast('🔒 শুধু নিজের daily task update করতে পারবেন।','err');return;}
   const key=dateStr+'_'+userId;
   const ts=[...(dtData[key]||[])];
@@ -1669,7 +1850,13 @@ window.dtToggle=async function(userId, dateStr, idx){
   renderDaily();
 };
 
-window.dtDel=async function(userId, dateStr, idx){
+window.dtDel=async function(userId, dateStr, idx, isRecurring=false){
+  if(isRecurring){
+    const ts=recurData[userId]||[];
+    const t=ts[idx];if(!t)return;
+    await dtDelRecurring(userId,t.id);
+    return;
+  }
   if(!isOwner()&&userId!==cu?.id){toast('🔒 শুধু নিজের daily task delete করতে পারবেন।','err');return;}
   if(!confirm('এই task মুছবেন?'))return;
   const key=dateStr+'_'+userId;
@@ -1680,8 +1867,18 @@ window.dtDel=async function(userId, dateStr, idx){
   toast('Task মুছে গেছে','info');
 };
 
-window.dtNote=async function(userId, dateStr, idx){
+window.dtNote=async function(userId, dateStr, idx, isRecurring=false){
   if(!isOwner()&&userId!==cu?.id){toast('🔒 শুধু নিজের daily task edit করতে পারবেন।','err');return;}
+  if(isRecurring){
+    const ts=recurData[userId]||[];
+    const t=ts[idx];if(!t)return;
+    const note=prompt('Note লিখুন:',t.note||'');
+    if(note===null)return;
+    ts[idx]={...t,note:note.trim()};
+    await saveRecurring(userId,[...ts]);
+    renderDaily();
+    return;
+  }
   const key=dateStr+'_'+userId;
   const ts=[...(dtData[key]||[])];
   if(!ts[idx])return;

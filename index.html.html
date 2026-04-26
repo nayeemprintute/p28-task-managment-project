@@ -248,36 +248,157 @@ select.fs option{background:var(--s2);}
 .mob-ov{position:fixed;inset:0;background:rgba(0,0,0,.55);z-index:399;display:none;}
 .mob-ov.open{display:block;}
 
-/* ══ BULK ACTION BAR ══ */
-.bab{position:fixed;bottom:24px;left:50%;transform:translateX(-50%) translateY(100px);z-index:900;background:var(--s1);border:1px solid var(--bd2);border-radius:16px;padding:11px 16px;display:flex;align-items:center;gap:10px;box-shadow:0 20px 60px rgba(0,0,0,.7),0 0 0 1px rgba(240,62,95,.2);transition:transform .3s cubic-bezier(.34,1.56,.64,1),opacity .25s;opacity:0;pointer-events:none;min-width:500px;}
-.bab.open{transform:translateX(-50%) translateY(0);opacity:1;pointer-events:all;}
-.bab-cnt{background:var(--red);color:#fff;font-size:11px;font-weight:800;padding:3px 9px;border-radius:20px;white-space:nowrap;}
-.bab-sep{width:1px;height:22px;background:var(--bd2);flex-shrink:0;}
-.bab-lbl{font-size:11px;color:var(--t3);white-space:nowrap;}
-.bab-actions{display:flex;gap:5px;align-items:center;}
-.bab-btn{display:flex;align-items:center;gap:5px;padding:6px 11px;border-radius:8px;font-size:12px;font-weight:600;cursor:pointer;transition:all .15s;border:1px solid var(--bd2);background:var(--s2);color:var(--t2);font-family:var(--font);white-space:nowrap;}
-.bab-btn:hover{border-color:var(--text);color:var(--text);background:var(--s3);}
-.bab-btn.danger{border-color:rgba(240,62,95,.4);color:var(--red);}
-.bab-btn.danger:hover{background:var(--red-d);border-color:var(--red);}
-.bab-btn.success{border-color:rgba(34,212,122,.3);color:var(--green);}
-.bab-btn.success:hover{background:rgba(34,212,122,.1);border-color:var(--green);}
-.bab-close{padding:5px 8px;border-radius:7px;cursor:pointer;color:var(--t3);background:none;border:1px solid var(--bd2);transition:.15s;font-size:13px;font-family:var(--font);}
-.bab-close:hover{color:var(--red);border-color:var(--red);}
-/* select-all checkbox in header */
-.th-chk{width:16px;height:16px;border:2px solid var(--bd2);border-radius:4px;cursor:pointer;transition:all .2s;display:flex;align-items:center;justify-content:center;flex-shrink:0;}
-.th-chk.ck{background:var(--red);border-color:var(--red);}
-.th-chk.ck::after{content:'✓';color:#fff;font-size:10px;font-weight:800;}
-.th-chk.partial{background:rgba(240,62,95,.3);border-color:var(--red);}
-.th-chk.partial::after{content:'—';color:var(--red);font-size:10px;font-weight:800;}
-/* row selected state */
-.tr.sel-r{background:rgba(240,62,95,.06)!important;}
-.tr.sel-r .chk{border-color:var(--red);}
-/* bulk status/assign dropdown */
-.bab-sel{background:var(--s2);border:1px solid var(--bd2);border-radius:8px;padding:6px 9px;color:var(--t2);font-family:var(--font);font-size:12px;outline:none;cursor:pointer;}
-.bab-sel option{background:var(--s2);}
-
 @media(max-width:960px){.sg{grid-template-columns:repeat(3,1fr);}.dg{grid-template-columns:1fr;}.kb{grid-template-columns:repeat(2,1fr);}.set-grid{grid-template-columns:1fr;}.th,.tr{grid-template-columns:30px 1fr 88px 82px 90px 68px;}.th>div:nth-child(6),.tr>div:nth-child(6){display:none;}}
-@media(max-width:680px){.ag{grid-template-columns:1fr;}.sb{position:fixed;left:0;top:0;bottom:0;z-index:400;transform:translateX(-100%);transition:.25s;width:250px;}.sb.open{transform:translateX(0);}.ham{display:flex;}.sg{grid-template-columns:repeat(2,1fr);}.kb{grid-template-columns:1fr;}.th,.tr{grid-template-columns:30px 1fr 80px 64px;}.th>div:nth-child(3),.tr>div:nth-child(3),.th>div:nth-child(4),.tr>div:nth-child(4),.th>div:nth-child(6),.tr>div:nth-child(6){display:none;}.tb{padding:0 13px;}.ct{padding:13px;}.fr2{grid-template-columns:1fr;}.lw{padding:26px 18px;}.np{width:100%;}.fts{display:none;}.set-grid{grid-template-columns:1fr;}.bab{min-width:calc(100vw - 24px);flex-wrap:wrap;bottom:12px;}}
+@media(max-width:680px){.ag{grid-template-columns:1fr;}.sb{position:fixed;left:0;top:0;bottom:0;z-index:400;transform:translateX(-100%);transition:.25s;width:250px;}.sb.open{transform:translateX(0);}.ham{display:flex;}.sg{grid-template-columns:repeat(2,1fr);}.kb{grid-template-columns:1fr;}.th,.tr{grid-template-columns:30px 1fr 80px 64px;}.th>div:nth-child(3),.tr>div:nth-child(3),.th>div:nth-child(4),.tr>div:nth-child(4),.th>div:nth-child(6),.tr>div:nth-child(6){display:none;}.tb{padding:0 13px;}.ct{padding:13px;}.fr2{grid-template-columns:1fr;}.lw{padding:26px 18px;}.np{width:100%;}.fts{display:none;}.set-grid{grid-template-columns:1fr;}}
+
+/* ══ DAILY TASKS ══ */
+.dt-header{display:flex;align-items:center;justify-content:space-between;margin-bottom:14px;}
+.dt-date-nav{display:flex;align-items:center;gap:9px;}
+.dt-date-btn{background:var(--s2);border:1px solid var(--bd2);color:var(--t2);border-radius:7px;padding:5px 10px;cursor:pointer;font-size:13px;transition:.15s;}
+.dt-date-btn:hover{border-color:var(--text);color:var(--text);}
+.dt-date-label{font-size:14px;font-weight:700;min-width:140px;text-align:center;}
+.dt-user-tabs{display:flex;gap:6px;flex-wrap:wrap;margin-bottom:14px;}
+.dt-user-tab{padding:5px 13px;border-radius:20px;font-size:12px;font-weight:600;cursor:pointer;border:1px solid var(--bd2);background:var(--s2);color:var(--t2);transition:.15s;}
+.dt-user-tab.active{background:var(--red-d);border-color:var(--red);color:var(--red);}
+.dt-section{background:var(--s1);border:1px solid var(--bd);border-radius:13px;margin-bottom:12px;overflow:hidden;}
+.dt-sec-head{padding:11px 15px;border-bottom:1px solid var(--bd);display:flex;align-items:center;justify-content:space-between;cursor:pointer;}
+.dt-sec-title{font-size:12px;font-weight:700;display:flex;align-items:center;gap:7px;}
+.dt-sec-count{font-size:10px;background:var(--s2);padding:2px 7px;border-radius:20px;color:var(--t3);}
+.dt-tasks{padding:6px 8px;}
+.dt-task{display:flex;align-items:center;gap:9px;padding:8px 8px;border-radius:8px;transition:.15s;cursor:pointer;}
+.dt-task:hover{background:var(--s2);}
+.dt-task-title{flex:1;font-size:13px;}
+.dt-task.done-t .dt-task-title{text-decoration:line-through;color:var(--t3);}
+.dt-add-row{display:flex;gap:7px;padding:7px 8px 9px;}
+.dt-add-row input{flex:1;background:var(--s2);border:1px solid var(--bd2);border-radius:7px;padding:6px 10px;color:var(--text);font-size:12px;outline:none;font-family:var(--font);}
+.dt-add-row input:focus{border-color:var(--red);}
+.dt-stats{display:grid;grid-template-columns:repeat(4,1fr);gap:9px;margin-bottom:16px;}
+.dt-stat{background:var(--s1);border:1px solid var(--bd);border-radius:10px;padding:12px;text-align:center;}
+.dt-stat .dsv{font-size:20px;font-weight:800;margin-bottom:2px;}
+.dt-stat .dsl{font-size:9px;letter-spacing:1px;text-transform:uppercase;color:var(--t3);}
+.dt-prog-bar{height:4px;background:var(--s3);border-radius:2px;margin-top:6px;overflow:hidden;}
+.dt-prog-fill{height:100%;background:var(--green);border-radius:2px;transition:width .4s;}
+
+/* ══ BULK ACTIONS ══ */
+.bulk-bar{background:var(--s3);border:1px solid var(--bd2);border-radius:10px;padding:9px 14px;margin-bottom:10px;display:none;align-items:center;gap:10px;flex-wrap:wrap;}
+.bulk-bar.show{display:flex;}
+.bulk-count{font-size:12px;font-weight:700;color:var(--text);}
+.bulk-sep{width:1px;height:18px;background:var(--bd2);}
+.chk-all{width:16px;height:16px;border:2px solid var(--bd2);border-radius:4px;cursor:pointer;transition:all .2s;display:inline-flex;align-items:center;justify-content:center;flex-shrink:0;}
+.chk-all.ck{background:var(--blue);border-color:var(--blue);}
+.chk-all.ck::after{content:'✓';color:#fff;font-size:10px;font-weight:800;}
+.tr-sel .chk-row{background:var(--red-d)!important;}
+.tr.selected{background:rgba(77,142,255,.08)!important;}
+
+/* ══ TIME TRACKING ══ */
+.tt-row{display:flex;align-items:center;gap:6px;margin-top:4px;}
+.tt-chip{font-size:10px;padding:2px 7px;border-radius:20px;background:rgba(157,111,255,.15);color:var(--purple);border:1px solid rgba(157,111,255,.3);display:inline-flex;align-items:center;gap:4px;}
+.tt-btn{padding:3px 8px;border-radius:5px;font-size:10px;cursor:pointer;border:1px solid;transition:.15s;font-family:var(--font);}
+.tt-start{background:rgba(34,212,122,.1);color:var(--green);border-color:rgba(34,212,122,.3);}
+.tt-start:hover{background:rgba(34,212,122,.2);}
+.tt-stop{background:rgba(240,62,95,.1);color:var(--red);border-color:rgba(240,62,95,.3);}
+.tt-stop:hover{background:rgba(240,62,95,.2);}
+
+/* ══ REPORT ══ */
+.rpt-tabs{display:flex;gap:5px;background:var(--s1);border:1px solid var(--bd);border-radius:9px;padding:4px;margin-bottom:16px;width:fit-content;}
+.rpt-tab{padding:6px 16px;border-radius:6px;font-size:12px;font-weight:600;cursor:pointer;color:var(--t2);transition:.15s;}
+.rpt-tab.active{background:var(--s3);color:var(--text);}
+.rpt-grid{display:grid;grid-template-columns:1fr 1fr;gap:14px;margin-bottom:14px;}
+.rpt-card{background:var(--s1);border:1px solid var(--bd);border-radius:13px;padding:16px;}
+.rpt-card h3{font-size:11px;font-weight:700;color:var(--t3);margin-bottom:13px;text-transform:uppercase;letter-spacing:1px;}
+.rpt-bar-row{display:flex;align-items:center;gap:9px;margin-bottom:8px;}
+.rpt-bar-label{font-size:11px;min-width:80px;color:var(--t2);}
+.rpt-bar-wrap{flex:1;height:6px;background:var(--s3);border-radius:3px;overflow:hidden;}
+.rpt-bar-fill{height:100%;border-radius:3px;transition:width .6s;}
+.rpt-bar-val{font-size:10px;color:var(--t3);min-width:28px;text-align:right;}
+.rpt-summary-row{display:flex;justify-content:space-between;align-items:center;padding:7px 0;border-bottom:1px solid var(--bd);font-size:12px;}
+.rpt-summary-row:last-child{border-bottom:none;}
+
+/* ══ CALENDAR VIEW ══ */
+.cal-header{display:flex;align-items:center;justify-content:space-between;margin-bottom:14px;}
+.cal-grid{display:grid;grid-template-columns:repeat(7,1fr);gap:3px;}
+.cal-day-label{text-align:center;font-size:10px;font-weight:700;color:var(--t3);text-transform:uppercase;padding:6px 0;}
+.cal-cell{background:var(--s1);border:1px solid var(--bd);border-radius:8px;min-height:80px;padding:6px;cursor:pointer;transition:.15s;position:relative;}
+.cal-cell:hover{border-color:var(--bd2);background:var(--s2);}
+.cal-cell.today{border-color:var(--red);background:var(--red-d);}
+.cal-cell.other-month{opacity:.4;}
+.cal-cell.has-tasks{border-color:var(--blue);}
+.cal-dn{font-size:11px;font-weight:700;margin-bottom:4px;}
+.cal-dot{font-size:9px;padding:1px 5px;border-radius:10px;margin-bottom:2px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;max-width:100%;}
+
+/* ══ GANTT / TIMELINE ══ */
+.gantt-wrap{overflow-x:auto;}
+.gantt-header{display:flex;border-bottom:1px solid var(--bd);padding-bottom:8px;margin-bottom:4px;}
+.gantt-task-col{width:200px;flex-shrink:0;font-size:10px;font-weight:700;color:var(--t3);text-transform:uppercase;letter-spacing:1px;padding-left:6px;}
+.gantt-days{display:flex;flex:1;}
+.gantt-day-head{font-size:9px;color:var(--t3);text-align:center;min-width:40px;font-weight:600;}
+.gantt-row{display:flex;align-items:center;padding:4px 0;border-bottom:1px solid var(--bd);}
+.gantt-row:last-child{border-bottom:none;}
+.gantt-row-label{width:200px;flex-shrink:0;font-size:11px;padding:4px 6px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;}
+.gantt-row-bars{flex:1;display:flex;align-items:center;height:28px;position:relative;}
+.gantt-bar{position:absolute;height:18px;border-radius:4px;display:flex;align-items:center;padding:0 6px;font-size:9px;font-weight:700;color:#fff;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;cursor:pointer;transition:.15s;}
+.gantt-bar:hover{filter:brightness(1.15);}
+
+/* ══ STAR/PIN ══ */
+.star-btn{cursor:pointer;font-size:13px;padding:2px 4px;border-radius:4px;transition:.15s;line-height:1;background:none;border:none;color:var(--t3);}
+.star-btn:hover{color:var(--gold);}
+.star-btn.starred{color:var(--gold);}
+
+/* ══ ONLINE INDICATOR ══ */
+.online-dot{width:8px;height:8px;border-radius:50%;background:var(--green);box-shadow:0 0 5px var(--green);display:inline-block;flex-shrink:0;}
+.online-dot.offline{background:var(--t3);box-shadow:none;}
+.online-dot.away{background:var(--gold);box-shadow:0 0 5px var(--gold);}
+
+/* ══ DATE PICKER ══ */
+input[type="date"].fg-date{color-scheme:dark;}
+
+/* ══ DAILY TASK EDIT INLINE ══ */
+.dt-task-edit-input{flex:1;background:var(--s2);border:1px solid var(--red);border-radius:6px;padding:4px 8px;color:var(--text);font-size:13px;outline:none;font-family:var(--font);}
+
+/* ══ INLINE EDIT MODAL (Daily Task) ══ */
+.iem{position:fixed;inset:0;background:rgba(0,0,0,.75);display:none;align-items:center;justify-content:center;z-index:1100;backdrop-filter:blur(6px);}
+.iem.open{display:flex;}
+.ied{background:var(--s1);border:1px solid var(--bd2);border-radius:16px;width:440px;max-width:calc(100vw - 24px);box-shadow:0 32px 64px rgba(0,0,0,.6);animation:ieSlide .18s ease;}
+@keyframes ieSlide{from{transform:translateY(-12px);opacity:0;}to{transform:translateY(0);opacity:1;}}
+.ieh{padding:18px 20px 0;display:flex;justify-content:space-between;align-items:center;}
+.iet{font-size:15px;font-weight:700;}
+.iec{background:var(--s2);border:1px solid var(--bd2);color:var(--t2);border-radius:7px;padding:4px 9px;cursor:pointer;font-size:14px;transition:.15s;line-height:1.4;}
+.iec:hover{color:var(--red);border-color:var(--red);}
+.ieb{padding:16px 20px 20px;display:flex;flex-direction:column;gap:11px;}
+.ie-row{display:flex;flex-direction:column;gap:5px;}
+.ie-lbl{font-size:10px;letter-spacing:1.5px;text-transform:uppercase;color:var(--t3);font-weight:600;}
+.ie-inp{width:100%;background:var(--s2);border:1px solid var(--bd2);border-radius:8px;padding:9px 12px;color:var(--text);font-family:var(--font);font-size:13px;outline:none;transition:border-color .2s;resize:none;}
+.ie-inp:focus{border-color:var(--red);}
+.ie-foot{display:flex;justify-content:flex-end;gap:7px;padding:0 20px 18px;}
+
+/* ══ BULK SELECT SYSTEM ══ */
+.bulk-bar{background:var(--s3);border:1px solid var(--bd2);border-radius:10px;padding:9px 14px;margin-bottom:10px;display:none;align-items:center;gap:10px;flex-wrap:wrap;}
+.bulk-bar.show{display:flex;}
+.bulk-count{font-size:12px;font-weight:700;color:var(--text);}
+.bulk-sep{width:1px;height:18px;background:var(--bd2);}
+.chk-all{width:16px;height:16px;border:2px solid var(--bd2);border-radius:4px;cursor:pointer;transition:all .2s;display:inline-flex;align-items:center;justify-content:center;flex-shrink:0;}
+.chk-all.ck{background:var(--blue);border-color:var(--blue);}
+.chk-all.ck::after{content:'✓';color:#fff;font-size:10px;font-weight:800;}
+.tr.selected{background:rgba(77,142,255,.08)!important;outline:1px solid rgba(77,142,255,.25);}
+.dt-task.selected{background:rgba(77,142,255,.1)!important;border-radius:8px;outline:1px solid rgba(77,142,255,.25);}
+/* bulk status select */
+.bulk-sel{background:var(--s2);border:1px solid var(--bd2);border-radius:7px;padding:5px 8px;color:var(--text);font-family:var(--font);font-size:12px;outline:none;cursor:pointer;}
+.bulk-sel option{background:var(--s2);}
+
+/* ══ RECURRING TASK ══ */
+.recurring-chip{font-size:9px;padding:2px 6px;border-radius:10px;background:rgba(157,111,255,.15);color:var(--purple);border:1px solid rgba(157,111,255,.3);flex-shrink:0;}
+.dt-recur-section{background:rgba(157,111,255,.06);border:1px dashed rgba(157,111,255,.3);border-radius:10px;padding:10px 8px;margin-top:6px;}
+.dt-recur-head{font-size:10px;font-weight:700;color:var(--purple);letter-spacing:1px;text-transform:uppercase;margin-bottom:7px;display:flex;align-items:center;gap:6px;}
+/* ══ MEMBER RESTRICTED OVERLAY ══ */
+.restricted{pointer-events:none;opacity:.5;}
+.member-badge{font-size:9px;padding:2px 6px;border-radius:10px;background:rgba(77,142,255,.15);color:var(--blue);border:1px solid rgba(77,142,255,.3);margin-left:6px;}
+/* ══ PERMISSION ROLE INDICATOR ══ */
+.role-chip{display:inline-flex;align-items:center;gap:4px;font-size:9px;font-weight:700;padding:2px 7px;border-radius:10px;letter-spacing:.5px;text-transform:uppercase;}
+.role-chip.owner{background:rgba(240,62,95,.15);color:var(--red);border:1px solid rgba(240,62,95,.3);}
+.role-chip.member{background:rgba(77,142,255,.12);color:var(--blue);border:1px solid rgba(77,142,255,.25);}
+.perm-bar{display:none;background:rgba(77,142,255,.08);border-bottom:1px solid rgba(77,142,255,.2);padding:5px 16px;font-size:11px;color:var(--blue);align-items:center;gap:6px;flex-shrink:0;}
+.perm-bar.show{display:flex;}
+.view-only-tag{display:inline-flex;align-items:center;gap:3px;font-size:9px;font-weight:700;padding:1px 6px;border-radius:4px;background:rgba(77,142,255,.15);color:var(--blue);border:1px solid rgba(77,142,255,.3);}
 </style>
 </head>
 <body>
@@ -319,8 +440,13 @@ select.fs option{background:var(--s2);}
         <div class="ng">
           <div class="ngl">Overview</div>
           <div class="ni active" onclick="showV('dashboard',this)"><span class="ic">📊</span> Dashboard</div>
+          <div class="ni" onclick="showV('daily',this)"><span class="ic">📅</span> Daily Tasks</div>
           <div class="ni" onclick="showV('tasks',this)"><span class="ic">✅</span> All Tasks <span class="bc" id="nc">0</span></div>
           <div class="ni" onclick="showV('kanban',this)"><span class="ic">🗂</span> Kanban Board</div>
+          <div class="ni" onclick="showV('calendar',this)"><span class="ic">🗓</span> Calendar</div>
+          <div class="ni" onclick="showV('gantt',this)"><span class="ic">📊</span> Timeline/Gantt</div>
+          <div class="ni" onclick="showV('starred',this)"><span class="ic">⭐</span> Starred Tasks</div>
+          <div class="ni" onclick="showV('report',this)"><span class="ic">📈</span> Reports</div>
         </div>
         <div class="ng">
           <div class="ngl">Sections <span class="ngl-add" onclick="openQuick('section')">＋</span></div>
@@ -356,6 +482,10 @@ select.fs option{background:var(--s2);}
           </button>
         </div>
       </div>
+      <!-- Permission info bar for non-owners -->
+      <div class="perm-bar" id="permBar">
+        🔒 <strong id="permRoleName"></strong> Mode — শুধু নিজের task edit/delete করতে পারবেন। Task তৈরি, user management এবং settings শুধু Owner এর জন্য।
+      </div>
       <div class="ct">
         <div class="view active" id="view-dashboard">
           <div class="sg" id="sg"></div>
@@ -367,6 +497,19 @@ select.fs option{background:var(--s2);}
           </div>
         </div>
         <div class="view" id="view-tasks">
+          <!-- Bulk Action Bar -->
+          <div class="bulk-bar" id="bulkBar">
+            <div class="chk-all" id="chkAll" onclick="toggleSelectAll()"></div>
+            <span class="bulk-count" id="bulkCount">0 selected</span>
+            <div class="bulk-sep"></div>
+            <select class="bulk-sel" id="bulkStatus" onchange="bulkChangeStatus()">
+              <option value="">— Status পরিবর্তন করুন —</option>
+            </select>
+            <button class="btn bg bxs" onclick="bulkMarkDone()">✓ Done করুন</button>
+            <button class="btn bg bxs" onclick="bulkMarkTodo()">↩ Reopen করুন</button>
+            <button class="btn bg bxs" style="color:var(--red);border-color:rgba(240,62,95,.4)" onclick="bulkDelete()">🗑 Delete করুন</button>
+            <button class="btn bg bxs" style="margin-left:auto" onclick="clearSelection()">✕ বাতিল</button>
+          </div>
           <div class="tlb">
             <div class="sb2"><span style="color:var(--t3)">🔍</span><input type="text" id="si" placeholder="Search tasks..." oninput="renderT()"/></div>
             <div class="fts" id="statusTabs"></div>
@@ -380,7 +523,7 @@ select.fs option{background:var(--s2);}
             <div class="srt" id="srtBtn" onclick="toggleAsc()"><span>A→Z</span><span class="sa">▲</span></div>
           </div>
           <div class="tw">
-            <div class="th"><div id="thChk" class="th-chk" onclick="toggleSelectAll()" title="সব select করুন"></div><div>Task</div><div>Section</div><div>Priority</div><div>Status</div><div>Assignee</div><div></div></div>
+            <div class="th"><div><div class="chk-all" id="chkAllTh" onclick="toggleSelectAll()" title="সব select করুন"></div></div><div>Task</div><div>Section</div><div>Priority</div><div>Status</div><div>Assignee</div><div></div></div>
             <div id="tl"></div>
           </div>
         </div>
@@ -397,6 +540,96 @@ select.fs option{background:var(--s2);}
           <div style="color:var(--t3);font-size:12px;margin-bottom:16px">Sections, Statuses, Priorities, Roles</div>
           <div class="set-grid" id="setGrid"></div>
         </div>
+
+        <!-- ══ STARRED TASKS VIEW ══ -->
+        <div class="view" id="view-starred">
+          <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:16px;">
+            <div><div style="font-weight:700;font-size:16px">⭐ Starred Tasks</div><div style="color:var(--t3);font-size:12px">তোমার starred ও pinned tasks</div></div>
+          </div>
+          <div class="tw">
+            <div class="th"><div></div><div>Task</div><div>Section</div><div>Priority</div><div>Status</div><div>Assignee</div><div></div></div>
+            <div id="starredList"></div>
+          </div>
+        </div>
+
+        <!-- ══ CALENDAR VIEW ══ -->
+        <div class="view" id="view-calendar">
+          <div class="cal-header">
+            <div style="font-weight:700;font-size:16px">🗓 Calendar</div>
+            <div style="display:flex;align-items:center;gap:9px;">
+              <button class="dt-date-btn" onclick="calNav(-1)">‹</button>
+              <div class="dt-date-label" id="calLabel">—</div>
+              <button class="dt-date-btn" onclick="calNav(1)">›</button>
+              <button class="dt-date-btn" onclick="calGoToday()">Today</button>
+            </div>
+          </div>
+          <div class="cal-grid" id="calDayLabels"></div>
+          <div class="cal-grid" id="calGrid" style="margin-top:3px;"></div>
+          <div id="calTaskDetail" style="display:none;margin-top:14px;background:var(--s1);border:1px solid var(--bd);border-radius:13px;padding:16px;">
+            <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:10px;">
+              <div style="font-weight:700;font-size:13px" id="calDetailLabel">Tasks</div>
+              <span style="cursor:pointer;color:var(--t3)" onclick="document.getElementById('calTaskDetail').style.display='none'">✕</span>
+            </div>
+            <div id="calDetailList"></div>
+          </div>
+        </div>
+
+        <!-- ══ GANTT / TIMELINE VIEW ══ -->
+        <div class="view" id="view-gantt">
+          <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:14px;">
+            <div><div style="font-weight:700;font-size:16px">📊 Timeline / Gantt</div><div style="color:var(--t3);font-size:12px">Task schedule ও phase overview</div></div>
+            <div style="display:flex;gap:7px;">
+              <select class="fs" id="ganttPhaseF" onchange="renderGantt()"><option value="">All Phases</option><option value="Phase 1">Phase 1</option><option value="Phase 2">Phase 2</option><option value="Both">Both</option></select>
+              <select class="fs" id="ganttSecF" onchange="renderGantt()"><option value="">All Sections</option></select>
+            </div>
+          </div>
+          <div style="background:var(--s1);border:1px solid var(--bd);border-radius:13px;padding:14px;">
+            <div class="gantt-wrap" id="ganttWrap"></div>
+          </div>
+        </div>
+
+        <!-- ══ REPORT VIEW ══ -->
+        <div class="view" id="view-report">
+          <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:14px;">
+            <div><div style="font-weight:700;font-size:16px">📈 Reports</div><div style="color:var(--t3);font-size:12px">Team ও task analytics</div></div>
+            <button class="btn bg bsm" onclick="renderReport()">🔄 Refresh</button>
+          </div>
+          <div class="rpt-tabs">
+            <div class="rpt-tab active" onclick="setRptTab('overview',this)">Overview</div>
+            <div class="rpt-tab" onclick="setRptTab('team',this)">Team</div>
+            <div class="rpt-tab" onclick="setRptTab('section',this)">Sections</div>
+            <div class="rpt-tab" onclick="setRptTab('priority',this)">Priority</div>
+          </div>
+          <div id="rptContent"></div>
+        </div>
+
+        <!-- ══ DAILY TASKS VIEW ══ -->
+        <div class="view" id="view-daily">
+          <div class="dt-header">
+            <div>
+              <div style="font-weight:700;font-size:16px">📅 Daily Tasks</div>
+              <div style="color:var(--t3);font-size:12px" id="dtSubLabel">আজকের কাজের তালিকা</div>
+            </div>
+            <div class="dt-date-nav">
+              <button class="dt-date-btn" onclick="dtNav(-1)">‹</button>
+              <div class="dt-date-label" id="dtDateLabel" style="min-width:160px;text-align:center;font-size:14px;font-weight:700"></div>
+              <button class="dt-date-btn" onclick="dtNav(1)">›</button>
+              <button class="dt-date-btn" onclick="dtGoToday()" style="font-size:11px;padding:5px 9px;">আজ</button>
+            </div>
+          </div>
+          <!-- Daily Task Bulk Bar -->
+          <div class="bulk-bar" id="dtBulkBar">
+            <span class="bulk-count" id="dtBulkCount">0 selected</span>
+            <div class="bulk-sep"></div>
+            <button class="btn bg bxs" onclick="bulkDtMarkDone()">✓ Done করুন</button>
+            <button class="btn bg bxs" style="color:var(--red);border-color:rgba(240,62,95,.4)" onclick="bulkDtDelete()">🗑 Delete করুন</button>
+            <button class="btn bg bxs" style="margin-left:auto" onclick="clearDtSelection()">✕ বাতিল</button>
+          </div>
+          <div class="dt-stats" id="dtStats"></div>
+          <div class="dt-user-tabs" id="dtUserTabs"></div>
+          <div id="dtContent"></div>
+        </div>
+
       </div>
     </div>
   </div>
@@ -473,27 +706,32 @@ select.fs option{background:var(--s2);}
   </div>
 </div>
 
-<!-- BULK ACTION BAR -->
-<div class="bab" id="bulkBar">
-  <span class="bab-cnt" id="bulkCnt">0 selected</span>
-  <div class="bab-sep"></div>
-  <div class="bab-actions">
-    <button class="bab-btn success" onclick="bulkDone()">✅ Done করো</button>
-    <button class="bab-btn" onclick="bulkReopen()">🔄 Reopen করো</button>
-    <div class="bab-sep"></div>
-    <select class="bab-sel" id="bulkStatusSel" onchange="bulkSetStatus()">
-      <option value="">— Status পরিবর্তন —</option>
-    </select>
-    <select class="bab-sel" id="bulkPriSel" onchange="bulkSetPriority()">
-      <option value="">— Priority পরিবর্তন —</option>
-    </select>
-    <select class="bab-sel" id="bulkAssignSel" onchange="bulkSetAssignee()">
-      <option value="">— Assign করো —</option>
-    </select>
-    <div class="bab-sep"></div>
-    <button class="bab-btn danger" onclick="bulkDelete()">🗑 Delete</button>
+<!-- INLINE EDIT MODAL (Daily Task) -->
+<div class="iem" id="iem">
+  <div class="ied">
+    <div class="ieh">
+      <div class="iet" id="iemTitle">Task Edit করুন</div>
+      <button class="iec" onclick="closeIEM()">✕</button>
+    </div>
+    <div class="ieb">
+      <input type="hidden" id="iemUserId"/>
+      <input type="hidden" id="iemDateStr"/>
+      <input type="hidden" id="iemIdx"/>
+      <input type="hidden" id="iemIsRecurring"/>
+      <div class="ie-row">
+        <div class="ie-lbl">Task</div>
+        <textarea class="ie-inp" id="iemText" rows="2" placeholder="Task লিখুন..."></textarea>
+      </div>
+      <div class="ie-row">
+        <div class="ie-lbl">Note (ঐচ্ছিক)</div>
+        <input class="ie-inp" type="text" id="iemNote" placeholder="Note লিখুন..."/>
+      </div>
+    </div>
+    <div class="ie-foot">
+      <button class="btn bg" onclick="closeIEM()">বাতিল</button>
+      <button class="btn br" onclick="saveIEM()">Save করুন</button>
+    </div>
   </div>
-  <button class="bab-close" onclick="clearSel()">✕</button>
 </div>
 
 <div id="toast"></div>
@@ -560,8 +798,22 @@ const DEF_TASKS=[
 // ══ STATE ══
 let sections=[],statuses=[],priorities=[],roles=[],users=[],tasks=[],notifs=[];
 let cu=null,filt={status:'all',section:null,assignee:null},sortAsc=true,sortF='due',exp=new Set(),cv='dashboard';
-let sel=new Set(); // bulk selected task ids
 let _local=false;
+
+// ══ PERMISSIONS ══
+// isOwner: শুধুমাত্র Owner role সব কিছু করতে পারবে
+const isOwner = () => cu?.role === 'Owner';
+// isMyTask: নিজের task কিনা
+const isMyTask = t => t?.assignee === cu?.id;
+// canActOnTask: Owner অথবা নিজের task — edit/delete/toggle করতে পারবে
+const canActOnTask = t => isOwner() || isMyTask(t);
+// canCreate: শুধু Owner নতুন task/user/category তৈরি করতে পারবে
+const canCreate = () => isOwner();
+// canManageSystem: শুধু Owner settings/users manage করতে পারবে
+const canManageSystem = () => isOwner();
+// দেখানোর জন্য permission denied toast
+const permDenied = () => toast('🔒 Permission নেই! শুধুমাত্র Owner এই কাজটি করতে পারবেন।', 'err');
+const permDeniedTask = () => toast('🔒 শুধু নিজের task edit/delete করতে পারবেন।', 'err');
 
 // ══ HELPERS ══
 const h2r=(h,a)=>{const r=parseInt(h.slice(1,3),16),g=parseInt(h.slice(3,5),16),b=parseInt(h.slice(5,7),16);return`rgba(${r},${g},${b},${a})`;};
@@ -762,11 +1014,46 @@ window.doLogin=function(){
   if(!u||u.pass!==pass){eid('lerr').style.display='block';return;}
   cu=u;
   eid('loginScreen').style.display='none';eid('app').style.display='block';
-  upSbU();buildSidebar();rebuildDropdowns();
+  upSbU();buildSidebar();rebuildDropdowns();applyPermUI();
   showV('dashboard',document.querySelector('.ni'));
   upND();renderNP();
   toast('Welcome, '+u.name+' 👋','ok');
 };
+
+// ══ PERMISSION UI ══
+// Login এর পরে role অনুযায়ী UI hide/show করে
+function applyPermUI(){
+  const owner = isOwner();
+  // Topbar buttons
+  const btnTask = document.querySelector('.tb-act .btn.bg.bsm');
+  if(btnTask) btnTask.style.display = owner ? '' : 'none';
+  const btnUser = document.querySelector('.tb-act .btn.br.bsm');
+  if(btnUser) btnUser.style.display = owner ? '' : 'none';
+  // Sidebar — Section ＋ add button
+  const secAdd = document.querySelector('.ngl-add[onclick*="openQuick"]');
+  if(secAdd) secAdd.style.display = owner ? '' : 'none';
+  // Sidebar — Team ＋ add button
+  const teamAdd = document.querySelector('.ngl-add[onclick*="openM"]');
+  if(teamAdd) teamAdd.style.display = owner ? '' : 'none';
+  // Sidebar — Manage Users nav item
+  const manageUsers = document.querySelector('.ni[onclick*="showV(\'users\'"]');
+  if(manageUsers) manageUsers.style.display = owner ? '' : 'none';
+  // Sidebar — Settings nav item
+  const settingsNav = document.querySelector('.ni[onclick*="showV(\'settings\'"]');
+  if(settingsNav) settingsNav.style.display = owner ? '' : 'none';
+  // Permission bar (non-owner info strip)
+  const permBar = document.getElementById('permBar');
+  if(permBar){
+    permBar.classList.toggle('show', !owner);
+    const pn = document.getElementById('permRoleName');
+    if(pn) pn.textContent = cu?.role || '';
+  }
+  // Role chip in sidebar user area
+  const rl = document.getElementById('sbRl');
+  if(rl){
+    rl.innerHTML = `${cu?.role} <span class="role-chip ${owner?'owner':'member'}">${owner?'👑 Full Access':'👁 Limited'}</span>`;
+  }
+}
 window.doLogout=function(){
   cu=null;window._selUid=null;
   eid('app').style.display='none';eid('loginScreen').style.display='flex';
@@ -785,9 +1072,10 @@ function upSbU(){
 // ══ SIDEBAR ══
 function buildSidebar(){
   const sn=eid('secNav');
-  if(sn)sn.innerHTML=sections.map(s=>`<div class="ni" onclick="secF('${s.id}',this)"><span class="ic">${s.icon}</span>${s.name}<span class="ni-del" onclick="event.stopPropagation();delSection('${s.id}')">✕</span></div>`).join('');
+  const delBtn=(fn,id)=>isOwner()?`<span class="ni-del" onclick="event.stopPropagation();${fn}('${id}')">✕</span>`:'';
+  if(sn)sn.innerHTML=sections.map(s=>`<div class="ni" onclick="secF('${s.id}',this)"><span class="ic">${s.icon}</span>${s.name}${delBtn('delSection',s.id)}</div>`).join('');
   const tn=eid('teamNav');
-  if(tn)tn.innerHTML=users.map(u=>`<div class="ni" onclick="assF('${u.id}',this)"><span style="width:16px;height:16px;border-radius:4px;background:${h2r(u.color||'#f03e5f',.25)};color:${u.color||'#f03e5f'};font-size:9px;font-weight:700;display:inline-flex;align-items:center;justify-content:center;flex-shrink:0">${u.emoji||u.name[0]}</span>${u.name}'s Tasks<span class="ni-del" onclick="event.stopPropagation();delUser('${u.id}')">✕</span></div>`).join('');
+  if(tn)tn.innerHTML=users.map(u=>`<div class="ni" onclick="assF('${u.id}',this)"><span style="width:16px;height:16px;border-radius:4px;background:${h2r(u.color||'#f03e5f',.25)};color:${u.color||'#f03e5f'};font-size:9px;font-weight:700;display:inline-flex;align-items:center;justify-content:center;flex-shrink:0">${u.emoji||u.name[0]}</span>${u.name}'s Tasks${delBtn('delUser',u.id)}</div>`).join('');
 }
 
 // ══ DROPDOWNS ══
@@ -802,24 +1090,33 @@ function rebuildDropdowns(){
   el('tSt',statuses.map(s=>`<option value="${s.id}">${s.name}</option>`).join(''));
   el('tAs',users.map(u=>`<option value="${u.id}">${u.name} (${u.role})</option>`).join(''));
   el('uR',roles.map(r=>`<option>${r}</option>`).join(''));
-  // Reset bulk dropdowns so they rebuild fresh
-  el('bulkStatusSel',`<option value="">— Status পরিবর্তন —</option>`);
-  el('bulkPriSel',`<option value="">— Priority পরিবর্তন —</option>`);
-  el('bulkAssignSel',`<option value="">— Assign করো —</option>`);
 }
 
 // ══ VIEWS ══
 window.showV=function(v,el){
   cv=v;filt={status:'all',section:null,assignee:null};
-  sel.clear();upBulkBar();
   document.querySelectorAll('.view').forEach(x=>x.classList.remove('active'));
   eid('view-'+v)?.classList.add('active');
   document.querySelectorAll('.ni').forEach(n=>n.classList.remove('active'));
   if(el)el.classList.add('active');
-  const titles={dashboard:'Dashboard',tasks:'All Tasks',kanban:'Kanban Board',users:'Team Management',settings:'⚙️ Settings'};
+  const titles={dashboard:'Dashboard',tasks:'All Tasks',kanban:'Kanban Board',users:'Team Management',settings:'⚙️ Settings',starred:'⭐ Starred Tasks',calendar:'🗓 Calendar',gantt:'📊 Timeline/Gantt',report:'📈 Reports',daily:'📅 Daily Tasks'};
   const vt=eid('vt');if(vt)vt.textContent=titles[v]||'Tasks';
+  // Non-owner protected pages
+  if(!isOwner()&&(v==='users'||v==='settings')){
+    toast('🔒 এই section শুধুমাত্র Owner দেখতে পারবেন।','err');
+    showV('dashboard',document.querySelector('.ni'));
+    return;
+  }
   if(v==='tasks'){resetFilters();renderT();}
-  if(v==='kanban')renderK();if(v==='users')renderU();if(v==='dashboard')renderD();if(v==='settings')renderSettings();
+  if(v==='kanban')renderK();
+  if(v==='users')renderU();
+  if(v==='dashboard')renderD();
+  if(v==='settings')renderSettings();
+  if(v==='starred')renderStarred();
+  if(v==='calendar'){calMonth=calMonth||(new Date().getMonth());calYear=calYear||(new Date().getFullYear());renderCal();}
+  if(v==='gantt')renderGantt();
+  if(v==='report'){rptTab=rptTab||'overview';renderReport();}
+  if(v==='daily'){initDailyDate();renderDaily();}
   closeMob();
 };
 function resetFilters(){
@@ -852,7 +1149,16 @@ function renderAll(){
   const cnt=tasks.filter(t=>t.status!=='done').length;
   const nc=eid('nc');if(nc)nc.textContent=cnt;
   upND();
-  if(cv==='dashboard')renderD();if(cv==='tasks')renderT();if(cv==='kanban')renderK();if(cv==='users')renderU();if(cv==='settings')renderSettings();
+  if(cv==='dashboard')renderD();
+  if(cv==='tasks')renderT();
+  if(cv==='kanban')renderK();
+  if(cv==='users')renderU();
+  if(cv==='settings')renderSettings();
+  if(cv==='starred')renderStarred();
+  if(cv==='calendar')renderCal();
+  if(cv==='gantt')renderGantt();
+  if(cv==='report')renderReport();
+  if(cv==='daily')renderDaily();
 }
 
 // ══ DASHBOARD ══
@@ -888,17 +1194,148 @@ window.setSt=function(s,el){filt.status=s;document.querySelectorAll('.ft').forEa
 window.changeSort=function(){sortF=eid('sortSel').value;renderT();};
 window.toggleAsc=function(){sortAsc=!sortAsc;eid('srtBtn').classList.toggle('asc',sortAsc);renderT();};
 
+// ══ BULK SELECTION STATE ══
+let selectedIds = new Set();
+
+function updateBulkBar(){
+  const bar=eid('bulkBar');
+  const cnt=eid('bulkCount');
+  const chkAll=eid('chkAll');
+  const chkAllTh=eid('chkAllTh');
+  const show=selectedIds.size>0;
+  if(bar)bar.classList.toggle('show',show);
+  if(cnt)cnt.textContent=`${selectedIds.size}টি selected`;
+  // Populate bulk status select
+  const bs=eid('bulkStatus');
+  if(bs&&bs.options.length<=1){
+    statuses.forEach(s=>{const o=document.createElement('option');o.value=s.id;o.textContent=s.name;bs.appendChild(o);});
+  }
+  // Select all checkbox state
+  const visibleIds=getF().map(t=>t.id);
+  const allSelected=visibleIds.length>0&&visibleIds.every(id=>selectedIds.has(id));
+  [chkAll,chkAllTh].forEach(el=>{if(el)el.classList.toggle('ck',allSelected);});
+}
+window.toggleTaskSelect=function(id,e){
+  e.stopPropagation();
+  if(selectedIds.has(id))selectedIds.delete(id);
+  else selectedIds.add(id);
+  updateBulkBar();
+  // Toggle row highlight
+  const row=document.querySelector(`[data-id="${id}"]`);
+  if(row)row.classList.toggle('selected',selectedIds.has(id));
+};
+window.toggleSelectAll=function(){
+  const visibleIds=getF().map(t=>t.id);
+  const allSelected=visibleIds.every(id=>selectedIds.has(id));
+  if(allSelected){visibleIds.forEach(id=>selectedIds.delete(id));}
+  else{visibleIds.forEach(id=>selectedIds.add(id));}
+  updateBulkBar();
+  renderT();
+};
+window.clearSelection=function(){selectedIds.clear();updateBulkBar();renderT();};
+window.bulkMarkDone=async function(){
+  if(!selectedIds.size)return;
+  for(const id of selectedIds){
+    const t=tasks.find(t=>t.id===id);
+    if(t&&canActOnTask(t)){t.status='done';await saveTaskFS(t);}
+  }
+  toast(`${selectedIds.size}টি task done করা হয়েছে ✓`,'ok');
+  selectedIds.clear();updateBulkBar();
+};
+window.bulkMarkTodo=async function(){
+  if(!selectedIds.size)return;
+  for(const id of selectedIds){
+    const t=tasks.find(t=>t.id===id);
+    if(t&&canActOnTask(t)){t.status='todo';await saveTaskFS(t);}
+  }
+  toast(`${selectedIds.size}টি task reopen করা হয়েছে`,'ok');
+  selectedIds.clear();updateBulkBar();
+};
+window.bulkChangeStatus=async function(){
+  const val=eid('bulkStatus')?.value;if(!val||!selectedIds.size)return;
+  const sta=staById(val);
+  for(const id of selectedIds){
+    const t=tasks.find(t=>t.id===id);
+    if(t&&canActOnTask(t)){t.status=val;await saveTaskFS(t);}
+  }
+  toast(`${selectedIds.size}টি task → ${sta.name} ✓`,'ok');
+  eid('bulkStatus').value='';
+  selectedIds.clear();updateBulkBar();
+};
+window.bulkDelete=async function(){
+  if(!selectedIds.size)return;
+  const canDel=[...selectedIds].filter(id=>{const t=tasks.find(t=>t.id===id);return t&&canActOnTask(t);});
+  if(!canDel.length){permDeniedTask();return;}
+  if(!confirm(`${canDel.length}টি task delete করবেন?`))return;
+  for(const id of canDel){
+    const t=tasks.find(t=>t.id===id);
+    if(t)await sendNotif(t.assignee,'deleted',t.id,t.title,cu?.name||'Someone');
+    await deleteTaskFS(id);
+  }
+  toast(`${canDel.length}টি task delete হয়েছে`,'info');
+  selectedIds.clear();updateBulkBar();
+};
+
+// ══ INLINE EDIT MODAL (Daily Task) ══
+window.openIEM=function(userId,dateStr,idx,isRecurring,text,note){
+  eid('iemUserId').value=userId;
+  eid('iemDateStr').value=dateStr;
+  eid('iemIdx').value=idx;
+  eid('iemIsRecurring').value=isRecurring?'1':'0';
+  eid('iemText').value=text||'';
+  eid('iemNote').value=note||'';
+  eid('iemTitle').textContent=isRecurring?'🔁 Recurring Task Edit':'📅 Daily Task Edit';
+  eid('iem').classList.add('open');
+  setTimeout(()=>eid('iemText').focus(),80);
+};
+window.closeIEM=function(){eid('iem').classList.remove('open');};
+window.saveIEM=async function(){
+  const userId=eid('iemUserId').value;
+  const dateStr=eid('iemDateStr').value;
+  const idx=parseInt(eid('iemIdx').value);
+  const isRecurring=eid('iemIsRecurring').value==='1';
+  const newText=eid('iemText').value.trim();
+  const newNote=eid('iemNote').value.trim();
+  if(!newText){toast('Task text খালি হতে পারবে না!','err');return;}
+  if(!isOwner()&&userId!==cu?.id){permDeniedTask();return;}
+  if(isRecurring){
+    const ts=[...(recurData[userId]||[])];
+    if(!ts[idx])return;
+    ts[idx]={...ts[idx],text:newText,note:newNote};
+    await saveRecurring(userId,ts);
+  }else{
+    const key=dateStr+'_'+userId;
+    const ts=[...(Array.isArray(dtData[key])?dtData[key]:[])];
+    if(!ts[idx])return;
+    ts[idx]={...ts[idx],text:newText,note:newNote};
+    await saveDtDoc(dateStr,userId,ts);
+  }
+  closeIEM();
+  renderDaily();
+  toast('Task updated ✓','ok');
+};
+// Close IEM on backdrop click
+document.addEventListener('DOMContentLoaded',()=>{
+  const iemEl=eid('iem');
+  if(iemEl)iemEl.addEventListener('click',e=>{if(e.target===iemEl)closeIEM();});
+  // Enter to save in IEM
+  const iemNote=eid('iemNote');
+  if(iemNote)iemNote.addEventListener('keydown',e=>{if(e.key==='Enter')saveIEM();});
+});
+
 function renderT(){
   const list=getF();const tl=eid('tl');if(!tl)return;
-  if(!list.length){tl.innerHTML=`<div style="text-align:center;padding:48px 20px;color:var(--t3)">📭 No tasks found</div>`;upSelAll(list);return;}
+  if(!list.length){tl.innerHTML=`<div style="text-align:center;padding:48px 20px;color:var(--t3)">📭 No tasks found</div>`;return;}
   tl.innerHTML=list.map(t=>{
     const sec=secById(t.section),pri=priById(t.priority),sta=staById(t.status);
     const u=users.find(u=>u.id===t.assignee);
     const sbd=(t.subtasks||[]).filter(s=>s.done).length,sbt=(t.subtasks||[]).length,ie=exp.has(t.id),uc=u?.color||'#8d96b8';
-    const isSel=sel.has(t.id);
+    const isSel=selectedIds.has(t.id);
     return`<div id="tw-${t.id}">
-      <div class="tr ${t.status==='done'?'done-r':''} ${ie?'exp':''} ${isSel?'sel-r':''}" data-id="${t.id}" onclick="tExp('${t.id}')">
-        <div class="chk ${isSel?'ck':t.status==='done'?'ck':''}" style="${isSel?'background:var(--red);border-color:var(--red)':''}" onclick="event.stopPropagation();toggleSel('${t.id}',event)"></div>
+      <div class="tr ${t.status==='done'?'done-r':''} ${ie?'exp':''} ${isSel?'selected':''}" data-id="${t.id}" onclick="tExp('${t.id}')">
+        <div onclick="event.stopPropagation()" style="display:flex;align-items:center;gap:4px;">
+          <div class="chk-all ${isSel?'ck':''}" onclick="toggleTaskSelect('${t.id}',event)" title="Select"></div>
+        </div>
         <div>
           <div class="tt ${t.status==='done'?'done':''}">${t.title}</div>
           <div class="tm">
@@ -910,114 +1347,27 @@ function renderT(){
         <div><span class="pb2" style="background:${h2r(pri.color,.15)};color:${pri.color};border-color:${h2r(pri.color,.3)}">${pri.name}</span></div>
         <div><span class="sb3" style="background:${h2r(sta.color,.15)};color:${sta.color};border-color:${h2r(sta.color,.3)}">${sta.name}</span></div>
         <div class="ac"><div style="width:20px;height:20px;border-radius:5px;background:${h2r(uc,.2)};color:${uc};display:flex;align-items:center;justify-content:center;font-size:9px;font-weight:700;flex-shrink:0">${u?.emoji||u?.name[0]||'?'}</div><span>${u?.name||t.assignee}</span></div>
-        <div class="ra" onclick="event.stopPropagation()">${isSel?'':'<button class="rb" onclick="editT(\''+t.id+'\')">✏️</button><button class="rb dl" onclick="delT(\''+t.id+'\')">🗑</button>'}</div>
+        <div class="ra" onclick="event.stopPropagation()">
+          <button class="rb ${isStarred(t.id)?'starred':'star-btn'}" style="${isStarred(t.id)?'color:var(--gold)':''}" onclick="toggleStar('${t.id}',event)">★</button>
+          ${canActOnTask(t)?`<button class="rb" onclick="editT('${t.id}')">✏️</button>`:''}
+          ${canActOnTask(t)?`<button class="rb dl" onclick="delT('${t.id}')">🗑</button>`:''}
+        </div>
       </div>
       ${sbt||ie?`<div class="sp ${ie?'open':''}" id="sp-${t.id}">
-        ${(t.subtasks||[]).map(s=>`<div class="str"><div class="chk ${s.done?'ck':''}" onclick="tSub('${t.id}','${s.id}')"></div><div class="stxt ${s.done?'done':''}">${s.text}</div><button class="rb dl" onclick="dSub('${t.id}','${s.id}')">✕</button></div>`).join('')}
-        <div class="add-s"><input type="text" placeholder="New sub-task..." id="ns-${t.id}" onkeydown="if(event.key==='Enter')aSub('${t.id}')"/><button class="btn bg bxs" onclick="aSub('${t.id}')">Add</button></div>
+        ${(t.subtasks||[]).map(s=>`<div class="str">
+          <div class="chk ${s.done?'ck':''}" onclick="${canActOnTask(t)?`tSub('${t.id}','${s.id}')`:'permDeniedTask()'}" style="${!canActOnTask(t)?'opacity:.35;cursor:not-allowed':''}"></div>
+          <div class="stxt ${s.done?'done':''}">${s.text}</div>
+          ${canActOnTask(t)?`<button class="rb dl" onclick="dSub('${t.id}','${s.id}')">✕</button>`:''}
+        </div>`).join('')}
+        ${canActOnTask(t)?`<div class="add-s"><input type="text" placeholder="New sub-task..." id="ns-${t.id}" onkeydown="if(event.key==='Enter')aSub('${t.id}')"/><button class="btn bg bxs" onclick="aSub('${t.id}')">Add</button></div>`:'<div style="font-size:11px;color:var(--t3);padding:6px 0 4px">👁 View only — এই task আপনার না</div>'}
       </div>`:''}
     </div>`;}).join('');
-  upSelAll(list);
+  updateBulkBar();
 }
-
-// ══ BULK SELECTION ══
-function upSelAll(list){
-  const thc=eid('thChk');if(!thc)return;
-  const vis=list||getF();
-  const visIds=vis.map(t=>t.id);
-  const selVisible=visIds.filter(id=>sel.has(id));
-  thc.className='th-chk'+(selVisible.length===0?'':selVisible.length===visIds.length?' ck':' partial');
-}
-function upBulkBar(){
-  const bar=eid('bulkBar'),cnt=eid('bulkCnt');
-  if(!bar)return;
-  if(sel.size>0){
-    bar.classList.add('open');
-    if(cnt)cnt.textContent=sel.size+' টি selected';
-    // rebuild selects
-    const ss=eid('bulkStatusSel');
-    if(ss&&ss.options.length===1)statuses.forEach(s=>{const o=document.createElement('option');o.value=s.id;o.textContent=s.name;ss.appendChild(o);});
-    const ps=eid('bulkPriSel');
-    if(ps&&ps.options.length===1)priorities.forEach(p=>{const o=document.createElement('option');o.value=p.id;o.textContent=p.name;ps.appendChild(o);});
-    const as=eid('bulkAssignSel');
-    if(as&&as.options.length===1)users.forEach(u=>{const o=document.createElement('option');o.value=u.id;o.textContent=u.name;as.appendChild(o);});
-  }else{
-    bar.classList.remove('open');
-  }
-}
-window.toggleSel=function(id,event){
-  // If long-pressing or shift: select mode; single click: select
-  if(sel.size===0&&!event.shiftKey){
-    // First selection — start bulk mode
-    sel.add(id);
-  } else {
-    if(sel.has(id))sel.delete(id);else sel.add(id);
-  }
-  upBulkBar();renderT();
-};
-window.toggleSelectAll=function(){
-  const vis=getF().map(t=>t.id);
-  const allSel=vis.every(id=>sel.has(id));
-  if(allSel){vis.forEach(id=>sel.delete(id));}
-  else{vis.forEach(id=>sel.add(id));}
-  upBulkBar();renderT();
-};
-window.clearSel=function(){sel.clear();upBulkBar();renderT();};
-
-// ── Bulk actions ──
-window.bulkDone=async function(){
-  const ids=[...sel];
-  for(const id of ids){const t=tasks.find(t=>t.id===id);if(t&&t.status!=='done'){t.status='done';await saveTaskFS(t);}}
-  toast(`${ids.length} টি task done করা হয়েছে ✓`,'ok');clearSel();
-};
-window.bulkReopen=async function(){
-  const ids=[...sel];
-  for(const id of ids){const t=tasks.find(t=>t.id===id);if(t&&t.status==='done'){t.status='todo';await saveTaskFS(t);}}
-  toast(`${ids.length} টি task reopen করা হয়েছে`,'ok');clearSel();
-};
-window.bulkSetStatus=async function(){
-  const val=eid('bulkStatusSel').value;if(!val)return;
-  const ids=[...sel];
-  for(const id of ids){const t=tasks.find(t=>t.id===id);if(t){t.status=val;await saveTaskFS(t);}}
-  const st=staById(val);
-  toast(`${ids.length} টি task → ${st.name}`,'ok');
-  eid('bulkStatusSel').value='';clearSel();
-};
-window.bulkSetPriority=async function(){
-  const val=eid('bulkPriSel').value;if(!val)return;
-  const ids=[...sel];
-  for(const id of ids){const t=tasks.find(t=>t.id===id);if(t){t.priority=val;await saveTaskFS(t);}}
-  const pr=priById(val);
-  toast(`${ids.length} টি task priority → ${pr.name}`,'ok');
-  eid('bulkPriSel').value='';clearSel();
-};
-window.bulkSetAssignee=async function(){
-  const val=eid('bulkAssignSel').value;if(!val)return;
-  const ids=[...sel];
-  for(const id of ids){
-    const t=tasks.find(t=>t.id===id);if(!t)continue;
-    const old=t.assignee;t.assignee=val;await saveTaskFS(t);
-    if(old!==val)await sendNotif(val,'assigned',t.id,t.title,cu?.name||'Someone');
-  }
-  const u=users.find(u=>u.id===val);
-  toast(`${ids.length} টি task → ${u?.name||val}-কে assign করা হয়েছে`,'ok');
-  eid('bulkAssignSel').value='';clearSel();
-};
-window.bulkDelete=async function(){
-  const ids=[...sel];
-  if(!confirm(`${ids.length} টি task delete করবেন? এটি undoable নয়।`))return;
-  for(const id of ids){
-    const t=tasks.find(t=>t.id===id);
-    if(t){await sendNotif(t.assignee,'deleted',t.id,t.title,cu?.name||'Someone');await deleteTaskFS(id);}
-  }
-  toast(`${ids.length} টি task delete করা হয়েছে`,'info');clearSel();
-};
-
 window.tExp=function(id){if(exp.has(id))exp.delete(id);else exp.add(id);renderT();};
 window.tDone=async function(id){
-  // If bulk selection mode is active, toggle selection instead
-  if(sel.size>0){toggleSel(id,{shiftKey:true});return;}
   const t=tasks.find(t=>t.id===id);if(!t)return;
+  if(!canActOnTask(t)){permDeniedTask();return;}
   const wasD=t.status==='done';t.status=wasD?'todo':'done';
   await saveTaskFS(t);
   if(!wasD) await sendNotif(t.assignee,'completed',t.id,t.title,cu?.name||'Someone');
@@ -1025,12 +1375,14 @@ window.tDone=async function(id){
 };
 window.tSub=async function(tid,sid){
   const t=tasks.find(t=>t.id===tid);if(!t)return;
+  if(!canActOnTask(t)){permDeniedTask();return;}
   const s=(t.subtasks||[]).find(s=>s.id===sid);if(!s)return;
   s.done=!s.done;await saveTaskFS(t);
 };
 window.aSub=async function(tid){
   const inp=eid('ns-'+tid);const txt=inp?.value.trim();if(!txt)return;
   const t=tasks.find(t=>t.id===tid);if(!t)return;
+  if(!canActOnTask(t)){permDeniedTask();return;}
   if(!t.subtasks)t.subtasks=[];
   t.subtasks.push({id:tid+'_'+Date.now(),text:txt,done:false});
   await saveTaskFS(t);
@@ -1039,31 +1391,42 @@ window.aSub=async function(tid){
 };
 window.dSub=async function(tid,sid){
   const t=tasks.find(t=>t.id===tid);if(!t)return;
+  if(!canActOnTask(t)){permDeniedTask();return;}
   if(!confirm('Delete sub-task?'))return;
   t.subtasks=(t.subtasks||[]).filter(s=>s.id!==sid);await saveTaskFS(t);
 };
 window.delT=async function(id){
   const t=tasks.find(t=>t.id===id);if(!t)return;
+  if(!canActOnTask(t)){permDeniedTask();return;}
   if(!confirm('Task delete করবেন?'))return;
   await sendNotif(t.assignee,'deleted',t.id,t.title,cu?.name||'Someone');
   await deleteTaskFS(id);toast('Task deleted','info');
 };
 
 // ══ TASK MODAL ══
-window.openM=function(n){rebuildDropdowns();eid('mo-'+n).classList.add('open');};
+window.openM=function(n){
+  if(n==='task'&&!canCreate()){permDenied();return;}
+  if(n==='user'&&!canManageSystem()){permDenied();return;}
+  rebuildDropdowns();eid('mo-'+n).classList.add('open');
+};
 window.closeM=function(n){
   eid('mo-'+n).classList.remove('open');
   if(n==='task'){['eid','tT','tD','tDu'].forEach(id=>{const e=eid(id);if(e)e.value='';});eid('mdT').textContent='Add New Task';}
   if(n==='user'){['uEid','uN','uI','uP','uEm','uCl'].forEach(id=>{const e=eid(id);if(e)e.value='';});eid('uMdT').textContent='Add New User';}
 };
 window.editT=function(id){
-  const t=tasks.find(t=>t.id===id);if(!t)return;rebuildDropdowns();
+  const t=tasks.find(t=>t.id===id);if(!t)return;
+  if(!canActOnTask(t)){permDeniedTask();return;}
+  rebuildDropdowns();
   eid('eid').value=id;eid('tT').value=t.title;eid('tD').value=t.desc||'';
   eid('tSc').value=t.section;eid('tPr').value=t.priority;eid('tSt').value=t.status;
   eid('tDu').value=t.due||'';eid('tPh').value=t.phase||'Phase 1';eid('tAs').value=t.assignee;
   eid('mdT').textContent='Edit Task';eid('mo-task').classList.add('open');
 };
 window.saveTask=async function(){
+  const editId_check=eid('eid').value;
+  if(!editId_check&&!canCreate()){permDenied();return;} // new task = owner only
+  if(editId_check){const t_check=tasks.find(t=>t.id===editId_check);if(!canActOnTask(t_check)){permDeniedTask();return;}}
   const title=eid('tT').value.trim();if(!title){toast('Title required!','err');return;}
   const editId=eid('eid').value;
   const newAssignee=eid('tAs').value;
@@ -1089,12 +1452,14 @@ window.saveTask=async function(){
 
 // ══ USER MODAL ══
 window.editUser=function(id){
+  if(!canManageSystem()){permDenied();return;}
   const u=users.find(u=>u.id===id);if(!u)return;rebuildDropdowns();
   eid('uEid').value=id;eid('uN').value=u.name;eid('uI').value=u.uid;eid('uP').value=u.pass;
   eid('uR').value=u.role;eid('uEm').value=u.emoji||'';eid('uCl').value=u.color||'';
   eid('uMdT').textContent='Edit User';eid('mo-user').classList.add('open');
 };
 window.saveUser=async function(){
+  if(!canManageSystem()){permDenied();return;}
   const n=eid('uN').value.trim(),uid=eid('uI').value.trim(),pass=eid('uP').value.trim();
   const role=eid('uR').value,emoji=eid('uEm').value.trim()||'👤',color=eid('uCl').value.trim()||'#4d8eff';
   if(!n||!uid||!pass){toast('Name, ID & Password required!','err');return;}
@@ -1104,13 +1469,14 @@ window.saveUser=async function(){
   await saveConfig();closeM('user');
 };
 window.delUser=async function(id){
+  if(!canManageSystem()){permDenied();return;}
   if(id===cu?.id){toast('নিজেকে delete করা যাবে না!','err');return;}
   if(!confirm('User delete করবেন?'))return;
   users=users.filter(u=>u.id!==id);await saveConfig();toast('User removed','info');
 };
 function renderU(){
   const ul=eid('ul');if(!ul)return;
-  ul.innerHTML=users.map(u=>`<div class="ur"><div><div style="width:34px;height:34px;border-radius:9px;background:${h2r(u.color||'#f03e5f',.2)};color:${u.color||'#f03e5f'};display:flex;align-items:center;justify-content:center;font-size:14px;font-weight:700">${u.emoji||u.name[0]}</div></div><div><div style="font-weight:600">${u.name}</div><div style="font-size:11px;color:var(--t3)">${u.role}</div></div><div style="font-size:11px"><code style="font-family:var(--mono);background:var(--s2);padding:2px 6px;border-radius:4px">${u.uid}</code> / <code style="font-family:var(--mono);background:var(--s2);padding:2px 6px;border-radius:4px">${u.pass}</code></div><div><span class="tag" style="background:var(--s3);color:var(--t2);border:1px solid var(--bd2)">${u.role}</span></div><div style="display:flex;gap:4px">${u.id!==cu?.id?`<button class="rb" onclick="editUser('${u.id}')">✏️</button><button class="rb dl" onclick="delUser('${u.id}')">🗑</button>`:'<span style="font-size:10px;color:var(--t3)">You</span>'}</div></div>`).join('');
+  ul.innerHTML=users.map(u=>`<div class="ur"><div><div style="width:34px;height:34px;border-radius:9px;background:${h2r(u.color||'#f03e5f',.2)};color:${u.color||'#f03e5f'};display:flex;align-items:center;justify-content:center;font-size:14px;font-weight:700">${u.emoji||u.name[0]}</div></div><div><div style="font-weight:600">${u.name}</div><div style="font-size:11px;color:var(--t3)">${u.role}</div></div><div style="font-size:11px"><code style="font-family:var(--mono);background:var(--s2);padding:2px 6px;border-radius:4px">${u.uid}</code> / <code style="font-family:var(--mono);background:var(--s2);padding:2px 6px;border-radius:4px">${u.pass}</code></div><div><span class="tag" style="background:var(--s3);color:var(--t2);border:1px solid var(--bd2)">${u.role}</span></div><div style="display:flex;gap:4px">${u.id===cu?.id?'<span style="font-size:10px;color:var(--t3)">You</span>':isOwner()?`<button class="rb" onclick="editUser('${u.id}')">✏️</button><button class="rb dl" onclick="delUser('${u.id}')">🗑</button>`:'<span style="font-size:10px;color:var(--t3)">—</span>'}</div></div>`).join('');
 }
 
 // ══ KANBAN ══
@@ -1130,12 +1496,13 @@ function renderK(){
 function renderSettings(){
   const g=eid('setGrid');if(!g)return;
   g.innerHTML=`
-    <div class="set-card"><h3>🏷 Sections <button class="btn bg bxs" onclick="openQuick('section')">+ Add</button></h3>${sections.map(s=>`<div class="set-item"><span style="font-size:16px">${s.icon}</span><span class="si-nm">${s.name}</span><span class="si-color" style="background:${s.color}"></span><button class="si-del" onclick="delSection('${s.id}')">✕</button></div>`).join('')}</div>
-    <div class="set-card"><h3>📊 Statuses <button class="btn bg bxs" onclick="openQuick('status')">+ Add</button></h3>${statuses.map(s=>`<div class="set-item"><span class="si-nm">${s.name}</span><span class="si-color" style="background:${s.color}"></span><button class="si-del" onclick="delStatus('${s.id}')">✕</button></div>`).join('')}</div>
-    <div class="set-card"><h3>🔴 Priorities <button class="btn bg bxs" onclick="openQuick('priority')">+ Add</button></h3>${priorities.map(p=>`<div class="set-item"><span class="si-nm">${p.name}</span><span class="si-color" style="background:${p.color}"></span><button class="si-del" onclick="delPriority('${p.id}')">✕</button></div>`).join('')}</div>
-    <div class="set-card"><h3>👤 Roles <button class="btn bg bxs" onclick="openQuick('role')">+ Add</button></h3>${roles.map(r=>`<div class="set-item"><span class="si-nm">${r}</span><button class="si-del" onclick="delRole('${r}')">✕</button></div>`).join('')}</div>`;
+    <div class="set-card"><h3>🏷 Sections ${isOwner()?'<button class="btn bg bxs" onclick="openQuick(\'section\')">+ Add</button>':''}</h3>${sections.map(s=>`<div class="set-item"><span style="font-size:16px">${s.icon}</span><span class="si-nm">${s.name}</span><span class="si-color" style="background:${s.color}"></span>${isOwner()?`<button class="si-del" onclick="delSection('${s.id}')">✕</button>`:''}</div>`).join('')}</div>
+    <div class="set-card"><h3>📊 Statuses ${isOwner()?'<button class="btn bg bxs" onclick="openQuick(\'status\')">+ Add</button>':''}</h3>${statuses.map(s=>`<div class="set-item"><span class="si-nm">${s.name}</span><span class="si-color" style="background:${s.color}"></span>${isOwner()?`<button class="si-del" onclick="delStatus('${s.id}')">✕</button>`:''}</div>`).join('')}</div>
+    <div class="set-card"><h3>🔴 Priorities ${isOwner()?'<button class="btn bg bxs" onclick="openQuick(\'priority\')">+ Add</button>':''}</h3>${priorities.map(p=>`<div class="set-item"><span class="si-nm">${p.name}</span><span class="si-color" style="background:${p.color}"></span>${isOwner()?`<button class="si-del" onclick="delPriority('${p.id}')">✕</button>`:''}</div>`).join('')}</div>
+    <div class="set-card"><h3>👤 Roles ${isOwner()?'<button class="btn bg bxs" onclick="openQuick(\'role\')">+ Add</button>':''}</h3>${roles.map(r=>`<div class="set-item"><span class="si-nm">${r}</span>${isOwner()?`<button class="si-del" onclick="delRole('${r}')">✕</button>`:''}</div>`).join('')}</div>`;
 }
 window.openQuick=function(type){
+  if(!canManageSystem()){permDenied();return;}
   document.getElementById('qType').value=type;
   const titles={section:'Add Section',status:'Add Status',priority:'Add Priority',role:'Add Role'};
   eid('qMdT').textContent=titles[type]||'Add Item';
@@ -1145,6 +1512,7 @@ window.openQuick=function(type){
   eid('mo-quick').classList.add('open');
 };
 window.saveQuick=async function(){
+  if(!canManageSystem()){permDenied();return;}
   const type=eid('qType').value,name=eid('qName').value.trim();if(!name){toast('Name required!','err');return;}
   const icon=eid('qIcon').value.trim()||'📁',color=eid('qColor').value.trim()||'#4d8eff';
   const id=name.toLowerCase().replace(/\s+/g,'_').replace(/[^a-z0-9_]/g,'')+'_'+Date.now();
@@ -1154,10 +1522,10 @@ window.saveQuick=async function(){
   else if(type==='role'){if(!roles.includes(name))roles.push(name);}
   await saveConfig();closeM('quick');toast(name+' added!','ok');
 };
-window.delSection=async function(id){if(tasks.find(t=>t.section===id)){toast('Tasks আছে!','err');return;}if(!confirm('Delete?'))return;sections=sections.filter(s=>s.id!==id);await saveConfig();};
-window.delStatus=async function(id){if(tasks.find(t=>t.status===id)){toast('Tasks আছে!','err');return;}if(!confirm('Delete?'))return;statuses=statuses.filter(s=>s.id!==id);await saveConfig();};
-window.delPriority=async function(id){if(tasks.find(t=>t.priority===id)){toast('Tasks আছে!','err');return;}if(!confirm('Delete?'))return;priorities=priorities.filter(p=>p.id!==id);await saveConfig();};
-window.delRole=async function(r){if(users.find(u=>u.role===r)){toast('Users আছে!','err');return;}if(!confirm('Delete?'))return;roles=roles.filter(x=>x!==r);await saveConfig();};
+window.delSection=async function(id){if(!canManageSystem()){permDenied();return;}if(tasks.find(t=>t.section===id)){toast('Tasks আছে!','err');return;}if(!confirm('Delete?'))return;sections=sections.filter(s=>s.id!==id);await saveConfig();};
+window.delStatus=async function(id){if(!canManageSystem()){permDenied();return;}if(tasks.find(t=>t.status===id)){toast('Tasks আছে!','err');return;}if(!confirm('Delete?'))return;statuses=statuses.filter(s=>s.id!==id);await saveConfig();};
+window.delPriority=async function(id){if(!canManageSystem()){permDenied();return;}if(tasks.find(t=>t.priority===id)){toast('Tasks আছে!','err');return;}if(!confirm('Delete?'))return;priorities=priorities.filter(p=>p.id!==id);await saveConfig();};
+window.delRole=async function(r){if(!canManageSystem()){permDenied();return;}if(users.find(u=>u.role===r)){toast('Users আছে!','err');return;}if(!confirm('Delete?'))return;roles=roles.filter(x=>x!==r);await saveConfig();};
 
 // ══ TOAST ══
 let tTimer;
@@ -1168,6 +1536,635 @@ window.toggleMob=function(){eid('sidebar').classList.toggle('open');eid('mobOv')
 window.closeMob=function(){eid('sidebar')?.classList.remove('open');eid('mobOv')?.classList.remove('open');};
 
 document.querySelectorAll('.mo').forEach(mo=>mo.addEventListener('click',e=>{if(e.target===mo)mo.classList.remove('open');}));
+
+// ══ STARRED TASKS ══
+let starredIds=JSON.parse(localStorage.getItem('starredIds')||'[]');
+function saveStars(){localStorage.setItem('starredIds',JSON.stringify(starredIds));}
+window.toggleStar=function(id,e){if(e)e.stopPropagation();if(starredIds.includes(id))starredIds=starredIds.filter(x=>x!==id);else starredIds.push(id);saveStars();if(cv==='starred')renderStarred();else renderT();};
+function isStarred(id){return starredIds.includes(id);}
+function renderStarred(){
+  const el=eid('starredList');if(!el)return;
+  const list=tasks.filter(t=>starredIds.includes(t.id));
+  if(!list.length){el.innerHTML=`<div style="text-align:center;padding:48px 20px;color:var(--t3)">⭐ কোনো starred task নেই<br><span style="font-size:11px">All Tasks-এ গিয়ে task-এর পাশে ⭐ ক্লিক করো</span></div>`;return;}
+  el.innerHTML=list.map(t=>{
+    const sec=secById(t.section),pri=priById(t.priority),sta=staById(t.status),u=users.find(u=>u.id===t.assignee),uc=u?.color||'#8d96b8';
+    return`<div class="tr ${t.status==='done'?'done-r':''}" onclick="editT('${t.id}')">
+      <div class="chk ${t.status==='done'?'ck':''}" onclick="event.stopPropagation();${canActOnTask(t)?`tDone('${t.id}')`:'permDeniedTask()'}" style="${!canActOnTask(t)?'opacity:.35;cursor:not-allowed':''}"></div>
+      <div><div class="tt ${t.status==='done'?'done':''}">${t.title}</div><div class="tm">${t.due?`<span style="font-size:10px;color:var(--t3)">📅 ${t.due}</span>`:''}</div></div>
+      <div><span class="tag" style="background:${h2r(sec.color,.15)};color:${sec.color};border:1px solid ${h2r(sec.color,.3)}">${sec.icon} ${sec.name}</span></div>
+      <div><span class="pb2" style="background:${h2r(pri.color,.15)};color:${pri.color};border-color:${h2r(pri.color,.3)}">${pri.name}</span></div>
+      <div><span class="sb3" style="background:${h2r(sta.color,.15)};color:${sta.color};border-color:${h2r(sta.color,.3)}">${sta.name}</span></div>
+      <div class="ac"><div style="width:20px;height:20px;border-radius:5px;background:${h2r(uc,.2)};color:${uc};display:flex;align-items:center;justify-content:center;font-size:9px;font-weight:700;flex-shrink:0">${u?.emoji||u?.name[0]||'?'}</div><span>${u?.name||t.assignee}</span></div>
+      <div class="ra" onclick="event.stopPropagation()"><button class="rb" style="color:var(--gold)" onclick="toggleStar('${t.id}',event)">★</button>${canActOnTask(t)?`<button class="rb" onclick="editT('${t.id}')">✏️</button><button class="rb dl" onclick="delT('${t.id}')">🗑</button>`:''}</div>
+    </div>`;}).join('');
+}
+
+// ══ CALENDAR ══
+let calMonth=new Date().getMonth(),calYear=new Date().getFullYear();
+const MON=['January','February','March','April','May','June','July','August','September','October','November','December'];
+const DAY_L=['Sun','Mon','Tue','Wed','Thu','Fri','Sat'];
+window.calNav=function(d){calMonth+=d;if(calMonth>11){calMonth=0;calYear++;}if(calMonth<0){calMonth=11;calYear--;}renderCal();};
+window.calGoToday=function(){calMonth=new Date().getMonth();calYear=new Date().getFullYear();renderCal();};
+
+function parseDayNum(due){
+  // Parse "Day 1", "Day 3-5", "Day 1–3" etc. Returns [start, end]
+  if(!due)return null;
+  const m=due.match(/Day\s*(\d+)[–\-]?(\d*)/i);
+  if(!m)return null;
+  return[parseInt(m[1]),m[2]?parseInt(m[2]):parseInt(m[1])];
+}
+
+function renderCal(){
+  const lbl=eid('calLabel');if(lbl)lbl.textContent=MON[calMonth]+' '+calYear;
+  const dl=eid('calDayLabels');
+  if(dl)dl.innerHTML=DAY_L.map(d=>`<div class="cal-day-label">${d}</div>`).join('');
+  const grid=eid('calGrid');if(!grid)return;
+  const firstDay=new Date(calYear,calMonth,1).getDay();
+  const daysInMonth=new Date(calYear,calMonth+1,0).getDate();
+  const today=new Date();
+  // Build calendar cells
+  let cells='';
+  // Empty cells before first day
+  for(let i=0;i<firstDay;i++) cells+=`<div class="cal-cell other-month"></div>`;
+  for(let d=1;d<=daysInMonth;d++){
+    const isToday=d===today.getDate()&&calMonth===today.getMonth()&&calYear===today.getFullYear();
+    // Tasks due on day number d (map calendar date to day number in project)
+    const dayTasks=tasks.filter(t=>{
+      const p=parseDayNum(t.due);
+      if(!p)return false;
+      return d>=p[0]&&d<=p[1];
+    });
+    const dots=dayTasks.slice(0,3).map(t=>{
+      const pri=priById(t.priority);
+      return`<div class="cal-dot" style="background:${h2r(pri.color,.2)};color:${pri.color}">${t.title}</div>`;
+    }).join('');
+    const more=dayTasks.length>3?`<div style="font-size:9px;color:var(--t3)">+${dayTasks.length-3} more</div>`:'';
+    cells+=`<div class="cal-cell ${isToday?'today':''} ${dayTasks.length?'has-tasks':''}" onclick="calShowDay(${d})">
+      <div class="cal-dn">${d}</div>${dots}${more}
+    </div>`;
+  }
+  grid.innerHTML=cells;
+}
+window.calShowDay=function(d){
+  const dayTasks=tasks.filter(t=>{const p=parseDayNum(t.due);if(!p)return false;return d>=p[0]&&d<=p[1];});
+  const detail=eid('calTaskDetail');const lbl=eid('calDetailLabel');const list=eid('calDetailList');
+  if(!detail||!lbl||!list)return;
+  lbl.textContent=`Day ${d} — ${dayTasks.length} task(s)`;
+  if(!dayTasks.length){list.innerHTML=`<div style="color:var(--t3);font-size:12px;text-align:center;padding:12px">এই দিনে কোনো task নেই</div>`;detail.style.display='block';return;}
+  list.innerHTML=dayTasks.map(t=>{
+    const pri=priById(t.priority),sta=staById(t.status),u=users.find(u=>u.id===t.assignee);
+    return`<div style="display:flex;align-items:center;gap:9px;padding:8px 0;border-bottom:1px solid var(--bd);cursor:pointer" onclick="editT('${t.id}')">
+      <div class="chk ${t.status==='done'?'ck':''}" onclick="event.stopPropagation();tDone('${t.id}')"></div>
+      <div style="flex:1"><div style="font-size:13px;font-weight:500 ${t.status==='done'?';text-decoration:line-through;color:var(--t3)':''}">${t.title}</div><div style="font-size:10px;color:var(--t3)">${u?.name||''}</div></div>
+      <span class="pb2" style="background:${h2r(pri.color,.15)};color:${pri.color};border-color:${h2r(pri.color,.3)}">${pri.name}</span>
+      <span class="sb3" style="background:${h2r(sta.color,.15)};color:${sta.color};border-color:${h2r(sta.color,.3)}">${sta.name}</span>
+    </div>`;}).join('');
+  detail.style.display='block';
+};
+
+// ══ GANTT / TIMELINE ══
+function renderGantt(){
+  const wrap=eid('ganttWrap');if(!wrap)return;
+  const phF=eid('ganttPhaseF')?.value||'';
+  const secF=eid('ganttSecF')?.value||'';
+  // Populate section filter
+  const secFEl=eid('ganttSecF');
+  if(secFEl&&secFEl.options.length<=1)secFEl.innerHTML=`<option value="">All Sections</option>`+sections.map(s=>`<option value="${s.id}">${s.icon} ${s.name}</option>`).join('');
+  let list=[...tasks];
+  if(phF)list=list.filter(t=>t.phase===phF);
+  if(secF)list=list.filter(t=>t.section===secF);
+  // Find max day number
+  let maxDay=30;
+  list.forEach(t=>{const p=parseDayNum(t.due);if(p&&p[1]>maxDay)maxDay=p[1];});
+  const COLS=Math.min(maxDay,30);
+  const COL_W=40;
+  // Build header
+  let header=`<div class="gantt-header"><div class="gantt-task-col">Task</div><div class="gantt-days">`;
+  for(let i=1;i<=COLS;i++)header+=`<div class="gantt-day-head" style="min-width:${COL_W}px">D${i}</div>`;
+  header+=`</div></div>`;
+  // Build rows
+  let rows='';
+  if(!list.length){rows=`<div style="text-align:center;padding:24px;color:var(--t3)">কোনো task নেই</div>`;}
+  else{
+    list.forEach(t=>{
+      const p=parseDayNum(t.due);
+      const sec=secById(t.section),pri=priById(t.priority);
+      const barHTML=p?`<div class="gantt-bar" style="left:${(p[0]-1)*COL_W}px;width:${(p[1]-p[0]+1)*COL_W-4}px;background:${h2r(pri.color,.8)};border:1px solid ${pri.color}" onclick="editT('${t.id}')" title="${t.title}">${t.title}</div>`:'';
+      rows+=`<div class="gantt-row">
+        <div class="gantt-row-label" title="${t.title}"><span style="color:${sec.color}">${sec.icon}</span> ${t.title}</div>
+        <div class="gantt-row-bars" style="min-width:${COLS*COL_W}px">${barHTML}</div>
+      </div>`;
+    });
+  }
+  wrap.innerHTML=header+`<div style="overflow-x:auto">`+rows+`</div>`;
+}
+
+// ══ REPORT ══
+let rptTab='overview';
+window.setRptTab=function(tab,el){rptTab=tab;document.querySelectorAll('.rpt-tab').forEach(t=>t.classList.remove('active'));if(el)el.classList.add('active');renderReport();};
+function renderReport(){
+  const el=eid('rptContent');if(!el)return;
+  const tot=tasks.length,dn=tasks.filter(t=>t.status==='done').length,pr=tasks.filter(t=>t.status==='progress').length,bl=tasks.filter(t=>t.status==='blocked').length,td=tasks.filter(t=>t.status==='todo').length;
+  const pct=tot?Math.round(dn/tot*100):0;
+  if(rptTab==='overview'){
+    el.innerHTML=`
+    <div class="rpt-grid">
+      <div class="rpt-card"><h3>Overall Progress</h3>
+        <div style="text-align:center;padding:10px 0"><div style="font-size:42px;font-weight:800;color:var(--green)">${pct}%</div><div style="color:var(--t3);font-size:12px;margin-top:4px">Completion Rate</div></div>
+        <div class="prb" style="height:10px;border-radius:5px;margin-top:10px"><div class="prf" style="width:${pct}%;background:linear-gradient(90deg,#f03e5f,#9d6fff);border-radius:5px"></div></div>
+        <div style="display:flex;justify-content:space-around;margin-top:14px;font-size:12px">
+          <div style="text-align:center"><div style="font-size:18px;font-weight:800;color:var(--green)">${dn}</div><div style="color:var(--t3)">Done</div></div>
+          <div style="text-align:center"><div style="font-size:18px;font-weight:800;color:var(--blue)">${pr}</div><div style="color:var(--t3)">In Progress</div></div>
+          <div style="text-align:center"><div style="font-size:18px;font-weight:800;color:var(--t3)">${td}</div><div style="color:var(--t3)">To Do</div></div>
+          <div style="text-align:center"><div style="font-size:18px;font-weight:800;color:var(--red)">${bl}</div><div style="color:var(--t3)">Blocked</div></div>
+        </div>
+      </div>
+      <div class="rpt-card"><h3>Status Breakdown</h3>
+        ${statuses.map(s=>{const n=tasks.filter(t=>t.status===s.id).length,pp=tot?Math.round(n/tot*100):0;return`<div class="rpt-bar-row"><div class="rpt-bar-label">${s.name}</div><div class="rpt-bar-wrap"><div class="rpt-bar-fill" style="width:${pp}%;background:${s.color}"></div></div><div class="rpt-bar-val">${n}</div></div>`;}).join('')}
+      </div>
+    </div>
+    <div class="rpt-card" style="margin-bottom:14px"><h3>Summary</h3>
+      <div class="rpt-summary-row"><span>Total Tasks</span><strong>${tot}</strong></div>
+      <div class="rpt-summary-row"><span>Completed</span><strong style="color:var(--green)">${dn} (${pct}%)</strong></div>
+      <div class="rpt-summary-row"><span>Pending</span><strong style="color:var(--gold)">${tot-dn}</strong></div>
+      <div class="rpt-summary-row"><span>Blocked</span><strong style="color:${bl>0?'var(--red)':'var(--t3)'}">${bl}</strong></div>
+      <div class="rpt-summary-row"><span>Critical Tasks</span><strong>${tasks.filter(t=>t.priority==='critical').length}</strong></div>
+    </div>`;
+  }else if(rptTab==='team'){
+    el.innerHTML=`<div class="rpt-grid">`+users.map(u=>{
+      const ut=tasks.filter(t=>t.assignee===u.id),ud=ut.filter(t=>t.status==='done').length,upp=ut.length?Math.round(ud/ut.length*100):0;
+      return`<div class="rpt-card"><h3 style="display:flex;align-items:center;gap:7px"><div style="width:22px;height:22px;border-radius:6px;background:${h2r(u.color||'#f03e5f',.2)};color:${u.color||'#f03e5f'};display:flex;align-items:center;justify-content:center;font-size:11px;font-weight:700">${u.emoji||u.name[0]}</div>${u.name}</h3>
+        <div class="rpt-summary-row"><span>Assigned</span><strong>${ut.length}</strong></div>
+        <div class="rpt-summary-row"><span>Done</span><strong style="color:var(--green)">${ud}</strong></div>
+        <div class="rpt-summary-row"><span>Pending</span><strong style="color:var(--gold)">${ut.length-ud}</strong></div>
+        <div class="rpt-summary-row"><span>Completion</span><strong style="color:${u.color||'var(--text)'}">${upp}%</strong></div>
+        <div class="prb" style="height:6px;border-radius:3px;margin-top:8px"><div class="prf" style="width:${upp}%;background:${u.color||'#f03e5f'}"></div></div>
+      </div>`;}).join('')+`</div>`;
+  }else if(rptTab==='section'){
+    el.innerHTML=`<div class="rpt-card"><h3>Section Progress</h3>`+sections.map(s=>{
+      const st=tasks.filter(t=>t.section===s.id),sd=st.filter(t=>t.status==='done').length,pp=st.length?Math.round(sd/st.length*100):0;
+      return`<div class="rpt-bar-row"><div class="rpt-bar-label">${s.icon} ${s.name}</div><div class="rpt-bar-wrap"><div class="rpt-bar-fill" style="width:${pp}%;background:${s.color}"></div></div><div class="rpt-bar-val">${sd}/${st.length}</div></div>`;
+    }).join('')+`</div>`;
+  }else if(rptTab==='priority'){
+    el.innerHTML=`<div class="rpt-card"><h3>Priority Breakdown</h3>`+priorities.map(p=>{
+      const pt=tasks.filter(t=>t.priority===p.id),pd=pt.filter(t=>t.status==='done').length,pp=pt.length?Math.round(pd/pt.length*100):0;
+      return`<div class="rpt-bar-row"><div class="rpt-bar-label" style="color:${p.color}">${p.name}</div><div class="rpt-bar-wrap"><div class="rpt-bar-fill" style="width:${pp}%;background:${p.color}"></div></div><div class="rpt-bar-val">${pt.length}</div></div>
+      <div style="margin-bottom:8px;padding:0 0 0 0"><div class="prb" style="height:4px"><div class="prf" style="width:${pp}%;background:${p.color}"></div></div></div>`;
+    }).join('')+`</div>`;
+  }
+}
+
+// ══ DAILY TASKS ══
+// dailyTasks structure in Firestore: collection 'dailyTasks', doc id = 'YYYY-MM-DD_userId'
+// Each doc: { date, userId, tasks: [{id, text, done, assignee, priority, note}] }
+
+let dtDate = new Date(); // current date being viewed
+let dtUser = null;
+let dtData = {}; // key: 'YYYY-MM-DD_userId' → tasks array (in-memory cache)
+let recurData = {}; // key: userId → [{id, text, note}]
+
+function dtDateKey(date, userId){ 
+  const d=date instanceof Date?date:new Date(date);
+  return d.toISOString().slice(0,10)+'_'+userId; 
+}
+function dtFmtDate(date){
+  const d=date instanceof Date?date:new Date(date);
+  const days=['রবিবার','সোমবার','মঙ্গলবার','বুধবার','বৃহস্পতিবার','শুক্রবার','শনিবার'];
+  const months=['জানুয়ারি','ফেব্রুয়ারি','মার্চ','এপ্রিল','মে','জুন','জুলাই','আগস্ট','সেপ্টেম্বর','অক্টোবর','নভেম্বর','ডিসেম্বর'];
+  return`${days[d.getDay()]}, ${d.getDate()} ${months[d.getMonth()]} ${d.getFullYear()}`;
+}
+function dtIsToday(date){
+  const t=new Date(),d=new Date(date);
+  return t.toDateString()===d.toDateString();
+}
+function dtDateStr(date){
+  const d=new Date(date);
+  return d.toISOString().slice(0,10);
+}
+
+function initDailyDate(){
+  // Only reset date if not already set (don't reset on re-visit)
+  if(!dtDate)dtDate=new Date();
+  if(!dtUser)dtUser=cu?.id||'all';
+}
+
+window.dtNav=function(delta){
+  if(!dtDate)dtDate=new Date();
+  const d=new Date(dtDate);d.setDate(d.getDate()+delta);dtDate=d;renderDaily();
+};
+window.dtGoToday=function(){dtDate=new Date();renderDaily();};
+window.dtSetUser=function(uid){dtUser=uid;renderDaily();};
+
+async function renderDaily(){
+  const dateStr=dtDateStr(dtDate);
+  const lbl=eid('dtDateLabel');
+  if(lbl){
+    lbl.textContent=dtFmtDate(dtDate);
+    lbl.style.color=dtIsToday(dtDate)?'var(--red)':'var(--text)';
+  }
+  const sub=eid('dtSubLabel');
+  if(sub)sub.textContent=dtIsToday(dtDate)?'আজকের কাজের তালিকা':`${dateStr} এর কাজের তালিকা`;
+
+  // User tabs
+  const utabs=eid('dtUserTabs');
+  if(utabs){
+    if(!dtUser)dtUser=cu?.id||'all';
+    const isOwnerOrManager=cu?.role==='Owner'||cu?.role==='Manager';
+    let tabHtml='';
+    if(isOwnerOrManager){
+      tabHtml+=`<div class="dt-user-tab ${dtUser==='all'?'active':''}" onclick="dtSetUser('all')">👥 সবার</div>`;
+    }
+    tabHtml+=users.map(u=>`<div class="dt-user-tab ${dtUser===u.id?'active':''}" onclick="dtSetUser('${u.id}')" style="${dtUser===u.id?`background:${h2r(u.color||'#f03e5f',.15)};border-color:${u.color||'#f03e5f'};color:${u.color||'#f03e5f'}`:''}">
+      ${u.emoji||u.name[0]} ${u.name}</div>`).join('');
+    utabs.innerHTML=tabHtml;
+  }
+
+  const cont=eid('dtContent');if(!cont)return;
+  cont.innerHTML=`<div style="text-align:center;padding:28px;color:var(--t3)"><div class="spin" style="margin:0 auto 10px"></div>লোড হচ্ছে...</div>`;
+
+  // Determine which users to show
+  const showUsers=(dtUser==='all')?users:[users.find(u=>u.id===dtUser)].filter(Boolean);
+  
+  // Load all docs + recurring
+  await Promise.all([
+    ...showUsers.map(u=>loadDtDoc(dateStr,u.id)),
+    ...showUsers.map(u=>loadRecurring(u.id))
+  ]);
+
+  // Stats across shown users (include recurring)
+  let allT=[],allD=0;
+  showUsers.forEach(u=>{
+    const key=dateStr+'_'+u.id;
+    const ts=dtData[key]||[];
+    const rec=recurData[u.id]||[];
+    const recurDone=getRecurDone(dateStr,u.id);
+    allT=allT.concat(ts,rec);
+    allD+=ts.filter(t=>t.done).length+rec.filter(t=>recurDone[t.id]).length;
+  });
+  const tot=allT.length,pct=tot?Math.round(allD/tot*100):0;
+  const stats=eid('dtStats');
+  if(stats)stats.innerHTML=`
+    <div class="dt-stat"><div class="dsv">${tot}</div><div class="dsl">মোট</div><div class="dt-prog-bar"><div class="dt-prog-fill" style="width:100%;background:var(--blue)"></div></div></div>
+    <div class="dt-stat"><div class="dsv" style="color:var(--green)">${allD}</div><div class="dsl">সম্পন্ন</div><div class="dt-prog-bar"><div class="dt-prog-fill" style="width:${pct}%"></div></div></div>
+    <div class="dt-stat"><div class="dsv" style="color:var(--gold)">${tot-allD}</div><div class="dsl">বাকি</div><div class="dt-prog-bar"><div class="dt-prog-fill" style="width:${tot?Math.round((tot-allD)/tot*100):0}%;background:var(--gold)"></div></div></div>
+    <div class="dt-stat"><div class="dsv" style="color:${pct===100&&tot>0?'var(--green)':'var(--purple)'}">${pct}%</div><div class="dsl">অগ্রগতি</div><div class="dt-prog-bar"><div class="dt-prog-fill" style="width:${pct}%;background:var(--purple)"></div></div></div>`;
+
+  // Render per-user panels
+  if(!showUsers.length){cont.innerHTML=`<div style="text-align:center;padding:40px;color:var(--t3)">কোনো user নেই</div>`;return;}
+
+  cont.innerHTML=showUsers.map(u=>{
+    const key=dateStr+'_'+u.id;
+    const ts=dtData[key]||[];
+    const rec=recurData[u.id]||[];
+    const recurDone=getRecurDone(dateStr,u.id);
+    const dn=ts.filter(t=>t.done).length+rec.filter(t=>recurDone[t.id]).length;
+    const totalCount=ts.length+rec.length;
+    const pct2=totalCount?Math.round(dn/totalCount*100):0;
+    const canEdit=isOwner()||cu?.id===u.id;
+    return`<div class="dt-section" id="dts-${u.id}">
+      <div class="dt-sec-head">
+        <div class="dt-sec-title">
+          <div style="width:22px;height:22px;border-radius:6px;background:${h2r(u.color||'#f03e5f',.2)};color:${u.color||'#f03e5f'};display:flex;align-items:center;justify-content:center;font-size:11px;font-weight:700;flex-shrink:0">${u.emoji||u.name[0]}</div>
+          ${u.name}
+          <span class="dt-sec-count">${dn}/${totalCount}</span>
+          ${pct2===100&&totalCount>0?'<span style="font-size:11px;color:var(--green)">✓ সম্পন্ন</span>':''}
+        </div>
+        <div style="display:flex;align-items:center;gap:7px">
+          <div style="font-size:10px;color:var(--t3)">${pct2}%</div>
+          <div style="width:60px;height:4px;background:var(--s3);border-radius:2px;overflow:hidden"><div style="height:100%;width:${pct2}%;background:${u.color||'#f03e5f'};border-radius:2px;transition:width .4s"></div></div>
+        </div>
+      </div>
+      <div class="dt-tasks">
+        ${rec.length?`<div class="dt-recur-section">
+          <div class="dt-recur-head">🔁 Recurring Tasks <span style="font-size:9px;font-weight:400;color:var(--t3)">(প্রতিদিন)</span></div>
+          ${rec.map((t,i)=>{
+            const selKey=`${u.id}::r::${i}`;
+            const safeKey=selKey.replace(/[^a-zA-Z0-9]/g,'_');
+            const isSel=dtSelectedIds.has(selKey);
+            return`<div class="dt-task ${recurDone[t.id]?'done-t':''} ${isSel?'selected':''}" id="dtrow-${safeKey}">
+              <div class="chk-all ${isSel?'ck':''}" id="dtchk-${safeKey}" onclick="toggleDtSelect('${selKey}',event)" style="flex-shrink:0;margin-right:2px"></div>
+              <div class="chk ${recurDone[t.id]?'ck':''}" onclick="dtToggleRecurring('${u.id}','${dateStr}','${t.id}')"></div>
+              <div class="dt-task-title">${t.text}</div>
+              <span class="recurring-chip">🔁 প্রতিদিন</span>
+              ${t.note?`<span style="font-size:10px;color:var(--t3);padding:2px 6px;background:var(--s2);border-radius:4px;max-width:100px;overflow:hidden;text-overflow:ellipsis;white-space:nowrap" title="${t.note}">📝 ${t.note}</span>`:''}
+              <div style="display:flex;gap:4px;opacity:0;transition:.15s" class="dt-task-actions">
+                ${canEdit?`<button class="rb" onclick="dtEdit('${u.id}','${dateStr}',${i},true)" title="Edit করুন">✏️</button>`:''}
+                ${canEdit?`<button class="rb" onclick="dtNote('${u.id}','${dateStr}',${i},true)" title="Note যোগ করুন">📝</button>`:''}
+                ${canEdit?`<button class="rb dl" onclick="dtDel('${u.id}','${dateStr}',${i},true)">✕</button>`:''}
+              </div>
+            </div>`;}).join('')}
+        </div>`:''}
+        ${ts.length?ts.map((t,i)=>renderDtTask(t,i,u.id,dateStr,false)).join(''):''}
+        ${!ts.length&&!rec.length?'<div style="padding:10px 8px;font-size:12px;color:var(--t3)">এখনো কোনো task যোগ করা হয়নি</div>':''}
+        ${canEdit?`<div class="dt-add-row">
+          <input type="text" placeholder="আজকের জন্য task লিখুন..." id="dtin-${u.id}" 
+            onkeydown="if(event.key==='Enter')dtAdd('${u.id}','${dateStr}')"/>
+          <button class="btn br bxs" onclick="dtAdd('${u.id}','${dateStr}')">+ আজ</button>
+          <button class="btn bg bxs" onclick="dtAddRecurringPrompt('${u.id}')" title="প্রতিদিনের জন্য recurring task যোগ করুন" style="color:var(--purple);border-color:rgba(157,111,255,.4)">🔁 প্রতিদিন</button>
+        </div>`:'<div style="font-size:11px;color:var(--t3);padding:6px 8px">👁 View only</div>'}
+      </div>
+    </div>`;
+  }).join('');
+}
+
+// ══ DAILY TASK BULK SELECTION ══
+let dtSelectedIds = new Set(); // 'userId_idx' format
+function updateDtBulkBar(){
+  const bar=eid('dtBulkBar');
+  if(!bar)return;
+  bar.classList.toggle('show',dtSelectedIds.size>0);
+  const cnt=eid('dtBulkCount');
+  if(cnt)cnt.textContent=`${dtSelectedIds.size}টি selected`;
+}
+window.toggleDtSelect=function(key,e){
+  e.stopPropagation();
+  if(dtSelectedIds.has(key))dtSelectedIds.delete(key);else dtSelectedIds.add(key);
+  updateDtBulkBar();
+  const el=eid('dtchk-'+key.replace(/[^a-zA-Z0-9]/g,'_'));
+  if(el)el.classList.toggle('ck',dtSelectedIds.has(key));
+  const row=eid('dtrow-'+key.replace(/[^a-zA-Z0-9]/g,'_'));
+  if(row)row.classList.toggle('selected',dtSelectedIds.has(key));
+};
+window.clearDtSelection=function(){dtSelectedIds.clear();updateDtBulkBar();renderDaily();};
+window.bulkDtMarkDone=async function(){
+  if(!dtSelectedIds.size)return;
+  // Parse keys and update
+  const dateStr=dtDateStr(dtDate);
+  const updates={};// userId → indices
+  for(const key of dtSelectedIds){
+    const parts=key.split('::');
+    if(parts.length<3)continue;
+    const userId=parts[0],type=parts[1],idx=parseInt(parts[2]);
+    if(!updates[userId])updates[userId]={daily:[],recurring:[]};
+    if(type==='r')updates[userId].recurring.push(idx);
+    else updates[userId].daily.push(idx);
+  }
+  for(const [userId,upd] of Object.entries(updates)){
+    if(upd.daily.length){
+      const k=dateStr+'_'+userId;
+      const ts=[...(Array.isArray(dtData[k])?dtData[k]:[])];
+      upd.daily.forEach(i=>{if(ts[i])ts[i]={...ts[i],done:true};});
+      await saveDtDoc(dateStr,userId,ts);
+    }
+    if(upd.recurring.length){
+      const rec=recurData[userId]||[];
+      for(const i of upd.recurring){if(rec[i])await setRecurDone(dateStr,userId,rec[i].id,true);}
+    }
+  }
+  toast(`${dtSelectedIds.size}টি daily task done ✓`,'ok');
+  dtSelectedIds.clear();updateDtBulkBar();renderDaily();
+};
+window.bulkDtDelete=async function(){
+  if(!dtSelectedIds.size)return;
+  const dateStr=dtDateStr(dtDate);
+  if(!confirm(`${dtSelectedIds.size}টি daily task delete করবেন?`))return;
+  const updates={};
+  for(const key of dtSelectedIds){
+    const parts=key.split('::');
+    if(parts.length<3)continue;
+    const userId=parts[0],type=parts[1],idx=parseInt(parts[2]);
+    if(!isOwner()&&userId!==cu?.id)continue;
+    if(!updates[userId])updates[userId]={daily:[],recurring:[]};
+    if(type==='r')updates[userId].recurring.push(idx);
+    else updates[userId].daily.push(idx);
+  }
+  for(const [userId,upd] of Object.entries(updates)){
+    if(upd.daily.length){
+      const k=dateStr+'_'+userId;
+      const ts=[...(Array.isArray(dtData[k])?dtData[k]:[])];
+      const toRemove=new Set(upd.daily);
+      const filtered=ts.filter((_,i)=>!toRemove.has(i));
+      await saveDtDoc(dateStr,userId,filtered);
+    }
+    if(upd.recurring.length){
+      const rec=[...(recurData[userId]||[])];
+      const toRemove=new Set(upd.recurring);
+      const filtered=rec.filter((_,i)=>!toRemove.has(i));
+      await saveRecurring(userId,filtered);
+    }
+  }
+  toast(`Daily tasks delete হয়েছে`,'info');
+  dtSelectedIds.clear();updateDtBulkBar();renderDaily();
+};
+
+function renderDtTask(t, idx, userId, dateStr, isRecurring=false){
+  const selKey=`${userId}::${isRecurring?'r':'d'}::${idx}`;
+  const safeKey=selKey.replace(/[^a-zA-Z0-9]/g,'_');
+  const isSel=dtSelectedIds.has(selKey);
+  return`<div class="dt-task ${t.done?'done-t':''} ${isSel?'selected':''}" id="dtrow-${safeKey}">
+    <div class="chk-all ${isSel?'ck':''}" id="dtchk-${safeKey}" onclick="toggleDtSelect('${selKey}',event)" style="flex-shrink:0;margin-right:2px"></div>
+    <div class="chk ${t.done?'ck':''}" onclick="dtToggle('${userId}','${dateStr}',${idx},${isRecurring})"></div>
+    <div class="dt-task-title">${t.text}</div>
+    ${isRecurring?`<span class="recurring-chip">🔁 প্রতিদিন</span>`:''}
+    ${t.note?`<span style="font-size:10px;color:var(--t3);padding:2px 6px;background:var(--s2);border-radius:4px;max-width:120px;overflow:hidden;text-overflow:ellipsis;white-space:nowrap" title="${t.note}">📝 ${t.note}</span>`:''}
+    <div style="display:flex;gap:4px;opacity:0;transition:.15s" class="dt-task-actions">
+      <button class="rb" onclick="dtEdit('${userId}','${dateStr}',${idx},${isRecurring})" title="Edit করুন">✏️</button>
+      <button class="rb" onclick="dtNote('${userId}','${dateStr}',${idx},${isRecurring})" title="Note যোগ করুন">📝</button>
+      <button class="rb dl" onclick="dtDel('${userId}','${dateStr}',${idx},${isRecurring})">✕</button>
+    </div>
+  </div>`;
+}
+
+// ══ RECURRING TASKS ══
+// Stored in Firestore: collection 'recurringTasks', doc id = userId
+// Each doc: { userId, tasks: [{id, text, note}] }
+// Completion status for recurring tasks stored per-date: key 'YYYY-MM-DD_userId' in dtData but with 'recurring' array
+// We store recurring done state inside daily doc: { ..., recurringDone: {taskId: bool} }
+
+async function loadRecurring(userId){
+  if(recurData[userId]!==undefined) return recurData[userId];
+  if(_local){recurData[userId]=recurData[userId]||[];return recurData[userId];}
+  try{
+    const snap=await getDoc(doc(db,'recurringTasks',userId));
+    recurData[userId]=snap.exists()?(snap.data().tasks||[]):[];
+  }catch(e){recurData[userId]=[];}
+  return recurData[userId];
+}
+async function saveRecurring(userId, tasksList){
+  recurData[userId]=tasksList;
+  if(_local)return;
+  try{await setDoc(doc(db,'recurringTasks',userId),{userId,tasks:tasksList,updatedAt:Date.now()});}catch(e){console.error(e);}
+}
+
+// Get recurring done state for a date+user (stored inside daily doc)
+function getRecurDone(dateStr, userId){
+  const key=dateStr+'_'+userId;
+  const doc2=dtData[key];
+  if(!doc2||!doc2._recurringDone) return {};
+  return doc2._recurringDone;
+}
+async function setRecurDone(dateStr, userId, taskId, done){
+  const key=dateStr+'_'+userId;
+  if(!dtData[key]) dtData[key]=[];
+  // Store recurring done state alongside daily tasks
+  if(!dtData[key]._recurringDone) dtData[key]._recurringDone={};
+  dtData[key]._recurringDone[taskId]=done;
+  // Save to Firestore — store the whole daily doc
+  if(!_local){
+    try{await setDoc(doc(db,'dailyTasks',key),{
+      date:dateStr,userId,
+      tasks:Array.isArray(dtData[key])?dtData[key]:[],
+      recurringDone:dtData[key]._recurringDone||{},
+      updatedAt:Date.now()
+    });}catch(e){console.error(e);}
+  }
+}
+
+// Override loadDtDoc to also load recurringDone
+async function loadDtDoc(dateStr, userId){
+  const key=dateStr+'_'+userId;
+  if(dtData[key]!==undefined)return dtData[key];
+  if(_local){dtData[key]=dtData[key]||[];return dtData[key];}
+  try{
+    const snap=await getDoc(doc(db,'dailyTasks',key));
+    if(snap.exists()){
+      const d=snap.data();
+      dtData[key]=d.tasks||[];
+      if(d.recurringDone) dtData[key]._recurringDone=d.recurringDone;
+    }else{
+      dtData[key]=[];
+    }
+  }catch(e){dtData[key]=[];}
+  return dtData[key];
+}
+
+// Override saveDtDoc to preserve recurringDone
+async function saveDtDoc(dateStr, userId, tasksList){
+  const key=dateStr+'_'+userId;
+  const prevRecurDone = (dtData[key]&&dtData[key]._recurringDone)||{};
+  dtData[key]=tasksList;
+  dtData[key]._recurringDone=prevRecurDone;
+  if(_local)return;
+  try{await setDoc(doc(db,'dailyTasks',key),{
+    date:dateStr,userId,
+    tasks:tasksList,
+    recurringDone:prevRecurDone,
+    updatedAt:Date.now()
+  });}catch(e){console.error(e);}
+}
+
+window.dtAdd=async function(userId, dateStr){
+  if(!isOwner()&&userId!==cu?.id){toast('🔒 শুধু নিজের daily task add করতে পারবেন।','err');return;}
+  const inp=eid('dtin-'+userId);if(!inp)return;
+  const text=inp.value.trim();if(!text)return;
+  const key=dateStr+'_'+userId;
+  const ts=[...(Array.isArray(dtData[key])?dtData[key]:[])];
+  ts.push({id:'dt'+Date.now(),text,done:false,note:'',createdAt:Date.now()});
+  await saveDtDoc(dateStr,userId,ts);
+  inp.value='';
+  renderDaily();
+  toast('Task যোগ হয়েছে ✓','ok');
+};
+window.dtAddRecurringPrompt=async function(userId){
+  if(!isOwner()&&userId!==cu?.id){toast('🔒 শুধু নিজের recurring task add করতে পারবেন।','err');return;}
+  const inp=eid('dtin-'+userId);
+  let text=inp?.value.trim()||'';
+  if(!text) text=prompt('Recurring task লিখুন (প্রতিদিন দেখাবে):','');
+  if(!text||!text.trim())return;
+  const ts=[...(recurData[userId]||[])];
+  ts.push({id:'r'+Date.now(),text:text.trim(),note:''});
+  await saveRecurring(userId,ts);
+  if(inp)inp.value='';
+  renderDaily();
+  toast('Recurring task যোগ হয়েছে 🔁','ok');
+};
+window.dtAddRecurring=async function(userId){
+  if(!isOwner()&&userId!==cu?.id){toast('🔒 শুধু নিজের recurring task add করতে পারবেন।','err');return;}
+  const inp=eid('dtrin-'+userId);if(!inp)return;
+  const text=inp.value.trim();if(!text)return;
+  const ts=[...(recurData[userId]||[])];
+  ts.push({id:'r'+Date.now(),text,note:''});
+  await saveRecurring(userId,ts);
+  inp.value='';
+  renderDaily();
+  toast('Recurring task যোগ হয়েছে 🔁','ok');
+};
+window.dtDelRecurring=async function(userId, taskId){
+  if(!isOwner()&&userId!==cu?.id){toast('🔒 শুধু নিজের recurring task delete করতে পারবেন।','err');return;}
+  if(!confirm('এই recurring task মুছবেন? সব দিন থেকে উঠে যাবে।'))return;
+  const ts=(recurData[userId]||[]).filter(t=>t.id!==taskId);
+  await saveRecurring(userId,ts);
+  renderDaily();
+  toast('Recurring task মুছে গেছে','info');
+};
+window.dtToggleRecurring=async function(userId, dateStr, taskId){
+  if(!isOwner()&&userId!==cu?.id){toast('🔒 শুধু নিজের task update করতে পারবেন।','err');return;}
+  const done=getRecurDone(dateStr,userId);
+  const newDone=!done[taskId];
+  await setRecurDone(dateStr,userId,taskId,newDone);
+  renderDaily();
+};
+
+window.dtEdit=async function(userId, dateStr, idx, isRecurring){
+  if(!isOwner()&&userId!==cu?.id){permDeniedTask();return;}
+  if(isRecurring){
+    const ts=recurData[userId]||[];
+    const t=ts[idx];if(!t)return;
+    openIEM(userId,dateStr,idx,true,t.text,t.note||'');
+  }else{
+    const key=dateStr+'_'+userId;
+    const ts=Array.isArray(dtData[key])?dtData[key]:[];
+    if(!ts[idx])return;
+    openIEM(userId,dateStr,idx,false,ts[idx].text,ts[idx].note||'');
+  }
+};
+
+window.dtToggle=async function(userId, dateStr, idx, isRecurring=false){
+  if(isRecurring){await dtToggleRecurring(userId,dateStr,idx);return;}
+  if(!isOwner()&&userId!==cu?.id){toast('🔒 শুধু নিজের daily task update করতে পারবেন।','err');return;}
+  const key=dateStr+'_'+userId;
+  const ts=[...(dtData[key]||[])];
+  if(!ts[idx])return;
+  ts[idx]={...ts[idx],done:!ts[idx].done};
+  await saveDtDoc(dateStr,userId,ts);
+  renderDaily();
+};
+
+window.dtDel=async function(userId, dateStr, idx, isRecurring=false){
+  if(isRecurring){
+    const ts=recurData[userId]||[];
+    const t=ts[idx];if(!t)return;
+    await dtDelRecurring(userId,t.id);
+    return;
+  }
+  if(!isOwner()&&userId!==cu?.id){toast('🔒 শুধু নিজের daily task delete করতে পারবেন।','err');return;}
+  if(!confirm('এই task মুছবেন?'))return;
+  const key=dateStr+'_'+userId;
+  const ts=[...(dtData[key]||[])];
+  ts.splice(idx,1);
+  await saveDtDoc(dateStr,userId,ts);
+  renderDaily();
+  toast('Task মুছে গেছে','info');
+};
+
+window.dtNote=async function(userId, dateStr, idx, isRecurring=false){
+  if(!isOwner()&&userId!==cu?.id){toast('🔒 শুধু নিজের daily task edit করতে পারবেন।','err');return;}
+  if(isRecurring){
+    const ts=recurData[userId]||[];
+    const t=ts[idx];if(!t)return;
+    const note=prompt('Note লিখুন:',t.note||'');
+    if(note===null)return;
+    ts[idx]={...t,note:note.trim()};
+    await saveRecurring(userId,[...ts]);
+    renderDaily();
+    return;
+  }
+  const key=dateStr+'_'+userId;
+  const ts=[...(dtData[key]||[])];
+  if(!ts[idx])return;
+  const note=prompt('Note লিখুন (খালি রাখলে মুছে যাবে):',ts[idx].note||'');
+  if(note===null)return;
+  ts[idx]={...ts[idx],note:note.trim()};
+  await saveDtDoc(dateStr,userId,ts);
+  renderDaily();
+};
+
+// Show action buttons on hover via CSS (add to style)
+document.addEventListener('DOMContentLoaded',()=>{
+  const style=document.createElement('style');
+  style.textContent=`.dt-task:hover .dt-task-actions{opacity:1!important;}`;
+  document.head.appendChild(style);
+});
 
 initFirebase();
 </script>

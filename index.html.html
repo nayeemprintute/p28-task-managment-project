@@ -419,7 +419,7 @@ select.fs option{background:var(--s2);}
           <div class="dg">
             <div class="dc"><h3>📅 Timeline</h3><div id="dTl"></div></div>
             <div class="dc"><h3>👥 Team Workload</h3><div id="dTm"></div></div>
-            <div class="dc"><h3>🏷 Department Progress</h3><div id="dSec"></div></div>
+            <div class="dc"><h3>🏷 Section Progress</h3><div id="dSec"></div></div>
             <div class="dc"><h3>📊 KPI</h3><div id="dKpi"></div></div>
             <div class="dc" style="grid-column:span 2"><h3>📁 Projects <button class="btn bg bxs" onclick="openM('project')" style="margin-left:8px">+ New</button></h3><div id="dProj"></div></div>
           </div>
@@ -438,7 +438,7 @@ select.fs option{background:var(--s2);}
             <div class="srt" id="srtBtn" onclick="toggleAsc()"><span>A→Z</span><span class="sa">▲</span></div>
           </div>
           <div class="tw">
-            <div class="th"><div id="thChk" class="th-chk" onclick="toggleSelectAll()" title="সব select করুন"></div><div>Task</div><div>Department</div><div>Priority</div><div>Status</div><div>Assignee</div><div></div></div>
+            <div class="th"><div id="thChk" class="th-chk" onclick="toggleSelectAll()" title="সব select করুন"></div><div>Task</div><div>Section</div><div>Priority</div><div>Status</div><div>Assignee</div><div></div></div>
             <div id="tl"></div>
           </div>
         </div>
@@ -486,7 +486,7 @@ select.fs option{background:var(--s2);}
       <div class="fg"><label>Description</label><textarea id="tD" placeholder="Details..."></textarea></div>
       <div class="fg"><label>Project</label><select id="tProj"><option value="">— কোনো Project নেই —</option></select></div>
       <div class="fr2">
-        <div class="fg"><label>Department</label><select id="tSc"></select></div>
+        <div class="fg"><label>Section</label><select id="tSc"></select></div>
         <div class="fg"><label>Assignee</label><select id="tAs"></select></div>
       </div>
       <div class="fr2">
@@ -1378,7 +1378,7 @@ function renderPVTasks(ptasks,p){
     html+=`<div class="pv-sec-block">
       <div class="pv-sec-head" onclick="pvToggleSec('__none')">
         <span class="pv-sec-icon">📌</span>
-        <span class="pv-sec-nm">No Department</span>
+        <span class="pv-sec-nm">No Section</span>
         <span class="pv-sec-meta">${grouped['__none'].length} tasks</span>
         <span class="pv-sec-toggle open" id="pvt-__none">▶</span>
       </div>
@@ -1545,7 +1545,7 @@ function renderSettings(){
 }
 window.openQuick=function(type){
   document.getElementById('qType').value=type;
-  const titles={section:'Add Department',status:'Add Status',priority:'Add Priority',role:'Add Role'};
+  const titles={section:'Add Section',status:'Add Status',priority:'Add Priority',role:'Add Role'};
   eid('qMdT').textContent=titles[type]||'Add Item';
   ['qName','qIcon','qColor'].forEach(id=>{const e=eid(id);if(e)e.value='';});
   eid('qIconFg').style.display=type==='role'?'none':'block';

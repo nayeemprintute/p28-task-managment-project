@@ -204,6 +204,7 @@ select.fs option{background:var(--s2);}
 .fg input:focus,.fg select:focus,.fg textarea:focus{border-color:var(--red);}
 .fg textarea{resize:vertical;min-height:68px;}
 .fg select option{background:var(--s2);}
+input[type="date"]{color-scheme:dark;}
 
 .ut{background:var(--s1);border:1px solid var(--bd);border-radius:12px;overflow:hidden;}
 .ur{display:grid;grid-template-columns:44px 1fr 130px 115px 70px;padding:12px 16px;border-bottom:1px solid var(--bd);align-items:center;}
@@ -566,7 +567,7 @@ select.fs option{background:var(--s2);}
         <div class="fg"><label>Status</label><select id="tSt"></select></div>
       </div>
       <div class="fr2">
-        <div class="fg"><label>Due</label><input type="text" id="tDu" placeholder="Day 1, Day 4–6..."/></div>
+        <div class="fg"><label>Deadline Date</label><input type="date" id="tDu"/></div>
         <div class="fg"><label>Phase</label><select id="tPh"><option value="Phase 1">Phase 1</option><option value="Phase 2">Phase 2</option><option value="Both">Both</option></select></div>
       </div>
     </div>
@@ -754,6 +755,8 @@ const priById=id=>priorities.find(p=>p.id===id)||{name:id,color:'#8d96b8'};
 const staById=id=>statuses.find(s=>s.id===id)||{name:id,color:'#8d96b8'};
 const tsNow=()=>new Date().toLocaleString('en-GB',{day:'2-digit',month:'short',hour:'2-digit',minute:'2-digit'});
 const eid=id=>document.getElementById(id);
+const fmtDate=d=>{if(!d)return'';if(!d.includes('-'))return d;const[y,m,dd]=d.split('-');const months=['Jan','Feb','Mar','Apr','May','Jun','Jul','Aug','Sep','Oct','Nov','Dec'];return`${dd} ${months[parseInt(m)-1]} ${y}`;};
+const isOverdue=d=>{if(!d||!d.includes('-'))return false;return new Date(d)<new Date(new Date().toDateString());};
 
 // ══ SYNC STATUS ══
 function setSyncStatus(on){
@@ -1157,7 +1160,7 @@ function renderT(){
         <div>
           <div class="tt ${t.status==='done'?'done':''}">${t.title}</div>
           <div class="tm">
-            ${t.due?`<span style="font-size:10px;color:var(--t3)">📅 ${t.due}</span>`:''}
+            ${t.due?`<span style="font-size:10px;color:${isOverdue(t.due)?'var(--red)':'var(--gold)'}">📅 ${fmtDate(t.due)}</span>`:''}
             ${sbt?`<span class="sc2">📋 ${sbd}/${sbt}</span>`:''}
           </div>
         </div>
@@ -1168,8 +1171,8 @@ function renderT(){
         <div class="ra" onclick="event.stopPropagation()">${isSel?'':'<button class="rb" onclick="editT(\''+t.id+'\')">✏️</button><button class="rb dl" onclick="delT(\''+t.id+'\')">🗑</button>'}</div>
       </div>
       <div class="sp ${ie?'open':''}" id="sp-${t.id}">
-        ${(t.subtasks||[]).map(s=>`<div class="str"><div class="chk ${s.done?'ck':''}" onclick="tSub('${t.id}','${s.id}')"></div><div class="stxt ${s.done?'done':''}">${s.text}</div><button class="rb dl" onclick="dSub('${t.id}','${s.id}')">✕</button></div>`).join('')}
-        <div class="add-s"><input type="text" placeholder="New sub-task..." id="ns-${t.id}" onkeydown="if(event.key==='Enter')aSub('${t.id}')"/><button class="btn bg bxs" onclick="aSub('${t.id}')">Add</button></div>
+        ${(t.subtasks||[]).map(s=>`<div class="str"><div class="chk ${s.done?'ck':''}" onclick="tSub('${t.id}','${s.id}')"></div><div class="stxt ${s.done?'done':''}">${s.text}${s.due?`<span style="margin-left:7px;font-size:10px;color:${isOverdue(s.due)?'var(--red)':'var(--gold)'};background:rgba(245,166,35,.12);border:1px solid rgba(245,166,35,.25);border-radius:4px;padding:1px 5px;">📅 ${fmtDate(s.due)}</span>`:''}</div><button class="rb dl" onclick="dSub('${t.id}','${s.id}')">✕</button></div>`).join('')}
+        <div class="add-s"><input type="text" placeholder="New sub-task..." id="ns-${t.id}" onkeydown="if(event.key==='Enter')aSub('${t.id}')"/><input type="date" id="nd-${t.id}" title="Deadline" style="background:var(--s2);border:1px solid var(--bd2);border-radius:7px;padding:6px 8px;color:var(--text);font-size:12px;outline:none;font-family:var(--font);"/><button class="btn bg bxs" onclick="aSub('${t.id}')">Add</button></div>
       </div>
     </div>`;}).join('');
   upSelAll(list);
@@ -1285,12 +1288,13 @@ window.tSub=async function(tid,sid){
 };
 window.aSub=async function(tid){
   const inp=eid('ns-'+tid);const txt=inp?.value.trim();if(!txt)return;
+  const dateInp=eid('nd-'+tid);const due=dateInp?.value||'';
   const t=tasks.find(t=>t.id===tid);if(!t)return;
   if(!t.subtasks)t.subtasks=[];
-  t.subtasks.push({id:tid+'_'+Date.now(),text:txt,done:false});
+  t.subtasks.push({id:tid+'_'+Date.now(),text:txt,done:false,due});
   await saveTaskFS(t);
   await sendNotif(t.assignee,'subtask',t.id,t.title,cu?.name||'Someone');
-  inp.value='';toast('Sub-task added!','ok');
+  inp.value='';if(dateInp)dateInp.value='';toast('Sub-task added!','ok');
 };
 window.dSub=async function(tid,sid){
   const t=tasks.find(t=>t.id===tid);if(!t)return;

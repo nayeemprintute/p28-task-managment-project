@@ -485,6 +485,7 @@ select.fs option{background:var(--s2);}
             <div>
               <div style="font-weight:700;font-size:16px">📆 Daily Tasks</div>
               <div class="daily-date" id="dailyDateLbl"></div>
+              <div id="dailyUserLbl" style="font-size:11px;color:var(--t3);margin-top:2px"></div>
             </div>
             <div style="display:flex;gap:7px;align-items:center;flex-wrap:wrap">
               <button class="btn bg bsm" onclick="navDaily(-1)">◀ আগের দিন</button>
@@ -974,6 +975,8 @@ window.doLogin=function(){
 };
 window.doLogout=function(){
   cu=null;window._selUid=null;
+  _dailyDayData={}; // clear per-user cache on logout
+  _viewingDate=null;
   eid('app').style.display='none';eid('loginScreen').style.display='flex';
   eid('pwSec').classList.remove('show');
   document.querySelectorAll('.pb').forEach(b=>b.classList.remove('sel'));
@@ -1697,18 +1700,23 @@ window.delRole=async function(r){if(users.find(u=>u.role===r)){toast('Users আ�
 // ══ DAILY TASKS ══
 // Structure in Firebase:
 //   config/daily  → { templates: [{id,title},...] }
-//   daily/{dateKey} → { tasks: [{id,title,done},...], date: dateKey }
+//   daily/{userId}_{dateKey} → { tasks: [{id,title,done},...], date: dateKey, userId }
 //
 // "templates" = permanent list that auto-creates each day's record
-// "daily/{dateKey}" = per-day snapshot with done state
+// "daily/{userId}_{dateKey}" = per-user per-day snapshot with done state
 //
 let dailyTemplates=[]; // [{id,title}] — permanent, no assignee
 let _viewingDate=null; // date key currently shown, null = today
-let _dailyDayData={}; // cache: {dateKey: {tasks:[{id,title,done}]}}
+let _dailyDayData={}; // cache: {userId_dateKey: {tasks:[{id,title,done}]}}
 
 function getTodayKey(){
   const d=new Date();
   return`${d.getFullYear()}-${String(d.getMonth()+1).padStart(2,'0')}-${String(d.getDate()).padStart(2,'0')}`;
+}
+function getUserDayKey(dateKey){
+  // Per-user key: userId_dateKey
+  const uid=cu?.id||'guest';
+  return`${uid}_${dateKey}`;
 }
 function dateKeyToDisplay(key){
   const [y,m,d]=key.split('-').map(Number);
@@ -1724,18 +1732,19 @@ function getViewKey(){return _viewingDate||getTodayKey();}
 // Called when firebase daily listener fires for a specific date
 async function ensureDayRecord(dateKey){
   // If this day has no record yet, create one from templates
-  if(_dailyDayData[dateKey])return;
+  const userDayKey=getUserDayKey(dateKey);
+  if(_dailyDayData[userDayKey])return;
   if(!_local){
     try{
-      const snap=await getDoc(doc(db,'daily',dateKey));
-      if(snap.exists()){_dailyDayData[dateKey]=snap.data();return;}
+      const snap=await getDoc(doc(db,'daily',userDayKey));
+      if(snap.exists()){_dailyDayData[userDayKey]=snap.data();return;}
     }catch(e){}
   }
   // Create new day record from templates
   const tasks=dailyTemplates.map(t=>({id:t.id,title:t.title,done:false}));
-  _dailyDayData[dateKey]={tasks,date:dateKey};
+  _dailyDayData[userDayKey]={tasks,date:dateKey,userId:cu?.id||'guest'};
   if(!_local){
-    try{await setDoc(doc(db,'daily',dateKey),_dailyDayData[dateKey]);}catch(e){}
+    try{await setDoc(doc(db,'daily',userDayKey),_dailyDayData[userDayKey]);}catch(e){}
   }
 }
 
@@ -1747,13 +1756,18 @@ async function renderDaily(){
   const lbl=eid('dailyDateLbl');
   if(lbl)lbl.textContent=dateKeyToDisplay(viewKey);
 
+  // Update user label
+  const uLbl=eid('dailyUserLbl');
+  if(uLbl&&cu)uLbl.textContent=`👤 ${cu.name} (${cu.role}) — নিজের progress`;
+
   // Next button: disable if viewing today or future
   const nextBtn=eid('dailyNextBtn');
   if(nextBtn)nextBtn.disabled=viewKey>=todayKey;
 
   // Ensure day record exists (auto-creates from templates if needed)
   await ensureDayRecord(viewKey);
-  const dayData=_dailyDayData[viewKey]||{tasks:[]};
+  const userDayKey=getUserDayKey(viewKey);
+  const dayData=_dailyDayData[userDayKey]||{tasks:[]};
   const dayTasks=dayData.tasks||[];
 
   // Render template list
@@ -1825,7 +1839,8 @@ window.toggleDailyDone=async function(taskId){
   const viewKey=getViewKey();
   const todayKey=getTodayKey();
   if(viewKey!==todayKey){toast('শুধু আজকের task mark করা যাবে','err');return;}
-  const day=_dailyDayData[viewKey];if(!day)return;
+  const userDayKey=getUserDayKey(viewKey);
+  const day=_dailyDayData[userDayKey];if(!day)return;
   const t=day.tasks.find(x=>x.id===taskId);if(!t)return;
   t.done=!t.done;
   await saveDayRecord(viewKey);
@@ -1838,7 +1853,8 @@ window.dailyAllComplete=async function(){
   const viewKey=getViewKey();
   const todayKey=getTodayKey();
   if(viewKey!==todayKey){toast('শুধু আজকের task complete করা যাবে','err');return;}
-  const day=_dailyDayData[viewKey];if(!day)return;
+  const userDayKey=getUserDayKey(viewKey);
+  const day=_dailyDayData[userDayKey];if(!day)return;
   const pending=day.tasks.filter(t=>!t.done);
   if(!pending.length){toast('সব already done!','ok');return;}
   pending.forEach(t=>t.done=true);
@@ -1849,9 +1865,10 @@ window.dailyAllComplete=async function(){
 };
 
 async function saveDayRecord(dateKey){
-  if(!_dailyDayData[dateKey])return;
+  const userDayKey=getUserDayKey(dateKey);
+  if(!_dailyDayData[userDayKey])return;
   if(!_local){
-    try{await setDoc(doc(db,'daily',dateKey),_dailyDayData[dateKey]);}catch(e){}
+    try{await setDoc(doc(db,'daily',userDayKey),_dailyDayData[userDayKey]);}catch(e){}
   }
 }
 
@@ -1874,23 +1891,25 @@ window.saveDailyNew=async function(){
     const t=dailyTemplates.find(x=>x.id===window._editDailyTemplateId);
     if(t){
       t.title=title;
-      // Also update title in ALL existing day records
+      // Also update title in ALL existing day records for current user
       Object.values(_dailyDayData).forEach(day=>{
         const dt=day.tasks?.find(x=>x.id===t.id);
         if(dt)dt.title=title;
       });
-      // Save all affected day records (only today's for perf)
+      // Save today's per-user record
       const todayKey=getTodayKey();
-      if(_dailyDayData[todayKey])await saveDayRecord(todayKey);
+      const userDayKey=getUserDayKey(todayKey);
+      if(_dailyDayData[userDayKey])await saveDayRecord(todayKey);
     }
     toast('Template updated ✓','ok');
   }else{
     const newT={id:'dt_'+Date.now(),title};
     dailyTemplates.push(newT);
-    // Also add to today's record if it exists
+    // Also add to today's per-user record if it exists
     const todayKey=getTodayKey();
-    if(_dailyDayData[todayKey]){
-      _dailyDayData[todayKey].tasks.push({id:newT.id,title:newT.title,done:false});
+    const userDayKey=getUserDayKey(todayKey);
+    if(_dailyDayData[userDayKey]){
+      _dailyDayData[userDayKey].tasks.push({id:newT.id,title:newT.title,done:false});
       await saveDayRecord(todayKey);
     }
     toast('Template যোগ হয়েছে ✓ (আজ থেকে দেখাবে)','ok');
@@ -1911,10 +1930,11 @@ window.editDailyTemplate=function(id){
 window.delDailyTemplate=async function(id){
   if(!confirm('এই template delete করবেন? আগের দিনের data থাকবে।'))return;
   dailyTemplates=dailyTemplates.filter(x=>x.id!==id);
-  // Remove from today's record too
+  // Remove from today's per-user record too
   const todayKey=getTodayKey();
-  if(_dailyDayData[todayKey]){
-    _dailyDayData[todayKey].tasks=_dailyDayData[todayKey].tasks.filter(x=>x.id!==id);
+  const userDayKey=getUserDayKey(todayKey);
+  if(_dailyDayData[userDayKey]){
+    _dailyDayData[userDayKey].tasks=_dailyDayData[userDayKey].tasks.filter(x=>x.id!==id);
     await saveDayRecord(todayKey);
   }
   await saveDailyTemplates();

@@ -1167,10 +1167,10 @@ function renderT(){
         <div class="ac-multi">${assigneeUsers.map(usr=>`<div class="av-sm" style="background:${h2r(usr.color||'#8d96b8',.2)};color:${usr.color||'#8d96b8'}" title="${usr.name}">${usr.emoji||usr.name[0]}</div>`).join('')}<span style="font-size:11px">${assigneeUsers.map(u=>u.name).join(', ')||t.assignee}</span></div>
         <div class="ra" onclick="event.stopPropagation()">${isSel?'':'<button class="rb" onclick="editT(\''+t.id+'\')">✏️</button><button class="rb dl" onclick="delT(\''+t.id+'\')">🗑</button>'}</div>
       </div>
-      ${sbt||ie?`<div class="sp ${ie?'open':''}" id="sp-${t.id}">
+      <div class="sp ${ie?'open':''}" id="sp-${t.id}">
         ${(t.subtasks||[]).map(s=>`<div class="str"><div class="chk ${s.done?'ck':''}" onclick="tSub('${t.id}','${s.id}')"></div><div class="stxt ${s.done?'done':''}">${s.text}</div><button class="rb dl" onclick="dSub('${t.id}','${s.id}')">✕</button></div>`).join('')}
         <div class="add-s"><input type="text" placeholder="New sub-task..." id="ns-${t.id}" onkeydown="if(event.key==='Enter')aSub('${t.id}')"/><button class="btn bg bxs" onclick="aSub('${t.id}')">Add</button></div>
-      </div>`:''}
+      </div>
     </div>`;}).join('');
   upSelAll(list);
 }

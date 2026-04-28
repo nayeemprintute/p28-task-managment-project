@@ -419,7 +419,7 @@ select.fs option{background:var(--s2);}
           <div class="dg">
             <div class="dc"><h3>📅 Timeline</h3><div id="dTl"></div></div>
             <div class="dc"><h3>👥 Team Workload</h3><div id="dTm"></div></div>
-            <div class="dc"><h3>🏷 Section Progress</h3><div id="dSec"></div></div>
+            <div class="dc"><h3>🏷 Department Progress</h3><div id="dSec"></div></div>
             <div class="dc"><h3>📊 KPI</h3><div id="dKpi"></div></div>
             <div class="dc" style="grid-column:span 2"><h3>📁 Projects <button class="btn bg bxs" onclick="openM('project')" style="margin-left:8px">+ New</button></h3><div id="dProj"></div></div>
           </div>
@@ -438,7 +438,7 @@ select.fs option{background:var(--s2);}
             <div class="srt" id="srtBtn" onclick="toggleAsc()"><span>A→Z</span><span class="sa">▲</span></div>
           </div>
           <div class="tw">
-            <div class="th"><div id="thChk" class="th-chk" onclick="toggleSelectAll()" title="সব select করুন"></div><div>Task</div><div>Section</div><div>Priority</div><div>Status</div><div>Assignee</div><div></div></div>
+            <div class="th"><div id="thChk" class="th-chk" onclick="toggleSelectAll()" title="সব select করুন"></div><div>Task</div><div>Department</div><div>Priority</div><div>Status</div><div>Assignee</div><div></div></div>
             <div id="tl"></div>
           </div>
         </div>
@@ -486,7 +486,7 @@ select.fs option{background:var(--s2);}
       <div class="fg"><label>Description</label><textarea id="tD" placeholder="Details..."></textarea></div>
       <div class="fg"><label>Project</label><select id="tProj"><option value="">— কোনো Project নেই —</option></select></div>
       <div class="fr2">
-        <div class="fg"><label>Section</label><select id="tSc"></select></div>
+        <div class="fg"><label>Department</label><select id="tSc"></select></div>
         <div class="fg"><label>Assignee</label><select id="tAs"></select></div>
       </div>
       <div class="fr2">
@@ -935,33 +935,19 @@ function buildSidebar(){
 }
 
 // ══ DROPDOWNS ══
-function buildTaskAssigneeGrid(selectedIds){
-  const grid=eid('tAsGrid');if(!grid)return;
-  grid.innerHTML=users.map(u=>`<div class="mb-item ${(selectedIds||[]).includes(u.id)?'sel':''}" id="tasgrid-${u.id}" onclick="toggleTaskAssignee('${u.id}')">
-    <div class="mb-av" style="background:${h2r(u.color||'#f03e5f',.2)};color:${u.color||'#f03e5f'}">${u.emoji||u.name[0]}</div>
-    <div class="mb-nm">${u.name}</div>
-  </div>`).join('');
-}
-window.toggleTaskAssignee=function(uid){
-  if(!window._taskAssignees)window._taskAssignees=[];
-  const idx=window._taskAssignees.indexOf(uid);
-  if(idx>-1)window._taskAssignees.splice(idx,1);else window._taskAssignees.push(uid);
-  document.querySelectorAll('#tAsGrid .mb-item').forEach(el=>el.classList.remove('sel'));
-  window._taskAssignees.forEach(id=>eid('tasgrid-'+id)?.classList.add('sel'));
-};
 function rebuildDropdowns(){
   const el=(id,html)=>{const e=eid(id);if(e)e.innerHTML=html;};
   el('statusTabs',`<div class="ft active" onclick="setSt('all',this)">All</div>`+statuses.map(s=>`<div class="ft" onclick="setSt('${s.id}',this)">${s.name}</div>`).join(''));
   el('pf',`<option value="">All Priority</option>`+priorities.map(p=>`<option value="${p.id}">${p.name}</option>`).join(''));
   el('sf2',`<option value="">All Department</option>`+Department.map(s=>`<option value="${s.id}">${s.icon} ${s.name}</option>`).join(''));
   el('af',`<option value="">All Assignees</option>`+users.map(u=>`<option value="${u.id}">${u.name}</option>`).join(''));
+  el('tSc',Department.map(s=>`<option value="${s.id}">${s.icon} ${s.name}</option>`).join(''));
   el('tPr',priorities.map(p=>`<option value="${p.id}">${p.name}</option>`).join(''));
   el('tSt',statuses.map(s=>`<option value="${s.id}">${s.name}</option>`).join(''));
+  el('tAs',users.map(u=>`<option value="${u.id}">${u.name} (${u.role})</option>`).join(''));
   el('uR',roles.map(r=>`<option>${r}</option>`).join(''));
   // Project dropdown for task modal
   el('tProj',`<option value="">— কোনো Project নেই —</option>`+projects.map(p=>`<option value="${p.id}">${p.icon||'📁'} ${p.name}</option>`).join(''));
-  // Assignee grid for task modal
-  buildTaskAssigneeGrid(window._taskAssignees||[]);
   // Reset bulk dropdowns so they rebuild fresh
   el('bulkStatusSel',`<option value="">— Status পরিবর্তন —</option>`);
   el('bulkPriSel',`<option value="">— Priority পরিবর্তন —</option>`);
@@ -1032,7 +1018,7 @@ function renderD(){
   const tot=tasks.length,dn=tasks.filter(t=>t.status==='done').length,pr=tasks.filter(t=>t.status==='progress').length,bl=tasks.filter(t=>t.status==='blocked').length,td=tasks.filter(t=>t.status==='todo').length;
   const sg=eid('sg');if(sg)sg.innerHTML=`<div class="sc" style="border-top-color:#f03e5f"><div class="sv">${tot}</div><div class="sl">Total</div></div><div class="sc" style="border-top-color:#22d47a"><div class="sv">${dn}</div><div class="sl">Done</div></div><div class="sc" style="border-top-color:#4d8eff"><div class="sv">${pr}</div><div class="sl">In Progress</div></div><div class="sc" style="border-top-color:#f5a623"><div class="sv">${td}</div><div class="sl">To Do</div></div><div class="sc" style="border-top-color:${bl>0?'#f03e5f':'#22d47a'}"><div class="sv" style="color:${bl>0?'var(--red)':'var(--green)'}">${bl}</div><div class="sl">Blocked</div></div>`;
   const dSec=eid('dSec');if(dSec)dSec.innerHTML=Department.map(s=>{const st=tasks.filter(t=>t.section===s.id),sd=st.filter(t=>t.status==='done').length,pct=st.length?Math.round(sd/st.length*100):0;return`<div class="pr"><div class="pl"><span>${s.icon} ${s.name}</span><span style="color:var(--t3)">${sd}/${st.length}</span></div><div class="prb"><div class="prf" style="width:${pct}%;background:${s.color}"></div></div></div>`;}).join('');
-  const dTm=eid('dTm');if(dTm)dTm.innerHTML=users.map(u=>{const at=tasks.filter(t=>(t.assignees||[t.assignee]).includes(u.id)),ad=at.filter(t=>t.status==='done').length,pp=at.length?Math.round(ad/at.length*100):0;return`<div class="ap"><div style="width:34px;height:34px;border-radius:9px;background:${h2r(u.color||'#f03e5f',.2)};color:${u.color||'#f03e5f'};display:flex;align-items:center;justify-content:center;font-size:13px;font-weight:700;flex-shrink:0">${u.emoji||u.name[0]}</div><div class="api"><div class="apn">${u.name} <span style="font-size:10px;color:var(--t3)">${at.filter(t=>t.status!=='done').length} pending</span></div><div class="apb"><div class="apf" style="width:${pp}%;background:${u.color||'#f03e5f'}"></div></div></div><div class="apc">${ad}/${at.length}</div></div>`;}).join('');
+  const dTm=eid('dTm');if(dTm)dTm.innerHTML=users.map(u=>{const at=tasks.filter(t=>t.assignee===u.id),ad=at.filter(t=>t.status==='done').length,pp=at.length?Math.round(ad/at.length*100):0;return`<div class="ap"><div style="width:34px;height:34px;border-radius:9px;background:${h2r(u.color||'#f03e5f',.2)};color:${u.color||'#f03e5f'};display:flex;align-items:center;justify-content:center;font-size:13px;font-weight:700;flex-shrink:0">${u.emoji||u.name[0]}</div><div class="api"><div class="apn">${u.name} <span style="font-size:10px;color:var(--t3)">${at.filter(t=>t.status!=='done').length} pending</span></div><div class="apb"><div class="apf" style="width:${pp}%;background:${u.color||'#f03e5f'}"></div></div></div><div class="apc">${ad}/${at.length}</div></div>`;}).join('');
   const tl=[['Day 1','Setup, C1/C2/C3','#f03e5f'],['Day 4','Campaign A LIVE 🚀','#22d47a'],['Day 7','Data review','#8d96b8'],['Day 8','Winner + Campaign B','#f03e5f'],['Day 14–15','Mid optimization','#f5a623'],['Day 21','Lookalike','#4d8eff'],['Day 30','Report + Phase 2','#22d47a']];
   const dTl=eid('dTl');if(dTl)dTl.innerHTML=tl.map(([d,t,c])=>`<div class="tli"><div class="tld" style="background:${c}"></div><div><div class="tlday">${d}</div><div class="tltask">${t}</div></div></div>`).join('');
   const pct=tot?Math.round(dn/tot*100):0;
@@ -1057,8 +1043,7 @@ function getF(){
   const s=(eid('si')?.value||'').toLowerCase().trim();
   const pf=eid('pf')?.value||'',sf=eid('sf2')?.value||'',af=eid('af')?.value||'';
   if(filt.section)list=list.filter(t=>t.section===filt.section);else if(sf)list=list.filter(t=>t.section===sf);
-  if(filt.assignee)list=list.filter(t=>(t.assignees||[t.assignee]).includes(filt.assignee));
-  else if(af)list=list.filter(t=>(t.assignees||[t.assignee]).includes(af));
+  if(filt.assignee)list=list.filter(t=>t.assignee===filt.assignee);else if(af)list=list.filter(t=>t.assignee===af);
   if(filt.status&&filt.status!=='all')list=list.filter(t=>t.status===filt.status);
   if(s)list=list.filter(t=>t.title.toLowerCase().includes(s)||(t.desc||'').toLowerCase().includes(s));
   if(pf)list=list.filter(t=>t.priority===pf);
@@ -1078,13 +1063,9 @@ function renderT(){
   if(!list.length){tl.innerHTML=`<div style="text-align:center;padding:48px 20px;color:var(--t3)">📭 No tasks found</div>`;upSelAll(list);return;}
   tl.innerHTML=list.map(t=>{
     const sec=secById(t.section),pri=priById(t.priority),sta=staById(t.status);
-    const sbd=(t.subtasks||[]).filter(s=>s.done).length,sbt=(t.subtasks||[]).length,ie=exp.has(t.id);
+    const u=users.find(u=>u.id===t.assignee);
+    const sbd=(t.subtasks||[]).filter(s=>s.done).length,sbt=(t.subtasks||[]).length,ie=exp.has(t.id),uc=u?.color||'#8d96b8';
     const isSel=sel.has(t.id);
-    // Multiple assignees display
-    const assigneeIds=t.assignees||(t.assignee?[t.assignee]:[]);
-    const assigneeAvatars=assigneeIds.slice(0,3).map(aid=>{const au=users.find(u=>u.id===aid);const ac=au?.color||'#8d96b8';return`<div style="width:20px;height:20px;border-radius:5px;background:${h2r(ac,.2)};color:${ac};display:flex;align-items:center;justify-content:center;font-size:9px;font-weight:700;flex-shrink:0;border:1px solid ${h2r(ac,.3)}" title="${au?.name||aid}">${au?.emoji||au?.name?.[0]||'?'}</div>`;}).join('');
-    const extraCount=assigneeIds.length>3?`<span style="font-size:9px;color:var(--t3)">+${assigneeIds.length-3}</span>`:'';
-    const firstUser=users.find(u=>u.id===assigneeIds[0]);
     return`<div id="tw-${t.id}">
       <div class="tr ${t.status==='done'?'done-r':''} ${ie?'exp':''} ${isSel?'sel-r':''}" data-id="${t.id}" onclick="tExp('${t.id}')">
         <div class="chk ${isSel?'ck':t.status==='done'?'ck':''}" style="${isSel?'background:var(--red);border-color:var(--red)':''}" onclick="event.stopPropagation();toggleSel('${t.id}',event)"></div>
@@ -1098,7 +1079,7 @@ function renderT(){
         <div><span class="tag" style="background:${h2r(sec.color,.15)};color:${sec.color};border:1px solid ${h2r(sec.color,.3)}">${sec.icon} ${sec.name}</span></div>
         <div><span class="pb2" style="background:${h2r(pri.color,.15)};color:${pri.color};border-color:${h2r(pri.color,.3)}">${pri.name}</span></div>
         <div><span class="sb3" style="background:${h2r(sta.color,.15)};color:${sta.color};border-color:${h2r(sta.color,.3)}">${sta.name}</span></div>
-        <div class="ac" style="gap:3px;flex-wrap:wrap">${assigneeAvatars}${extraCount}${assigneeIds.length===1?`<span style="font-size:11px">${firstUser?.name||assigneeIds[0]}</span>`:''}</div>
+        <div class="ac"><div style="width:20px;height:20px;border-radius:5px;background:${h2r(uc,.2)};color:${uc};display:flex;align-items:center;justify-content:center;font-size:9px;font-weight:700;flex-shrink:0">${u?.emoji||u?.name[0]||'?'}</div><span>${u?.name||t.assignee}</span></div>
         <div class="ra" onclick="event.stopPropagation()">${isSel?'':'<button class="rb" onclick="editT(\''+t.id+'\')">✏️</button><button class="rb dl" onclick="delT(\''+t.id+'\')">🗑</button>'}</div>
       </div>
       ${sbt||ie?`<div class="sp ${ie?'open':''}" id="sp-${t.id}">
@@ -1197,23 +1178,19 @@ window.bulkDelete=async function(){
   if(!confirm(`${ids.length} টি task delete করবেন? এটি undoable নয়।`))return;
   for(const id of ids){
     const t=tasks.find(t=>t.id===id);
-    if(t){
-      const assignees=t.assignees||(t.assignee?[t.assignee]:[]);
-      for(const a of assignees) await sendNotif(a,'deleted',t.id,t.title,cu?.name||'Someone');
-      await deleteTaskFS(id);
-    }
+    if(t){await sendNotif(t.assignee,'deleted',t.id,t.title,cu?.name||'Someone');await deleteTaskFS(id);}
   }
   toast(`${ids.length} টি task delete করা হয়েছে`,'info');clearSel();
 };
 
 window.tExp=function(id){if(exp.has(id))exp.delete(id);else exp.add(id);renderT();};
 window.tDone=async function(id){
+  // If bulk selection mode is active, toggle selection instead
   if(sel.size>0){toggleSel(id,{shiftKey:true});return;}
   const t=tasks.find(t=>t.id===id);if(!t)return;
   const wasD=t.status==='done';t.status=wasD?'todo':'done';
   await saveTaskFS(t);
-  const assignees=t.assignees||(t.assignee?[t.assignee]:[]);
-  if(!wasD) for(const a of assignees) await sendNotif(a,'completed',t.id,t.title,cu?.name||'Someone');
+  if(!wasD) await sendNotif(t.assignee,'completed',t.id,t.title,cu?.name||'Someone');
   toast(t.status==='done'?'Task completed ✓':'Task reopened','ok');
 };
 window.tSub=async function(tid,sid){
@@ -1227,8 +1204,7 @@ window.aSub=async function(tid){
   if(!t.subtasks)t.subtasks=[];
   t.subtasks.push({id:tid+'_'+Date.now(),text:txt,done:false});
   await saveTaskFS(t);
-  const assignees=t.assignees||(t.assignee?[t.assignee]:[]);
-  for(const a of assignees) await sendNotif(a,'subtask',t.id,t.title,cu?.name||'Someone');
+  await sendNotif(t.assignee,'subtask',t.id,t.title,cu?.name||'Someone');
   inp.value='';toast('Sub-task added!','ok');
 };
 window.dSub=async function(tid,sid){
@@ -1239,54 +1215,39 @@ window.dSub=async function(tid,sid){
 window.delT=async function(id){
   const t=tasks.find(t=>t.id===id);if(!t)return;
   if(!confirm('Task delete করবেন?'))return;
-  const assignees=t.assignees||(t.assignee?[t.assignee]:[]);
-  for(const a of assignees) await sendNotif(a,'deleted',t.id,t.title,cu?.name||'Someone');
+  await sendNotif(t.assignee,'deleted',t.id,t.title,cu?.name||'Someone');
   await deleteTaskFS(id);toast('Task deleted','info');
 };
 
 // ══ TASK MODAL ══
 // (openM and closeM are defined in PROJECT MODAL section below)
 window.editT=function(id){
-  const t=tasks.find(t=>t.id===id);if(!t)return;
-  // Load assignees — support both old single (t.assignee) and new array (t.assignees)
-  const existing=t.assignees||(t.assignee?[t.assignee]:[]);
-  window._taskAssignees=[...existing];
-  rebuildDropdowns();
+  const t=tasks.find(t=>t.id===id);if(!t)return;rebuildDropdowns();
   eid('eid').value=id;eid('tT').value=t.title;eid('tD').value=t.desc||'';
-  eid('tPr').value=t.priority;eid('tSt').value=t.status;
-  eid('tDu').value=t.due||'';
+  eid('tSc').value=t.section;eid('tPr').value=t.priority;eid('tSt').value=t.status;
+  eid('tDu').value=t.due||'';eid('tPh').value=t.phase||'Phase 1';eid('tAs').value=t.assignee;
   eid('tProj').value=t.projectId||'';
-  buildTaskAssigneeGrid(window._taskAssignees);
   eid('mdT').textContent='Edit Task';eid('mo-task').classList.add('open');
 };
 window.saveTask=async function(){
   const title=eid('tT').value.trim();if(!title){toast('Title required!','err');return;}
   const editId=eid('eid').value;
-  const newAssignees=window._taskAssignees||[];
-  if(!newAssignees.length){toast('অন্তত একজন assignee select করুন!','err');return;}
-  const data={
-    title,desc:eid('tD').value.trim(),
-    assignees:newAssignees,
-    assignee:newAssignees[0]||'', // backward compat
-    priority:eid('tPr').value,status:eid('tSt').value,
-    due:eid('tDu').value.trim(),
-    projectId:eid('tProj').value||null
-  };
+  const newAssignee=eid('tAs').value;
+  const data={title,desc:eid('tD').value.trim(),section:eid('tSc').value,assignee:newAssignee,priority:eid('tPr').value,status:eid('tSt').value,due:eid('tDu').value.trim(),phase:eid('tPh').value,projectId:eid('tProj').value||null};
   if(editId){
     const t=tasks.find(t=>t.id===editId);
-    const oldAssignees=t?.assignees||(t?.assignee?[t.assignee]:[]);
+    const oldAssignee=t?.assignee;
     if(t){Object.assign(t,data);await saveTaskFS(t);}
-    // Notify new assignees
-    const added=newAssignees.filter(a=>!oldAssignees.includes(a));
-    for(const a of added) await sendNotif(a,'assigned',editId,title,cu?.name||'Someone');
-    if(!added.length) for(const a of newAssignees) await sendNotif(a,'updated',editId,title,cu?.name||'Someone');
+    // Notify if assignee changed
+    if(oldAssignee!==newAssignee) await sendNotif(newAssignee,'assigned',editId,title,cu?.name||'Someone');
+    else await sendNotif(newAssignee,'updated',editId,title,cu?.name||'Someone');
     toast('Task updated ✓','ok');
   }else{
     const id='t'+Date.now();
     const maxOrd=tasks.reduce((m,t)=>Math.max(m,t.order||0),0);
     const newTask={id,...data,subtasks:[],order:maxOrd+1};
     await saveTaskFS(newTask);
-    for(const a of newAssignees) await sendNotif(a,'assigned',id,title,cu?.name||'Someone');
+    await sendNotif(newAssignee,'assigned',id,title,cu?.name||'Someone');
     toast('Task added ✓','ok');
   }
   closeM('task');
@@ -1323,12 +1284,12 @@ function renderU(){
 function renderK(){
   const kb=eid('kb');if(!kb)return;
   let list=[...tasks];
-  if(filt.assignee)list=list.filter(t=>(t.assignees||[t.assignee]).includes(filt.assignee));
+  if(filt.assignee)list=list.filter(t=>t.assignee===filt.assignee);
   if(filt.section)list=list.filter(t=>t.section===filt.section);
   kb.style.gridTemplateColumns=`repeat(${Math.min(statuses.length,4)},1fr)`;
   kb.innerHTML=statuses.slice(0,4).map(col=>{
     const ct=list.filter(t=>t.status===col.id);
-    return`<div class="kc"><div class="kch"><div class="kct" style="color:${col.color}">${col.name}</div><span class="kcc">${ct.length}</span></div><div class="kcb">${ct.length?ct.map(t=>{const pri=priById(t.priority);const assigneeIds=t.assignees||(t.assignee?[t.assignee]:[]);const avatars=assigneeIds.slice(0,3).map(aid=>{const au=users.find(u=>u.id===aid);const ac=au?.color||'#8d96b8';return`<div style="width:18px;height:18px;border-radius:4px;background:${h2r(ac,.2)};color:${ac};display:flex;align-items:center;justify-content:center;font-size:8px;font-weight:700" title="${au?.name||aid}">${au?.emoji||au?.name?.[0]||'?'}</div>`;}).join('');return`<div class="kcd" onclick="editT('${t.id}')"><div class="kct2">${t.title}</div><div class="kcf"><span class="pb2" style="font-size:9px;padding:2px 6px;background:${h2r(pri.color,.15)};color:${pri.color};border-color:${h2r(pri.color,.3)}">${pri.name}</span><div class="ac" style="gap:2px">${avatars}${assigneeIds.length>3?`<span style="font-size:9px;color:var(--t3)">+${assigneeIds.length-3}</span>`:''}</div></div></div>`;}).join(''):`<div style="text-align:center;padding:18px;color:var(--t3);font-size:12px">No tasks</div>`}</div></div>`;
+    return`<div class="kc"><div class="kch"><div class="kct" style="color:${col.color}">${col.name}</div><span class="kcc">${ct.length}</span></div><div class="kcb">${ct.length?ct.map(t=>{const u=users.find(u=>u.id===t.assignee),pri=priById(t.priority),uc=u?.color||'#8d96b8';return`<div class="kcd" onclick="editT('${t.id}')"><div class="kct2">${t.title}</div><div class="kcf"><span class="pb2" style="font-size:9px;padding:2px 6px;background:${h2r(pri.color,.15)};color:${pri.color};border-color:${h2r(pri.color,.3)}">${pri.name}</span><div class="ac"><div style="width:18px;height:18px;border-radius:4px;background:${h2r(uc,.2)};color:${uc};display:flex;align-items:center;justify-content:center;font-size:8px;font-weight:700">${u?.emoji||u?.name[0]||'?'}</div><span style="font-size:10px">${u?.name||t.assignee}</span></div></div></div>`;}).join(''):`<div style="text-align:center;padding:18px;color:var(--t3);font-size:12px">No tasks</div>`}</div></div>`;
   }).join('');
 }
 
@@ -1417,7 +1378,7 @@ function renderPVTasks(ptasks,p){
     html+=`<div class="pv-sec-block">
       <div class="pv-sec-head" onclick="pvToggleSec('__none')">
         <span class="pv-sec-icon">📌</span>
-        <span class="pv-sec-nm">No Section</span>
+        <span class="pv-sec-nm">No Department</span>
         <span class="pv-sec-meta">${grouped['__none'].length} tasks</span>
         <span class="pv-sec-toggle open" id="pvt-__none">▶</span>
       </div>
@@ -1438,10 +1399,8 @@ function renderPVTasks(ptasks,p){
 }
 
 function pvTaskRow(t){
-  const pri=priById(t.priority),sta=staById(t.status);
-  const assigneeIds=t.assignees||(t.assignee?[t.assignee]:[]);
+  const pri=priById(t.priority),sta=staById(t.status),u=users.find(u=>u.id===t.assignee),uc=u?.color||'#8d96b8';
   const sbd=(t.subtasks||[]).filter(s=>s.done).length,sbt=(t.subtasks||[]).length;
-  const avatars=assigneeIds.slice(0,3).map(aid=>{const au=users.find(u=>u.id===aid);const ac=au?.color||'#8d96b8';return`<div style="width:20px;height:20px;border-radius:5px;background:${h2r(ac,.2)};color:${ac};display:flex;align-items:center;justify-content:center;font-size:9px;font-weight:700;border:1px solid ${h2r(ac,.3)}" title="${au?.name||aid}">${au?.emoji||au?.name?.[0]||'?'}</div>`;}).join('');
   return`<div class="tr ${t.status==='done'?'done-r':''}" style="cursor:default;grid-template-columns:30px 1fr 100px 88px 80px 36px" onclick="event.stopPropagation()">
     <div class="chk ${t.status==='done'?'ck':''}" onclick="pvTaskDone('${t.id}')" style="cursor:pointer"></div>
     <div>
@@ -1454,7 +1413,7 @@ function pvTaskRow(t){
     </div>
     <div><span class="sb3" style="background:${h2r(sta.color,.15)};color:${sta.color};border-color:${h2r(sta.color,.3)}">${sta.name}</span></div>
     <div><span class="pb2" style="background:${h2r(pri.color,.15)};color:${pri.color};border-color:${h2r(pri.color,.3)}">${pri.name}</span></div>
-    <div class="ac" style="gap:3px">${avatars}${assigneeIds.length>3?`<span style="font-size:9px;color:var(--t3)">+${assigneeIds.length-3}</span>`:''}</div>
+    <div class="ac"><div style="width:20px;height:20px;border-radius:5px;background:${h2r(uc,.2)};color:${uc};display:flex;align-items:center;justify-content:center;font-size:9px;font-weight:700">${u?.emoji||u?.name[0]||'?'}</div></div>
     <div><button class="rb" onclick="editT('${t.id}')" title="Edit">✏️</button></div>
   </div>
   <div id="pvs-${t.id}" style="display:none;padding:8px 14px 10px 43px;background:var(--bg);border-top:1px solid var(--bd)">
@@ -1474,8 +1433,7 @@ window.pvTaskDone=async function(id){
   const t=tasks.find(t=>t.id===id);if(!t)return;
   const wasD=t.status==='done';t.status=wasD?'todo':'done';
   await saveTaskFS(t);
-  const assignees=t.assignees||(t.assignee?[t.assignee]:[]);
-  if(!wasD) for(const a of assignees) await sendNotif(a,'completed',t.id,t.title,cu?.name||'Someone');
+  if(!wasD)await sendNotif(t.assignee,'completed',t.id,t.title,cu?.name||'Someone');
   renderPV();
 };
 window.pvExpandSub=function(id){
@@ -1489,20 +1447,15 @@ window.pvASub=async function(tid){
   await saveTaskFS(t);inp.value='';renderPV();
 };
 window.addTaskToProject=function(pid,secId){
-  window._taskAssignees=[];
   rebuildDropdowns();
   eid('tProj').value=pid;
+  if(secId)eid('tSc').value=secId;
   eid('mo-task').classList.add('open');
 };
 
 // ══ PROJECT MODAL ══
 window.openM=function(n){
   rebuildDropdowns();
-  if(n==='task'){
-    // Init task assignee selection
-    window._taskAssignees=[];
-    buildTaskAssigneeGrid([]);
-  }
   if(n==='project'){
     // Build member grid
     const mg=eid('memberGrid');
@@ -1520,7 +1473,7 @@ window.openM=function(n){
 };
 window.closeM=function(n){
   eid('mo-'+n)?.classList.remove('open');
-  if(n==='task'){['eid','tT','tD','tDu'].forEach(id=>{const e=eid(id);if(e)e.value='';});eid('mdT').textContent='Add New Task';window._taskAssignees=[];}
+  if(n==='task'){['eid','tT','tD','tDu'].forEach(id=>{const e=eid(id);if(e)e.value='';});eid('mdT').textContent='Add New Task';}
   if(n==='user'){['uEid','uN','uI','uP','uEm','uCl'].forEach(id=>{const e=eid(id);if(e)e.value='';});eid('uMdT').textContent='Add New User';}
   if(n==='project'){['pEid','pName','pDesc','pIcon','pDeadline'].forEach(id=>{const e=eid(id);if(e)e.value='';});eid('pMdT').textContent='নতুন Project তৈরি করুন';eid('pStatus').value='active';window._projMembers=[];}
 };
@@ -1532,8 +1485,7 @@ window.toggleMember=function(uid){
   if(!window._projMembers)window._projMembers=[];
   const idx=window._projMembers.indexOf(uid);
   if(idx>-1)window._projMembers.splice(idx,1);else window._projMembers.push(uid);
-  // Only update project member grid items (id prefix mb-)
-  document.querySelectorAll('#memberGrid .mb-item').forEach(el=>el.classList.remove('sel'));
+  document.querySelectorAll('.mb-item').forEach(el=>el.classList.remove('sel'));
   window._projMembers.forEach(id=>eid('mb-'+id)?.classList.add('sel'));
 };
 window.saveProject=async function(){
@@ -1593,7 +1545,7 @@ function renderSettings(){
 }
 window.openQuick=function(type){
   document.getElementById('qType').value=type;
-  const titles={section:'Add Section',status:'Add Status',priority:'Add Priority',role:'Add Role'};
+  const titles={section:'Add Department',status:'Add Status',priority:'Add Priority',role:'Add Role'};
   eid('qMdT').textContent=titles[type]||'Add Item';
   ['qName','qIcon','qColor'].forEach(id=>{const e=eid(id);if(e)e.value='';});
   eid('qIconFg').style.display=type==='role'?'none':'block';

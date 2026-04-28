@@ -1545,7 +1545,7 @@ function renderSettings(){
 }
 window.openQuick=function(type){
   document.getElementById('qType').value=type;
-  const titles={section:'Add Section',status:'Add Status',priority:'Add Priority',role:'Add Role'};
+  const titles={section:'Add Department',status:'Add Status',priority:'Add Priority',role:'Add Role'};
   eid('qMdT').textContent=titles[type]||'Add Item';
   ['qName','qIcon','qColor'].forEach(id=>{const e=eid(id);if(e)e.value='';});
   eid('qIconFg').style.display=type==='role'?'none':'block';

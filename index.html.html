@@ -1651,7 +1651,7 @@ function pvTaskRow(t){
       <div class="tt ${t.status==='done'?'done':''}">${t.title}</div>
       <div class="tm">
         ${t.due?`<span style="font-size:10px;color:var(--t3)">📅 ${t.due}</span>`:''}
-        ${sbt?`<span class="sc2">📋 ${sbd}/${sbt}</span>`:''}
+        ${sbt?`<span class="sc2" style="cursor:pointer;user-select:none" onclick="pvToggleSub('${t.id}')" title="Subtask collapse/expand">📋 ${sbd}/${sbt} <span id="pvstoggle-${t.id}" style="font-size:9px">▾</span></span>`:''}
       </div>
     </div>
     <div><span class="sb3" style="background:${h2r(sta.color,.15)};color:${sta.color};border-color:${h2r(sta.color,.3)}">${sta.name}</span></div>
@@ -1758,6 +1758,13 @@ window.pvTaskDone=async function(id){
 };
 window.pvExpandSub=function(id){
   const el=eid('pvs-'+id);if(el)el.style.display=el.style.display==='none'?'block':'none';
+};
+window.pvToggleSub=function(id){
+  const panel=eid('pvs-'+id);if(!panel)return;
+  const arrow=eid('pvstoggle-'+id);
+  const isOpen=panel.style.display!=='none';
+  panel.style.display=isOpen?'none':'block';
+  if(arrow)arrow.textContent=isOpen?'▸':'▾';
 };
 window.pvASub=async function(tid){
   const inp=eid('pvns-'+tid);const txt=inp?.value.trim();if(!txt)return;

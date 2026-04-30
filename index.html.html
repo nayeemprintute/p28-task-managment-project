@@ -2,10 +2,7 @@
 <html lang="bn">
 <head>
 <meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
-<meta name="mobile-web-app-capable" content="yes">
-<meta name="apple-mobile-web-app-capable" content="yes">
-<meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0">
 <title>Printute — Pro Task Manager</title>
 <style>
 :root{
@@ -382,265 +379,10 @@ input[type="date"]{color-scheme:dark;}
 .daily-todo-badge{font-size:10px;font-weight:700;padding:3px 10px;border-radius:20px;background:var(--s3);color:var(--t3);border:1px solid var(--bd2);text-align:center;cursor:pointer;transition:.15s;}
 .daily-todo-badge:hover{border-color:var(--green);color:var(--green);}
 
-/* Project view task rows — 6 cols (no Section column) */
-.pv-sec-body .th{grid-template-columns:30px 1fr 110px 88px 110px 68px;border-radius:0;border-left:none;border-right:none;}
-.pv-sec-body .tr{grid-template-columns:30px 1fr 110px 88px 110px 68px;}
-.pv-sec-body .sp{padding-left:43px;}
+@media(max-width:680px){.daily-th,.daily-tr{grid-template-columns:30px 1fr 80px;}}
 
-
-.tb-btn-task,.tb-btn-proj,.tb-btn-user{transition:opacity .15s;}
-
-@media(max-width:679px){
-  .tb-btn-user{display:none;}
-}
-@media(max-width:479px){
-  .tb-btn-task{display:none;}
-  .tb-btn-proj{display:none;}
-}
-
-/* ═══════════════════════════════════════════
-   COMPREHENSIVE RESPONSIVE SYSTEM
-   Breakpoints:
-   • xl: 1280px+   (large desktop)
-   • lg: 960–1279  (desktop / small laptop)
-   • md: 680–959   (tablet landscape / large phone)
-   • sm: 480–679   (tablet portrait / large phone)
-   • xs: <480      (phone)
-═══════════════════════════════════════════ */
-
-/* ── Touch / tap targets – always at least 44px ── */
-@media (pointer:coarse){
-  .ni,.proj-item,.btn,.btn-log,.btn-out,.ngl-add,.rb,.ni-btn,
-  .bab-btn,.bab-close,.daily-todo-badge,.daily-done-badge,
-  .chk,.th-chk{min-height:44px;min-width:44px;}
-  .chk,.th-chk{min-width:20px;min-height:20px;width:20px;height:20px;}
-  .ni,.proj-item{min-height:44px;display:flex;align-items:center;}
-  .rb{min-height:32px;min-width:32px;padding:4px 8px;}
-}
-
-/* ── Large Desktop (1280px+): wider sidebar, multi-col dashboard ── */
-@media(min-width:1280px){
-  .ag{grid-template-columns:270px 1fr;}
-  .sg{grid-template-columns:repeat(5,1fr);}
-  .dg{grid-template-columns:1fr 1fr;}
-  .set-grid{grid-template-columns:1fr 1fr;}
-}
-
-/* ── Standard Desktop (960–1279) ── */
-@media(max-width:1279px) and (min-width:960px){
-  .sg{grid-template-columns:repeat(5,1fr);}
-  .dg{grid-template-columns:1fr 1fr;}
-}
-
-/* ── Tablet Landscape / Small Laptop (680–959) ── */
-@media(max-width:960px){
-  /* Stats grid */
-  .sg{grid-template-columns:repeat(3,1fr);gap:7px;}
-  /* Dashboard grid */
-  .dg{grid-template-columns:1fr;}
-  /* Kanban */
-  .kb{grid-template-columns:repeat(2,1fr);}
-  /* Settings */
-  .set-grid{grid-template-columns:1fr;}
-  /* Task table: hide Assignee column */
-  .th,.tr{grid-template-columns:30px 1fr 105px 88px 110px 68px;}
-  .th>div:nth-child(6),.tr>div:nth-child(6){display:none;}
-  /* PV stats */
-  .pv-stats{grid-template-columns:repeat(4,1fr);}
-  /* Bulk bar */
-  .bab{min-width:min(600px,calc(100vw - 24px));}
-  /* Daily */
-  .daily-th,.daily-tr{grid-template-columns:30px 1fr 100px;}
-}
-
-/* ── Tablet Portrait (480–679) ── */
-@media(max-width:679px){
-  /* Layout: sidebar becomes drawer */
-  .ag{grid-template-columns:1fr;}
-  .sb{
-    position:fixed;left:0;top:0;bottom:0;
-    z-index:400;transform:translateX(-100%);
-    transition:.25s cubic-bezier(.4,0,.2,1);
-    width:260px;
-    /* Safe area for notch phones */
-    padding-left:env(safe-area-inset-left,0);
-  }
-  .sb.open{transform:translateX(0);box-shadow:4px 0 40px rgba(0,0,0,.6);}
-  .ham{display:flex;}
-
-  /* Header toolbar */
-  .tb{padding:0 12px;height:52px;}
-  .tb-title{font-size:15px;}
-  /* Hide some toolbar buttons on small screens */
-  .tb-act .btn:not(:last-child):not(:nth-last-child(2)){display:none;}
-
-  /* Content area */
-  .ct{padding:12px;}
-
-  /* Stats: 2 cols */
-  .sg{grid-template-columns:repeat(2,1fr);gap:6px;}
-  .sc .sv{font-size:18px;}
-
-  /* Dashboard grid: single col */
-  .dg{grid-template-columns:1fr;}
-  .dc{padding:13px;}
-  /* Project span reset */
-  .dg .dc[style*="grid-column"]{grid-column:span 1!important;}
-
-  /* Kanban: single col */
-  .kb{grid-template-columns:1fr;}
-
-  /* Task table: compact – only checkbox, title, status, actions */
-  .th,.tr{grid-template-columns:30px 1fr 80px 64px;}
-  .th>div:nth-child(3),.tr>div:nth-child(3),
-  .th>div:nth-child(4),.tr>div:nth-child(4),
-  .th>div:nth-child(6),.tr>div:nth-child(6){display:none;}
-
-  /* Subtask panel indent */
-  .sp{padding-left:30px;}
-
-  /* Filters row: wrap nicely */
-  .tlb{gap:5px;}
-  .sb2{min-width:120px;}
-  .fts{display:none;}/* hide status tabs, use filter dropdown instead */
-  select.fs{font-size:12px;padding:6px 8px;}
-  .srt{padding:6px 8px;font-size:11px;}
-
-  /* Modals: full-width on phone */
-  .md{width:calc(100vw - 16px)!important;max-height:92vh;border-radius:14px;}
-  .lw{padding:24px 16px;border-radius:18px;}
-
-  /* Form 2-col → 1-col */
-  .fr2{grid-template-columns:1fr;}
-
-  /* Notification panel: full-width */
-  .np{width:100%;border-radius:0;}
-
-  /* Settings: single col */
-  .set-grid{grid-template-columns:1fr;}
-
-  /* Project view */
-  .pv-stats{grid-template-columns:repeat(2,1fr);}
-  .pv-header{flex-direction:column;}
-
-  /* Bulk action bar */
-  .bab{
-    min-width:calc(100vw - 16px);
-    flex-wrap:wrap;
-    bottom:max(12px, env(safe-area-inset-bottom,12px));
-    gap:7px;
-    border-radius:14px;
-  }
-  .bab-actions{flex-wrap:wrap;gap:4px;}
-  .bab-sep{display:none;}
-
-  /* Daily tasks */
-  .daily-th,.daily-tr{grid-template-columns:30px 1fr 80px;}
-  .daily-header{flex-direction:column;align-items:flex-start;gap:10px;}
-  .daily-header>div:last-child{width:100%;display:flex;flex-wrap:wrap;gap:6px;}
-  .daily-header .btn{flex:1;min-width:calc(50% - 4px);justify-content:center;}
-
-  /* User table */
-  .ur{grid-template-columns:40px 1fr 60px;}
-  .ur>div:nth-child(3),.ur>div:nth-child(4){display:none;}
-  .urh>div:nth-child(3),.urh>div:nth-child(4){display:none;}
-}
-
-/* ── Small Phone (<480px) ── */
-@media(max-width:479px){
-  /* Even tighter stats */
-  .sg{grid-template-columns:repeat(2,1fr);gap:5px;}
-  .sc{padding:10px 12px;}
-  .sc .sv{font-size:16px;}
-  .sc .sl{font-size:9px;}
-
-  /* Sidebar width */
-  .sb{width:80vw;max-width:280px;}
-
-  /* Toolbar: only hamburger + title + bell */
-  .tb-act .btn:not(:last-child){display:none;}
-  .tb-title{font-size:14px;max-width:160px;overflow:hidden;text-overflow:ellipsis;white-space:nowrap;}
-
-  /* Task rows: minimal */
-  .th,.tr{grid-template-columns:28px 1fr 60px;}
-  .th>div:nth-child(3),.tr>div:nth-child(3),
-  .th>div:nth-child(4),.tr>div:nth-child(4),
-  .th>div:nth-child(5),.tr>div:nth-child(5),
-  .th>div:nth-child(6),.tr>div:nth-child(6){display:none;}
-  /* Show status column on last visible */
-  .th>div:nth-child(5),.tr>div:nth-child(5){display:block;}
-
-  /* Login card */
-  .lw{padding:20px 14px;}
-  .lh{font-size:20px;}
-  .pg{max-height:200px;}
-
-  /* Kanban cards */
-  .kcd{padding:8px 9px;}
-  .kct2{font-size:11px;}
-
-  /* PV stats: 2×2 */
-  .pv-stats{grid-template-columns:repeat(2,1fr);}
-
-  /* Content padding */
-  .ct{padding:10px;}
-
-  /* Modal */
-  .md{width:calc(100vw - 10px)!important;border-radius:12px;}
-  .mdb{padding:14px 16px;}
-  .mdf{padding:0 16px 16px;}
-
-  /* Bulk bar compact */
-  .bab{padding:9px 12px;gap:5px;}
-  .bab-btn{padding:5px 8px;font-size:11px;}
-  .bab-sel{padding:5px 7px;font-size:11px;}
-
-  /* Daily */
-  .daily-th,.daily-tr{grid-template-columns:28px 1fr 70px;}
-  .daily-header .btn{font-size:11px;padding:5px 8px;}
-
-  /* Notification panel */
-  .np{width:100%;}
-  .npi{padding:10px 11px;}
-  .ni-icon{width:28px;height:28px;font-size:12px;}
-
-  /* Sub-task add row */
-  .add-s{flex-wrap:wrap;}
-  .add-s input{min-width:calc(100% - 90px);}
-}
-
-/* ── Safe area insets for notch/home-indicator devices ── */
-@supports(padding-bottom: env(safe-area-inset-bottom)){
-  .sbf{padding-bottom:calc(13px + env(safe-area-inset-bottom,0px));}
-  #toast{bottom:calc(18px + env(safe-area-inset-bottom,0px));}
-  .bab{bottom:calc(24px + env(safe-area-inset-bottom,0px));}
-}
-
-/* ── Smooth scrolling for nav panel ── */
-.sbn,.npb,.ct{scroll-behavior:smooth;-webkit-overflow-scrolling:touch;}
-
-/* ── Improved focus ring for keyboard users ── */
-button:focus-visible,input:focus-visible,select:focus-visible,textarea:focus-visible{
-  outline:2px solid var(--red);outline-offset:2px;
-}
-
-/* ── Hover states only on non-touch devices ── */
-@media(hover:none){
-  .tr:hover{background:transparent;}
-  .ni:hover{background:transparent;}
-  .ra{opacity:1!important;}/* always show actions on touch */
-  .ni-del{display:block!important;}
-  .proj-del{display:block!important;}
-}
-
-/* ── Print: hide sidebar and controls ── */
-@media print{
-  .sb,.tb,.bab,.np,#toast{display:none!important;}
-  .ag{display:block;}
-  .mn{height:auto;overflow:visible;}
-  .ct{overflow:visible;height:auto;}
-  body,html{overflow:visible;height:auto;}
-}
+@media(max-width:960px){.sg{grid-template-columns:repeat(3,1fr);}.dg{grid-template-columns:1fr;}.kb{grid-template-columns:repeat(2,1fr);}.set-grid{grid-template-columns:1fr;}.th,.tr{grid-template-columns:30px 1fr 88px 82px 90px 68px;}.th>div:nth-child(6),.tr>div:nth-child(6){display:none;}}
+@media(max-width:680px){.ag{grid-template-columns:1fr;}.sb{position:fixed;left:0;top:0;bottom:0;z-index:400;transform:translateX(-100%);transition:.25s;width:250px;}.sb.open{transform:translateX(0);}.ham{display:flex;}.sg{grid-template-columns:repeat(2,1fr);}.kb{grid-template-columns:1fr;}.th,.tr{grid-template-columns:30px 1fr 80px 64px;}.th>div:nth-child(3),.tr>div:nth-child(3),.th>div:nth-child(4),.tr>div:nth-child(4),.th>div:nth-child(6),.tr>div:nth-child(6){display:none;}.tb{padding:0 13px;}.ct{padding:13px;}.fr2{grid-template-columns:1fr;}.lw{padding:26px 18px;}.np{width:100%;}.fts{display:none;}.set-grid{grid-template-columns:1fr;}.bab{min-width:calc(100vw - 24px);flex-wrap:wrap;bottom:12px;}}
 </style>
 </head>
 <body>
@@ -717,9 +459,9 @@ button:focus-visible,input:focus-visible,select:focus-visible,textarea:focus-vis
           <div class="tb-title" id="vt">Dashboard</div>
         </div>
         <div class="tb-act">
-          <button class="btn bg bsm tb-btn-task" onclick="openM('task')">+ Task</button>
-          <button class="btn br bsm tb-btn-proj" onclick="openM('project')">+ Project</button>
-          <button class="btn bg bsm tb-btn-user" onclick="openM('user')">+ User</button>
+          <button class="btn bg bsm" onclick="openM('task')">+ Task</button>
+          <button class="btn br bsm" onclick="openM('project')">+ Project</button>
+          <button class="btn bg bsm" onclick="openM('user')">+ User</button>
           <button class="btn bg bsm" onclick="toggleNP()" style="position:relative;padding:6px 11px;">
             🔔<span class="unread-badge" id="nbadge"></span>
           </button>
@@ -1016,7 +758,6 @@ const DEF_TASKS=[
 let Department=[],statuses=[],priorities=[],roles=[],users=[],tasks=[],notifs=[],projects=[];
 let cu=null,filt={status:'all',section:null,assignee:null},sortAsc=true,sortF='due',exp=new Set(),cv='dashboard';
 let sel=new Set(); // bulk selected task ids
-let pvExp=new Set(); // project view expanded task ids
 let curProject=null; // currently viewed project id
 let _local=false;
 let _taskAssignees=[]; // multi-assignee for task modal
@@ -1603,20 +1344,26 @@ window.tDone=async function(id){
 window.tSub=async function(tid,sid){
   const t=tasks.find(t=>t.id===tid);if(!t)return;
   const s=(t.subtasks||[]).find(s=>s.id===sid);if(!s)return;
+  const wasD=s.done;
   s.done=!s.done;await saveTaskFS(t);
+  const sAs=subAssignees(s);
+  if(!wasD) for(const a of sAs) await sendNotif(a,'completed',t.id,`[Sub] ${s.text}`,cu?.name||'Someone');
+  else for(const a of sAs) await sendNotif(a,'updated',t.id,`[Sub] ${s.text}`,cu?.name||'Someone');
 };
 window.aSub=async function(tid){
   const inp=eid('ns-'+tid);const txt=inp?.value.trim();if(!txt)return;
   const dateInp=eid('nd-'+tid);const due=dateInp?.value||'';
-  // collect new subtask assignees
   const newAs=_subNewAs[tid]||[];
   const t=tasks.find(t=>t.id===tid);if(!t)return;
   if(!t.subtasks)t.subtasks=[];
-  t.subtasks.push({id:tid+'_'+Date.now(),text:txt,done:false,due,assignees:newAs,assignee:newAs[0]||''});
+  const newSub={id:tid+'_'+Date.now(),text:txt,done:false,due,assignees:newAs,assignee:newAs[0]||''};
+  t.subtasks.push(newSub);
   await saveTaskFS(t);
-  for(const a of newAs) await sendNotif(a,'subtask',t.id,t.title,cu?.name||'Someone');
+  // Notify: subtask assignees get 'assigned', parent task assignees get 'subtask'
+  for(const a of newAs) await sendNotif(a,'assigned',t.id,`[Sub] ${txt}`,cu?.name||'Someone');
+  const tAs=(t.assignees&&t.assignees.length)?t.assignees:(t.assignee?[t.assignee]:[]);
+  for(const a of tAs.filter(a=>!newAs.includes(a))) await sendNotif(a,'subtask',t.id,t.title,cu?.name||'Someone');
   inp.value='';if(dateInp)dateInp.value='';
-  // reset new subtask assignees
   delete _subNewAs[tid];
   toast('Sub-task added!','ok');
 };
@@ -1624,6 +1371,15 @@ window.aSub=async function(tid){
 // ── Subtask assignee state ──
 let _subNewAs={}; // tid -> [uid,...]
 let _subEditAs={}; // tid_sid -> [uid,...]
+
+// Helper: get assignees array from a subtask object
+function subAssignees(s){return(s.assignees&&s.assignees.length)?s.assignees:(s.assignee?[s.assignee]:[]);}
+// Helper: all people to notify for a subtask (subtask assignees + parent task assignees, deduped)
+function subNotifyList(t,s){
+  const tAs=(t.assignees&&t.assignees.length)?t.assignees:(t.assignee?[t.assignee]:[]);
+  const sAs=subAssignees(s);
+  return[...new Set([...sAs,...tAs])];
+}
 
 window.toggleSubAsDrop=function(tid,sid,mode){
   const key=mode==='new'?`sad-new-${tid}`:`sad-edit-${tid}-${sid}`;
@@ -1683,15 +1439,28 @@ window.saveSubEdit=async function(tid,sid){
   if(!newTxt){toast('Sub-task text required!','err');return;}
   const newDue=eid(`se-due-${tid}-${sid}`)?.value||'';
   const k=`${tid}_${sid}`;
-  const newAs=_subEditAs[k]!==undefined?_subEditAs[k]:((s.assignees&&s.assignees.length)?[...s.assignees]:(s.assignee?[s.assignee]:[]));
+  const oldAs=subAssignees(s);
+  const newAs=_subEditAs[k]!==undefined?_subEditAs[k]:([...oldAs]);
   s.text=newTxt;s.due=newDue;s.assignees=newAs;s.assignee=newAs[0]||'';
   await saveTaskFS(t);
+  // Newly assigned → 'assigned', existing → 'updated', parent task assignees → 'updated'
+  for(const a of newAs){
+    if(!oldAs.includes(a)) await sendNotif(a,'assigned',t.id,`[Sub] ${newTxt}`,cu?.name||'Someone');
+    else await sendNotif(a,'updated',t.id,`[Sub] ${newTxt}`,cu?.name||'Someone');
+  }
+  const tAs=(t.assignees&&t.assignees.length)?t.assignees:(t.assignee?[t.assignee]:[]);
+  for(const a of tAs.filter(a=>!newAs.includes(a))) await sendNotif(a,'updated',t.id,t.title,cu?.name||'Someone');
   delete _subEditAs[k];
   toast('Sub-task updated ✓','ok');
 };
 window.dSub=async function(tid,sid){
   const t=tasks.find(t=>t.id===tid);if(!t)return;
   if(!confirm('Delete sub-task?'))return;
+  const s=(t.subtasks||[]).find(s=>s.id===sid);
+  if(s){
+    const notifyList=subNotifyList(t,s);
+    for(const a of notifyList) await sendNotif(a,'deleted',t.id,`[Sub] ${s.text}`,cu?.name||'Someone');
+  }
   t.subtasks=(t.subtasks||[]).filter(s=>s.id!==sid);await saveTaskFS(t);
 };
 window.delT=async function(id){
@@ -1869,7 +1638,6 @@ function renderPVTasks(ptasks,p){
         <span class="pv-sec-toggle open" id="pvt-${sec.id}">▶</span>
       </div>
       <div class="pv-sec-body open" id="pvb-${sec.id}">
-        <div class="th" style="border-radius:0;border-top:none"><div></div><div>Task</div><div>Status</div><div>Priority</div><div>Assignee</div><div></div></div>
         ${list.map(t=>pvTaskRow(t)).join('')}
         <div class="pv-add-task" onclick="addTaskToProject('${p.id}','${sec.id}')">＋ Task যোগ করুন</div>
       </div>
@@ -1903,76 +1671,74 @@ function renderPVTasks(ptasks,p){
 function pvTaskRow(t){
   const pri=priById(t.priority),sta=staById(t.status);
   const assigneeUsers=(t.assignees&&t.assignees.length)?t.assignees.map(id=>users.find(u=>u.id===id)).filter(Boolean):(t.assignee?[users.find(u=>u.id===t.assignee)].filter(Boolean):[]);
+  const uc=assigneeUsers[0]?.color||'#8d96b8';
   const sbd=(t.subtasks||[]).filter(s=>s.done).length,sbt=(t.subtasks||[]).length;
-  // use shared pvExp set so expand state persists across re-renders
-  const ie=pvExp.has(t.id);
-  return`<div id="pvtw-${t.id}">
-    <div class="tr ${t.status==='done'?'done-r':''} ${ie?'exp':''}" data-id="${t.id}" onclick="pvTExp('${t.id}')">
-      <div class="chk ${t.status==='done'?'ck':''}" onclick="event.stopPropagation();pvTaskDone('${t.id}')" style="cursor:pointer"></div>
-      <div>
-        <div class="tt ${t.status==='done'?'done':''}">${t.title}</div>
-        <div class="tm">
-          ${t.due?`<span style="font-size:10px;color:${isOverdue(t.due)?'var(--red)':'var(--gold)'}">📅 ${fmtDate(t.due)}</span>`:''}
-          ${sbt?`<span class="sc2">📋 ${sbd}/${sbt}</span>`:''}
-        </div>
-      </div>
-      <div><span class="sb3" style="background:${h2r(sta.color,.15)};color:${sta.color};border-color:${h2r(sta.color,.3)}">${sta.name}</span></div>
-      <div><span class="pb2" style="background:${h2r(pri.color,.15)};color:${pri.color};border-color:${h2r(pri.color,.3)}">${pri.name}</span></div>
-      <div class="ac-multi">${assigneeUsers.map(u=>`<div class="av-sm" style="background:${h2r(u.color||'#8d96b8',.2)};color:${u.color||'#8d96b8'}" title="${u.name}">${u.emoji||u.name[0]}</div>`).join('')}<span style="font-size:11px">${assigneeUsers.map(u=>u.name).join(', ')||'—'}</span></div>
-      <div class="ra" onclick="event.stopPropagation()">
-        <button class="rb" onclick="pvEditTask('${t.id}')" title="Edit">✏️</button>
-        <button class="rb dl" onclick="pvDelTask('${t.id}')" title="Delete">🗑</button>
+  return`<div class="tr ${t.status==='done'?'done-r':''}" style="cursor:default;grid-template-columns:30px 1fr 100px 88px 110px 70px" onclick="event.stopPropagation()">
+    <div class="chk ${t.status==='done'?'ck':''}" onclick="pvTaskDone('${t.id}')" style="cursor:pointer"></div>
+    <div>
+      <div class="tt ${t.status==='done'?'done':''}">${t.title}</div>
+      <div class="tm">
+        ${t.due?`<span style="font-size:10px;color:var(--t3)">📅 ${t.due}</span>`:''}
+        ${sbt?`<span class="sc2" style="cursor:pointer;user-select:none" onclick="pvToggleSub('${t.id}')" title="Subtask collapse/expand">📋 ${sbd}/${sbt} <span id="pvstoggle-${t.id}" style="font-size:9px">▾</span></span>`:''}
       </div>
     </div>
-    <div class="sp ${ie?'open':''}" id="pvs-${t.id}">
-      ${(t.subtasks||[]).map(s=>{
-        const sAs=(s.assignees&&s.assignees.length)?s.assignees:(s.assignee?[s.assignee]:[]);
-        const sAsUsers=sAs.map(id=>users.find(u=>u.id===id)).filter(Boolean);
-        return`<div class="str" id="pvstr-${t.id}-${s.id}">
-          <div class="chk ${s.done?'ck':''}" onclick="tSub('${t.id}','${s.id}')"></div>
-          <div class="stxt ${s.done?'done':''}" style="flex:1">
-            ${s.text}${s.due?`<span style="margin-left:7px;font-size:10px;color:${isOverdue(s.due)?'var(--red)':'var(--gold)'};background:rgba(245,166,35,.12);border:1px solid rgba(245,166,35,.25);border-radius:4px;padding:1px 5px;">📅 ${fmtDate(s.due)}</span>`:''}
-            ${sAsUsers.length?`<span style="margin-left:6px">${sAsUsers.map(u=>`<span class="av-sm" style="display:inline-flex;background:${h2r(u.color||'#8d96b8',.2)};color:${u.color||'#8d96b8'}" title="${u.name}">${u.emoji||u.name[0]}</span>`).join('')}</span>`:''}
-          </div>
-          <button class="rb" onclick="openSubEdit('${t.id}','${s.id}')" title="Edit">✏️</button>
-          <button class="rb dl" onclick="pvDelSub('${t.id}','${s.id}')">✕</button>
+    <div><span class="sb3" style="background:${h2r(sta.color,.15)};color:${sta.color};border-color:${h2r(sta.color,.3)}">${sta.name}</span></div>
+    <div><span class="pb2" style="background:${h2r(pri.color,.15)};color:${pri.color};border-color:${h2r(pri.color,.3)}">${pri.name}</span></div>
+    <div class="ac-multi">${assigneeUsers.map(u=>`<div class="av-sm" style="background:${h2r(u.color||'#8d96b8',.2)};color:${u.color||'#8d96b8'}" title="${u.name}">${u.emoji||u.name[0]}</div>`).join('')}<span style="font-size:11px">${assigneeUsers.map(u=>u.name).join(', ')||'—'}</span></div>
+    <div style="display:flex;gap:3px">
+      <button class="rb" onclick="pvEditTask('${t.id}')" title="Edit">✏️</button>
+      <button class="rb dl" onclick="pvDelTask('${t.id}')" title="Delete">🗑</button>
+    </div>
+  </div>
+  <div class="sp open" id="pvs-${t.id}" style="display:block">
+    ${(t.subtasks||[]).map(s=>{
+      const sAs=(s.assignees&&s.assignees.length)?s.assignees:(s.assignee?[s.assignee]:[]);
+      const sAsUsers=sAs.map(id=>users.find(u=>u.id===id)).filter(Boolean);
+      return`<div class="str" id="pvstr-${t.id}-${s.id}">
+        <div class="chk ${s.done?'ck':''}" onclick="tSub('${t.id}','${s.id}')"></div>
+        <div class="stxt ${s.done?'done':''}" style="flex:1">
+          ${s.text}
+          ${s.due?`<span style="margin-left:7px;font-size:10px;color:var(--gold);background:rgba(245,166,35,.12);border:1px solid rgba(245,166,35,.25);border-radius:4px;padding:1px 5px;">📅 ${s.due}</span>`:''}
+          ${sAsUsers.length?`<span style="margin-left:6px">${sAsUsers.map(u=>`<span class="av-sm" style="display:inline-flex;background:${h2r(u.color||'#8d96b8',.2)};color:${u.color||'#8d96b8'}" title="${u.name}">${u.emoji||u.name[0]}</span>`).join('')}</span>`:''}
         </div>
-        <div class="str-edit" id="se-${t.id}-${s.id}">
-          <input type="text" id="se-txt-${t.id}-${s.id}" value="${s.text.replace(/"/g,'&quot;')}" placeholder="Sub-task text..."/>
-          <div style="display:flex;gap:6px;align-items:center;flex-wrap:wrap">
-            <input type="date" id="se-due-${t.id}-${s.id}" value="${s.due||''}" style="background:var(--s3);border:1px solid var(--bd2);border-radius:6px;padding:5px 8px;color:var(--text);font-size:12px;outline:none;font-family:var(--font);flex:1;min-width:120px;"/>
-            <div class="sub-as-wrap">
-              <div class="sub-as-btn" onclick="toggleSubAsDrop('${t.id}','${s.id}','edit')">👤 ${sAsUsers.length?sAsUsers.map(u=>u.name).join(', '):'Assignee'} ▾</div>
-              <div class="sub-as-drop" id="sad-edit-${t.id}-${s.id}">
-                ${users.map(u=>`<div class="sub-as-opt ${sAs.includes(u.id)?'sel':''}" id="sao-edit-${t.id}-${s.id}-${u.id}" onclick="toggleSubAs('${t.id}','${s.id}','edit','${u.id}')">
-                  <div class="sa-chk">${sAs.includes(u.id)?'✓':''}</div>
-                  <div class="av-sm" style="background:${h2r(u.color||'#8d96b8',.2)};color:${u.color||'#8d96b8'}">${u.emoji||u.name[0]}</div>
-                  ${u.name}
-                </div>`).join('')}
-              </div>
+        <button class="rb" onclick="openSubEdit('${t.id}','${s.id}')" title="Edit">✏️</button>
+        <button class="rb dl" onclick="pvDelSub('${t.id}','${s.id}')">✕</button>
+      </div>
+      <div class="str-edit" id="se-${t.id}-${s.id}">
+        <input type="text" id="se-txt-${t.id}-${s.id}" value="${s.text.replace(/"/g,'&quot;')}" placeholder="Sub-task text..."/>
+        <div style="display:flex;gap:6px;align-items:center;flex-wrap:wrap">
+          <input type="date" id="se-due-${t.id}-${s.id}" value="${s.due||''}" style="background:var(--s3);border:1px solid var(--bd2);border-radius:6px;padding:5px 8px;color:var(--text);font-size:12px;outline:none;font-family:var(--font);flex:1;min-width:120px;"/>
+          <div class="sub-as-wrap">
+            <div class="sub-as-btn" onclick="toggleSubAsDrop('${t.id}','${s.id}','edit')">👤 ${sAsUsers.length?sAsUsers.map(u=>u.name).join(', '):'Assignee'} ▾</div>
+            <div class="sub-as-drop" id="sad-edit-${t.id}-${s.id}">
+              ${users.map(u=>`<div class="sub-as-opt ${sAs.includes(u.id)?'sel':''}" id="sao-edit-${t.id}-${s.id}-${u.id}" onclick="toggleSubAs('${t.id}','${s.id}','edit','${u.id}')">
+                <div class="sa-chk">${sAs.includes(u.id)?'✓':''}</div>
+                <div class="av-sm" style="background:${h2r(u.color||'#8d96b8',.2)};color:${u.color||'#8d96b8'}">${u.emoji||u.name[0]}</div>
+                ${u.name}
+              </div>`).join('')}
             </div>
           </div>
-          <div style="display:flex;gap:5px;justify-content:flex-end">
-            <button class="btn bg bxs" onclick="closeSubEdit('${t.id}','${s.id}')">Cancel</button>
-            <button class="btn br bxs" onclick="saveSubEdit('${t.id}','${s.id}')">Save</button>
-          </div>
-        </div>`;
-      }).join('')}
-      <div class="add-s">
-        <input type="text" placeholder="New sub-task..." id="pvns-${t.id}" onkeydown="if(event.key==='Enter')pvASub('${t.id}')"/>
-        <input type="date" id="pvnd-${t.id}" title="Deadline" style="background:var(--s2);border:1px solid var(--bd2);border-radius:7px;padding:6px 8px;color:var(--text);font-size:12px;outline:none;font-family:var(--font);"/>
-        <div class="sub-as-wrap">
-          <div class="sub-as-btn" id="pvnasBtn-${t.id}" onclick="toggleSubAsDrop('${t.id}','','new')">👤 ▾</div>
-          <div class="sub-as-drop" id="sad-new-${t.id}">
-            ${users.map(u=>`<div class="sub-as-opt" id="sao-new-${t.id}-${u.id}" onclick="toggleSubAs('${t.id}','','new','${u.id}')">
-              <div class="sa-chk"></div>
-              <div class="av-sm" style="background:${h2r(u.color||'#8d96b8',.2)};color:${u.color||'#8d96b8'}">${u.emoji||u.name[0]}</div>
-              ${u.name}
-            </div>`).join('')}
-          </div>
         </div>
-        <button class="btn bg bxs" onclick="pvASub('${t.id}')">Add</button>
+        <div style="display:flex;gap:5px;justify-content:flex-end">
+          <button class="btn bg bxs" onclick="closeSubEdit('${t.id}','${s.id}')">Cancel</button>
+          <button class="btn br bxs" onclick="saveSubEdit('${t.id}','${s.id}')">Save</button>
+        </div>
+      </div>`;
+    }).join('')}
+    <div class="add-s">
+      <input type="text" placeholder="নতুন sub-task..." id="pvns-${t.id}" onkeydown="if(event.key==='Enter')pvASub('${t.id}')"/>
+      <input type="date" id="pvnd-${t.id}" title="Deadline" style="background:var(--s2);border:1px solid var(--bd2);border-radius:7px;padding:6px 8px;color:var(--text);font-size:12px;outline:none;font-family:var(--font);"/>
+      <div class="sub-as-wrap">
+        <div class="sub-as-btn" id="pvnasBtn-${t.id}" onclick="toggleSubAsDrop('${t.id}','','new')">👤 ▾</div>
+        <div class="sub-as-drop" id="sad-new-${t.id}">
+          ${users.map(u=>`<div class="sub-as-opt" id="sao-new-${t.id}-${u.id}" onclick="toggleSubAs('${t.id}','','new','${u.id}')">
+            <div class="sa-chk"></div>
+            <div class="av-sm" style="background:${h2r(u.color||'#8d96b8',.2)};color:${u.color||'#8d96b8'}">${u.emoji||u.name[0]}</div>
+            ${u.name}
+          </div>`).join('')}
+        </div>
       </div>
+      <button class="btn bg bxs" onclick="pvASub('${t.id}')">Add</button>
     </div>
   </div>`;
 }
@@ -2007,6 +1773,11 @@ window.pvDelTask=async function(id){
 window.pvDelSub=async function(tid,sid){
   const t=tasks.find(t=>t.id===tid);if(!t)return;
   if(!confirm('Sub-task delete করবেন?'))return;
+  const s=(t.subtasks||[]).find(s=>s.id===sid);
+  if(s){
+    const notifyList=subNotifyList(t,s);
+    for(const a of notifyList) await sendNotif(a,'deleted',t.id,`[Sub] ${s.text}`,cu?.name||'Someone');
+  }
   t.subtasks=(t.subtasks||[]).filter(s=>s.id!==sid);
   await saveTaskFS(t);
   toast('Sub-task deleted','info');
@@ -2018,7 +1789,16 @@ window.pvTaskDone=async function(id){
   if(!wasD)await sendNotif(t.assignee,'completed',t.id,t.title,cu?.name||'Someone');
   renderPV();
 };
-window.pvTExp=function(id){if(pvExp.has(id))pvExp.delete(id);else pvExp.add(id);renderPV();};
+window.pvExpandSub=function(id){
+  const el=eid('pvs-'+id);if(el)el.style.display=el.style.display==='none'?'block':'none';
+};
+window.pvToggleSub=function(id){
+  const panel=eid('pvs-'+id);if(!panel)return;
+  const arrow=eid('pvstoggle-'+id);
+  const isOpen=panel.style.display!=='none';
+  panel.style.display=isOpen?'none':'block';
+  if(arrow)arrow.textContent=isOpen?'▸':'▾';
+};
 window.pvASub=async function(tid){
   const inp=eid('pvns-'+tid);const txt=inp?.value.trim();if(!txt)return;
   const dateInp=eid('pvnd-'+tid);const due=dateInp?.value||'';
@@ -2026,11 +1806,12 @@ window.pvASub=async function(tid){
   const t=tasks.find(t=>t.id===tid);if(!t)return;
   if(!t.subtasks)t.subtasks=[];
   t.subtasks.push({id:tid+'_'+Date.now(),text:txt,done:false,due,assignees:newAs,assignee:newAs[0]||''});
-  pvExp.add(tid); // keep expanded after add
   await saveTaskFS(t);
+  for(const a of newAs) await sendNotif(a,'assigned',t.id,`[Sub] ${txt}`,cu?.name||'Someone');
+  const tAs=(t.assignees&&t.assignees.length)?t.assignees:(t.assignee?[t.assignee]:[]);
+  for(const a of tAs.filter(a=>!newAs.includes(a))) await sendNotif(a,'subtask',t.id,t.title,cu?.name||'Someone');
   inp.value='';if(dateInp)dateInp.value='';
   delete _subNewAs[tid];
-  for(const a of newAs) await sendNotif(a,'subtask',t.id,t.title,cu?.name||'Someone');
   toast('Sub-task added!','ok');
 };
 window.addTaskToProject=function(pid,secId){
@@ -2452,3 +2233,4 @@ initFirebase();
 </script>
 </body>
 </html>
+                                                                                  

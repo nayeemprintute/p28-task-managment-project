@@ -382,7 +382,12 @@ input[type="date"]{color-scheme:dark;}
 .daily-todo-badge{font-size:10px;font-weight:700;padding:3px 10px;border-radius:20px;background:var(--s3);color:var(--t3);border:1px solid var(--bd2);text-align:center;cursor:pointer;transition:.15s;}
 .daily-todo-badge:hover{border-color:var(--green);color:var(--green);}
 
-/* ── Responsive toolbar buttons ── */
+/* Project view task rows — 6 cols (no Section column) */
+.pv-sec-body .th{grid-template-columns:30px 1fr 110px 88px 110px 68px;border-radius:0;border-left:none;border-right:none;}
+.pv-sec-body .tr{grid-template-columns:30px 1fr 110px 88px 110px 68px;}
+.pv-sec-body .sp{padding-left:43px;}
+
+
 .tb-btn-task,.tb-btn-proj,.tb-btn-user{transition:opacity .15s;}
 
 @media(max-width:679px){
@@ -1011,6 +1016,7 @@ const DEF_TASKS=[
 let Department=[],statuses=[],priorities=[],roles=[],users=[],tasks=[],notifs=[],projects=[];
 let cu=null,filt={status:'all',section:null,assignee:null},sortAsc=true,sortF='due',exp=new Set(),cv='dashboard';
 let sel=new Set(); // bulk selected task ids
+let pvExp=new Set(); // project view expanded task ids
 let curProject=null; // currently viewed project id
 let _local=false;
 let _taskAssignees=[]; // multi-assignee for task modal
@@ -1863,6 +1869,7 @@ function renderPVTasks(ptasks,p){
         <span class="pv-sec-toggle open" id="pvt-${sec.id}">▶</span>
       </div>
       <div class="pv-sec-body open" id="pvb-${sec.id}">
+        <div class="th" style="border-radius:0;border-top:none"><div></div><div>Task</div><div>Status</div><div>Priority</div><div>Assignee</div><div></div></div>
         ${list.map(t=>pvTaskRow(t)).join('')}
         <div class="pv-add-task" onclick="addTaskToProject('${p.id}','${sec.id}')">＋ Task যোগ করুন</div>
       </div>
@@ -1896,74 +1903,76 @@ function renderPVTasks(ptasks,p){
 function pvTaskRow(t){
   const pri=priById(t.priority),sta=staById(t.status);
   const assigneeUsers=(t.assignees&&t.assignees.length)?t.assignees.map(id=>users.find(u=>u.id===id)).filter(Boolean):(t.assignee?[users.find(u=>u.id===t.assignee)].filter(Boolean):[]);
-  const uc=assigneeUsers[0]?.color||'#8d96b8';
   const sbd=(t.subtasks||[]).filter(s=>s.done).length,sbt=(t.subtasks||[]).length;
-  return`<div class="tr ${t.status==='done'?'done-r':''}" style="cursor:default;grid-template-columns:30px 1fr 100px 88px 110px 70px" onclick="event.stopPropagation()">
-    <div class="chk ${t.status==='done'?'ck':''}" onclick="pvTaskDone('${t.id}')" style="cursor:pointer"></div>
-    <div>
-      <div class="tt ${t.status==='done'?'done':''}">${t.title}</div>
-      <div class="tm">
-        ${t.due?`<span style="font-size:10px;color:var(--t3)">📅 ${t.due}</span>`:''}
-        ${sbt?`<span class="sc2" style="cursor:pointer;user-select:none" onclick="pvToggleSub('${t.id}')" title="Subtask collapse/expand">📋 ${sbd}/${sbt} <span id="pvstoggle-${t.id}" style="font-size:9px">▾</span></span>`:''}
-      </div>
-    </div>
-    <div><span class="sb3" style="background:${h2r(sta.color,.15)};color:${sta.color};border-color:${h2r(sta.color,.3)}">${sta.name}</span></div>
-    <div><span class="pb2" style="background:${h2r(pri.color,.15)};color:${pri.color};border-color:${h2r(pri.color,.3)}">${pri.name}</span></div>
-    <div class="ac-multi">${assigneeUsers.map(u=>`<div class="av-sm" style="background:${h2r(u.color||'#8d96b8',.2)};color:${u.color||'#8d96b8'}" title="${u.name}">${u.emoji||u.name[0]}</div>`).join('')}<span style="font-size:11px">${assigneeUsers.map(u=>u.name).join(', ')||'—'}</span></div>
-    <div style="display:flex;gap:3px">
-      <button class="rb" onclick="pvEditTask('${t.id}')" title="Edit">✏️</button>
-      <button class="rb dl" onclick="pvDelTask('${t.id}')" title="Delete">🗑</button>
-    </div>
-  </div>
-  <div class="sp open" id="pvs-${t.id}" style="display:block">
-    ${(t.subtasks||[]).map(s=>{
-      const sAs=(s.assignees&&s.assignees.length)?s.assignees:(s.assignee?[s.assignee]:[]);
-      const sAsUsers=sAs.map(id=>users.find(u=>u.id===id)).filter(Boolean);
-      return`<div class="str" id="pvstr-${t.id}-${s.id}">
-        <div class="chk ${s.done?'ck':''}" onclick="tSub('${t.id}','${s.id}')"></div>
-        <div class="stxt ${s.done?'done':''}" style="flex:1">
-          ${s.text}
-          ${s.due?`<span style="margin-left:7px;font-size:10px;color:var(--gold);background:rgba(245,166,35,.12);border:1px solid rgba(245,166,35,.25);border-radius:4px;padding:1px 5px;">📅 ${s.due}</span>`:''}
-          ${sAsUsers.length?`<span style="margin-left:6px">${sAsUsers.map(u=>`<span class="av-sm" style="display:inline-flex;background:${h2r(u.color||'#8d96b8',.2)};color:${u.color||'#8d96b8'}" title="${u.name}">${u.emoji||u.name[0]}</span>`).join('')}</span>`:''}
+  // use shared pvExp set so expand state persists across re-renders
+  const ie=pvExp.has(t.id);
+  return`<div id="pvtw-${t.id}">
+    <div class="tr ${t.status==='done'?'done-r':''} ${ie?'exp':''}" data-id="${t.id}" onclick="pvTExp('${t.id}')">
+      <div class="chk ${t.status==='done'?'ck':''}" onclick="event.stopPropagation();pvTaskDone('${t.id}')" style="cursor:pointer"></div>
+      <div>
+        <div class="tt ${t.status==='done'?'done':''}">${t.title}</div>
+        <div class="tm">
+          ${t.due?`<span style="font-size:10px;color:${isOverdue(t.due)?'var(--red)':'var(--gold)'}">📅 ${fmtDate(t.due)}</span>`:''}
+          ${sbt?`<span class="sc2">📋 ${sbd}/${sbt}</span>`:''}
         </div>
-        <button class="rb" onclick="openSubEdit('${t.id}','${s.id}')" title="Edit">✏️</button>
-        <button class="rb dl" onclick="pvDelSub('${t.id}','${s.id}')">✕</button>
       </div>
-      <div class="str-edit" id="se-${t.id}-${s.id}">
-        <input type="text" id="se-txt-${t.id}-${s.id}" value="${s.text.replace(/"/g,'&quot;')}" placeholder="Sub-task text..."/>
-        <div style="display:flex;gap:6px;align-items:center;flex-wrap:wrap">
-          <input type="date" id="se-due-${t.id}-${s.id}" value="${s.due||''}" style="background:var(--s3);border:1px solid var(--bd2);border-radius:6px;padding:5px 8px;color:var(--text);font-size:12px;outline:none;font-family:var(--font);flex:1;min-width:120px;"/>
-          <div class="sub-as-wrap">
-            <div class="sub-as-btn" onclick="toggleSubAsDrop('${t.id}','${s.id}','edit')">👤 ${sAsUsers.length?sAsUsers.map(u=>u.name).join(', '):'Assignee'} ▾</div>
-            <div class="sub-as-drop" id="sad-edit-${t.id}-${s.id}">
-              ${users.map(u=>`<div class="sub-as-opt ${sAs.includes(u.id)?'sel':''}" id="sao-edit-${t.id}-${s.id}-${u.id}" onclick="toggleSubAs('${t.id}','${s.id}','edit','${u.id}')">
-                <div class="sa-chk">${sAs.includes(u.id)?'✓':''}</div>
-                <div class="av-sm" style="background:${h2r(u.color||'#8d96b8',.2)};color:${u.color||'#8d96b8'}">${u.emoji||u.name[0]}</div>
-                ${u.name}
-              </div>`).join('')}
+      <div><span class="sb3" style="background:${h2r(sta.color,.15)};color:${sta.color};border-color:${h2r(sta.color,.3)}">${sta.name}</span></div>
+      <div><span class="pb2" style="background:${h2r(pri.color,.15)};color:${pri.color};border-color:${h2r(pri.color,.3)}">${pri.name}</span></div>
+      <div class="ac-multi">${assigneeUsers.map(u=>`<div class="av-sm" style="background:${h2r(u.color||'#8d96b8',.2)};color:${u.color||'#8d96b8'}" title="${u.name}">${u.emoji||u.name[0]}</div>`).join('')}<span style="font-size:11px">${assigneeUsers.map(u=>u.name).join(', ')||'—'}</span></div>
+      <div class="ra" onclick="event.stopPropagation()">
+        <button class="rb" onclick="pvEditTask('${t.id}')" title="Edit">✏️</button>
+        <button class="rb dl" onclick="pvDelTask('${t.id}')" title="Delete">🗑</button>
+      </div>
+    </div>
+    <div class="sp ${ie?'open':''}" id="pvs-${t.id}">
+      ${(t.subtasks||[]).map(s=>{
+        const sAs=(s.assignees&&s.assignees.length)?s.assignees:(s.assignee?[s.assignee]:[]);
+        const sAsUsers=sAs.map(id=>users.find(u=>u.id===id)).filter(Boolean);
+        return`<div class="str" id="pvstr-${t.id}-${s.id}">
+          <div class="chk ${s.done?'ck':''}" onclick="tSub('${t.id}','${s.id}')"></div>
+          <div class="stxt ${s.done?'done':''}" style="flex:1">
+            ${s.text}${s.due?`<span style="margin-left:7px;font-size:10px;color:${isOverdue(s.due)?'var(--red)':'var(--gold)'};background:rgba(245,166,35,.12);border:1px solid rgba(245,166,35,.25);border-radius:4px;padding:1px 5px;">📅 ${fmtDate(s.due)}</span>`:''}
+            ${sAsUsers.length?`<span style="margin-left:6px">${sAsUsers.map(u=>`<span class="av-sm" style="display:inline-flex;background:${h2r(u.color||'#8d96b8',.2)};color:${u.color||'#8d96b8'}" title="${u.name}">${u.emoji||u.name[0]}</span>`).join('')}</span>`:''}
+          </div>
+          <button class="rb" onclick="openSubEdit('${t.id}','${s.id}')" title="Edit">✏️</button>
+          <button class="rb dl" onclick="pvDelSub('${t.id}','${s.id}')">✕</button>
+        </div>
+        <div class="str-edit" id="se-${t.id}-${s.id}">
+          <input type="text" id="se-txt-${t.id}-${s.id}" value="${s.text.replace(/"/g,'&quot;')}" placeholder="Sub-task text..."/>
+          <div style="display:flex;gap:6px;align-items:center;flex-wrap:wrap">
+            <input type="date" id="se-due-${t.id}-${s.id}" value="${s.due||''}" style="background:var(--s3);border:1px solid var(--bd2);border-radius:6px;padding:5px 8px;color:var(--text);font-size:12px;outline:none;font-family:var(--font);flex:1;min-width:120px;"/>
+            <div class="sub-as-wrap">
+              <div class="sub-as-btn" onclick="toggleSubAsDrop('${t.id}','${s.id}','edit')">👤 ${sAsUsers.length?sAsUsers.map(u=>u.name).join(', '):'Assignee'} ▾</div>
+              <div class="sub-as-drop" id="sad-edit-${t.id}-${s.id}">
+                ${users.map(u=>`<div class="sub-as-opt ${sAs.includes(u.id)?'sel':''}" id="sao-edit-${t.id}-${s.id}-${u.id}" onclick="toggleSubAs('${t.id}','${s.id}','edit','${u.id}')">
+                  <div class="sa-chk">${sAs.includes(u.id)?'✓':''}</div>
+                  <div class="av-sm" style="background:${h2r(u.color||'#8d96b8',.2)};color:${u.color||'#8d96b8'}">${u.emoji||u.name[0]}</div>
+                  ${u.name}
+                </div>`).join('')}
+              </div>
             </div>
           </div>
+          <div style="display:flex;gap:5px;justify-content:flex-end">
+            <button class="btn bg bxs" onclick="closeSubEdit('${t.id}','${s.id}')">Cancel</button>
+            <button class="btn br bxs" onclick="saveSubEdit('${t.id}','${s.id}')">Save</button>
+          </div>
+        </div>`;
+      }).join('')}
+      <div class="add-s">
+        <input type="text" placeholder="New sub-task..." id="pvns-${t.id}" onkeydown="if(event.key==='Enter')pvASub('${t.id}')"/>
+        <input type="date" id="pvnd-${t.id}" title="Deadline" style="background:var(--s2);border:1px solid var(--bd2);border-radius:7px;padding:6px 8px;color:var(--text);font-size:12px;outline:none;font-family:var(--font);"/>
+        <div class="sub-as-wrap">
+          <div class="sub-as-btn" id="pvnasBtn-${t.id}" onclick="toggleSubAsDrop('${t.id}','','new')">👤 ▾</div>
+          <div class="sub-as-drop" id="sad-new-${t.id}">
+            ${users.map(u=>`<div class="sub-as-opt" id="sao-new-${t.id}-${u.id}" onclick="toggleSubAs('${t.id}','','new','${u.id}')">
+              <div class="sa-chk"></div>
+              <div class="av-sm" style="background:${h2r(u.color||'#8d96b8',.2)};color:${u.color||'#8d96b8'}">${u.emoji||u.name[0]}</div>
+              ${u.name}
+            </div>`).join('')}
+          </div>
         </div>
-        <div style="display:flex;gap:5px;justify-content:flex-end">
-          <button class="btn bg bxs" onclick="closeSubEdit('${t.id}','${s.id}')">Cancel</button>
-          <button class="btn br bxs" onclick="saveSubEdit('${t.id}','${s.id}')">Save</button>
-        </div>
-      </div>`;
-    }).join('')}
-    <div class="add-s">
-      <input type="text" placeholder="নতুন sub-task..." id="pvns-${t.id}" onkeydown="if(event.key==='Enter')pvASub('${t.id}')"/>
-      <input type="date" id="pvnd-${t.id}" title="Deadline" style="background:var(--s2);border:1px solid var(--bd2);border-radius:7px;padding:6px 8px;color:var(--text);font-size:12px;outline:none;font-family:var(--font);"/>
-      <div class="sub-as-wrap">
-        <div class="sub-as-btn" id="pvnasBtn-${t.id}" onclick="toggleSubAsDrop('${t.id}','','new')">👤 ▾</div>
-        <div class="sub-as-drop" id="sad-new-${t.id}">
-          ${users.map(u=>`<div class="sub-as-opt" id="sao-new-${t.id}-${u.id}" onclick="toggleSubAs('${t.id}','','new','${u.id}')">
-            <div class="sa-chk"></div>
-            <div class="av-sm" style="background:${h2r(u.color||'#8d96b8',.2)};color:${u.color||'#8d96b8'}">${u.emoji||u.name[0]}</div>
-            ${u.name}
-          </div>`).join('')}
-        </div>
+        <button class="btn bg bxs" onclick="pvASub('${t.id}')">Add</button>
       </div>
-      <button class="btn bg bxs" onclick="pvASub('${t.id}')">Add</button>
     </div>
   </div>`;
 }
@@ -2009,16 +2018,7 @@ window.pvTaskDone=async function(id){
   if(!wasD)await sendNotif(t.assignee,'completed',t.id,t.title,cu?.name||'Someone');
   renderPV();
 };
-window.pvExpandSub=function(id){
-  const el=eid('pvs-'+id);if(el)el.style.display=el.style.display==='none'?'block':'none';
-};
-window.pvToggleSub=function(id){
-  const panel=eid('pvs-'+id);if(!panel)return;
-  const arrow=eid('pvstoggle-'+id);
-  const isOpen=panel.style.display!=='none';
-  panel.style.display=isOpen?'none':'block';
-  if(arrow)arrow.textContent=isOpen?'▸':'▾';
-};
+window.pvTExp=function(id){if(pvExp.has(id))pvExp.delete(id);else pvExp.add(id);renderPV();};
 window.pvASub=async function(tid){
   const inp=eid('pvns-'+tid);const txt=inp?.value.trim();if(!txt)return;
   const dateInp=eid('pvnd-'+tid);const due=dateInp?.value||'';
@@ -2026,9 +2026,11 @@ window.pvASub=async function(tid){
   const t=tasks.find(t=>t.id===tid);if(!t)return;
   if(!t.subtasks)t.subtasks=[];
   t.subtasks.push({id:tid+'_'+Date.now(),text:txt,done:false,due,assignees:newAs,assignee:newAs[0]||''});
+  pvExp.add(tid); // keep expanded after add
   await saveTaskFS(t);
   inp.value='';if(dateInp)dateInp.value='';
   delete _subNewAs[tid];
+  for(const a of newAs) await sendNotif(a,'subtask',t.id,t.title,cu?.name||'Someone');
   toast('Sub-task added!','ok');
 };
 window.addTaskToProject=function(pid,secId){

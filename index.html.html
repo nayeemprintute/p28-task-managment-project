@@ -2,7 +2,10 @@
 <html lang="bn">
 <head>
 <meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
+<meta name="mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
 <title>Printute — Pro Task Manager</title>
 <style>
 :root{
@@ -379,10 +382,260 @@ input[type="date"]{color-scheme:dark;}
 .daily-todo-badge{font-size:10px;font-weight:700;padding:3px 10px;border-radius:20px;background:var(--s3);color:var(--t3);border:1px solid var(--bd2);text-align:center;cursor:pointer;transition:.15s;}
 .daily-todo-badge:hover{border-color:var(--green);color:var(--green);}
 
-@media(max-width:680px){.daily-th,.daily-tr{grid-template-columns:30px 1fr 80px;}}
+/* ── Responsive toolbar buttons ── */
+.tb-btn-task,.tb-btn-proj,.tb-btn-user{transition:opacity .15s;}
 
-@media(max-width:960px){.sg{grid-template-columns:repeat(3,1fr);}.dg{grid-template-columns:1fr;}.kb{grid-template-columns:repeat(2,1fr);}.set-grid{grid-template-columns:1fr;}.th,.tr{grid-template-columns:30px 1fr 88px 82px 90px 68px;}.th>div:nth-child(6),.tr>div:nth-child(6){display:none;}}
-@media(max-width:680px){.ag{grid-template-columns:1fr;}.sb{position:fixed;left:0;top:0;bottom:0;z-index:400;transform:translateX(-100%);transition:.25s;width:250px;}.sb.open{transform:translateX(0);}.ham{display:flex;}.sg{grid-template-columns:repeat(2,1fr);}.kb{grid-template-columns:1fr;}.th,.tr{grid-template-columns:30px 1fr 80px 64px;}.th>div:nth-child(3),.tr>div:nth-child(3),.th>div:nth-child(4),.tr>div:nth-child(4),.th>div:nth-child(6),.tr>div:nth-child(6){display:none;}.tb{padding:0 13px;}.ct{padding:13px;}.fr2{grid-template-columns:1fr;}.lw{padding:26px 18px;}.np{width:100%;}.fts{display:none;}.set-grid{grid-template-columns:1fr;}.bab{min-width:calc(100vw - 24px);flex-wrap:wrap;bottom:12px;}}
+@media(max-width:679px){
+  .tb-btn-user{display:none;}
+}
+@media(max-width:479px){
+  .tb-btn-task{display:none;}
+  .tb-btn-proj{display:none;}
+}
+
+/* ═══════════════════════════════════════════
+   COMPREHENSIVE RESPONSIVE SYSTEM
+   Breakpoints:
+   • xl: 1280px+   (large desktop)
+   • lg: 960–1279  (desktop / small laptop)
+   • md: 680–959   (tablet landscape / large phone)
+   • sm: 480–679   (tablet portrait / large phone)
+   • xs: <480      (phone)
+═══════════════════════════════════════════ */
+
+/* ── Touch / tap targets – always at least 44px ── */
+@media (pointer:coarse){
+  .ni,.proj-item,.btn,.btn-log,.btn-out,.ngl-add,.rb,.ni-btn,
+  .bab-btn,.bab-close,.daily-todo-badge,.daily-done-badge,
+  .chk,.th-chk{min-height:44px;min-width:44px;}
+  .chk,.th-chk{min-width:20px;min-height:20px;width:20px;height:20px;}
+  .ni,.proj-item{min-height:44px;display:flex;align-items:center;}
+  .rb{min-height:32px;min-width:32px;padding:4px 8px;}
+}
+
+/* ── Large Desktop (1280px+): wider sidebar, multi-col dashboard ── */
+@media(min-width:1280px){
+  .ag{grid-template-columns:270px 1fr;}
+  .sg{grid-template-columns:repeat(5,1fr);}
+  .dg{grid-template-columns:1fr 1fr;}
+  .set-grid{grid-template-columns:1fr 1fr;}
+}
+
+/* ── Standard Desktop (960–1279) ── */
+@media(max-width:1279px) and (min-width:960px){
+  .sg{grid-template-columns:repeat(5,1fr);}
+  .dg{grid-template-columns:1fr 1fr;}
+}
+
+/* ── Tablet Landscape / Small Laptop (680–959) ── */
+@media(max-width:960px){
+  /* Stats grid */
+  .sg{grid-template-columns:repeat(3,1fr);gap:7px;}
+  /* Dashboard grid */
+  .dg{grid-template-columns:1fr;}
+  /* Kanban */
+  .kb{grid-template-columns:repeat(2,1fr);}
+  /* Settings */
+  .set-grid{grid-template-columns:1fr;}
+  /* Task table: hide Assignee column */
+  .th,.tr{grid-template-columns:30px 1fr 105px 88px 110px 68px;}
+  .th>div:nth-child(6),.tr>div:nth-child(6){display:none;}
+  /* PV stats */
+  .pv-stats{grid-template-columns:repeat(4,1fr);}
+  /* Bulk bar */
+  .bab{min-width:min(600px,calc(100vw - 24px));}
+  /* Daily */
+  .daily-th,.daily-tr{grid-template-columns:30px 1fr 100px;}
+}
+
+/* ── Tablet Portrait (480–679) ── */
+@media(max-width:679px){
+  /* Layout: sidebar becomes drawer */
+  .ag{grid-template-columns:1fr;}
+  .sb{
+    position:fixed;left:0;top:0;bottom:0;
+    z-index:400;transform:translateX(-100%);
+    transition:.25s cubic-bezier(.4,0,.2,1);
+    width:260px;
+    /* Safe area for notch phones */
+    padding-left:env(safe-area-inset-left,0);
+  }
+  .sb.open{transform:translateX(0);box-shadow:4px 0 40px rgba(0,0,0,.6);}
+  .ham{display:flex;}
+
+  /* Header toolbar */
+  .tb{padding:0 12px;height:52px;}
+  .tb-title{font-size:15px;}
+  /* Hide some toolbar buttons on small screens */
+  .tb-act .btn:not(:last-child):not(:nth-last-child(2)){display:none;}
+
+  /* Content area */
+  .ct{padding:12px;}
+
+  /* Stats: 2 cols */
+  .sg{grid-template-columns:repeat(2,1fr);gap:6px;}
+  .sc .sv{font-size:18px;}
+
+  /* Dashboard grid: single col */
+  .dg{grid-template-columns:1fr;}
+  .dc{padding:13px;}
+  /* Project span reset */
+  .dg .dc[style*="grid-column"]{grid-column:span 1!important;}
+
+  /* Kanban: single col */
+  .kb{grid-template-columns:1fr;}
+
+  /* Task table: compact – only checkbox, title, status, actions */
+  .th,.tr{grid-template-columns:30px 1fr 80px 64px;}
+  .th>div:nth-child(3),.tr>div:nth-child(3),
+  .th>div:nth-child(4),.tr>div:nth-child(4),
+  .th>div:nth-child(6),.tr>div:nth-child(6){display:none;}
+
+  /* Subtask panel indent */
+  .sp{padding-left:30px;}
+
+  /* Filters row: wrap nicely */
+  .tlb{gap:5px;}
+  .sb2{min-width:120px;}
+  .fts{display:none;}/* hide status tabs, use filter dropdown instead */
+  select.fs{font-size:12px;padding:6px 8px;}
+  .srt{padding:6px 8px;font-size:11px;}
+
+  /* Modals: full-width on phone */
+  .md{width:calc(100vw - 16px)!important;max-height:92vh;border-radius:14px;}
+  .lw{padding:24px 16px;border-radius:18px;}
+
+  /* Form 2-col → 1-col */
+  .fr2{grid-template-columns:1fr;}
+
+  /* Notification panel: full-width */
+  .np{width:100%;border-radius:0;}
+
+  /* Settings: single col */
+  .set-grid{grid-template-columns:1fr;}
+
+  /* Project view */
+  .pv-stats{grid-template-columns:repeat(2,1fr);}
+  .pv-header{flex-direction:column;}
+
+  /* Bulk action bar */
+  .bab{
+    min-width:calc(100vw - 16px);
+    flex-wrap:wrap;
+    bottom:max(12px, env(safe-area-inset-bottom,12px));
+    gap:7px;
+    border-radius:14px;
+  }
+  .bab-actions{flex-wrap:wrap;gap:4px;}
+  .bab-sep{display:none;}
+
+  /* Daily tasks */
+  .daily-th,.daily-tr{grid-template-columns:30px 1fr 80px;}
+  .daily-header{flex-direction:column;align-items:flex-start;gap:10px;}
+  .daily-header>div:last-child{width:100%;display:flex;flex-wrap:wrap;gap:6px;}
+  .daily-header .btn{flex:1;min-width:calc(50% - 4px);justify-content:center;}
+
+  /* User table */
+  .ur{grid-template-columns:40px 1fr 60px;}
+  .ur>div:nth-child(3),.ur>div:nth-child(4){display:none;}
+  .urh>div:nth-child(3),.urh>div:nth-child(4){display:none;}
+}
+
+/* ── Small Phone (<480px) ── */
+@media(max-width:479px){
+  /* Even tighter stats */
+  .sg{grid-template-columns:repeat(2,1fr);gap:5px;}
+  .sc{padding:10px 12px;}
+  .sc .sv{font-size:16px;}
+  .sc .sl{font-size:9px;}
+
+  /* Sidebar width */
+  .sb{width:80vw;max-width:280px;}
+
+  /* Toolbar: only hamburger + title + bell */
+  .tb-act .btn:not(:last-child){display:none;}
+  .tb-title{font-size:14px;max-width:160px;overflow:hidden;text-overflow:ellipsis;white-space:nowrap;}
+
+  /* Task rows: minimal */
+  .th,.tr{grid-template-columns:28px 1fr 60px;}
+  .th>div:nth-child(3),.tr>div:nth-child(3),
+  .th>div:nth-child(4),.tr>div:nth-child(4),
+  .th>div:nth-child(5),.tr>div:nth-child(5),
+  .th>div:nth-child(6),.tr>div:nth-child(6){display:none;}
+  /* Show status column on last visible */
+  .th>div:nth-child(5),.tr>div:nth-child(5){display:block;}
+
+  /* Login card */
+  .lw{padding:20px 14px;}
+  .lh{font-size:20px;}
+  .pg{max-height:200px;}
+
+  /* Kanban cards */
+  .kcd{padding:8px 9px;}
+  .kct2{font-size:11px;}
+
+  /* PV stats: 2×2 */
+  .pv-stats{grid-template-columns:repeat(2,1fr);}
+
+  /* Content padding */
+  .ct{padding:10px;}
+
+  /* Modal */
+  .md{width:calc(100vw - 10px)!important;border-radius:12px;}
+  .mdb{padding:14px 16px;}
+  .mdf{padding:0 16px 16px;}
+
+  /* Bulk bar compact */
+  .bab{padding:9px 12px;gap:5px;}
+  .bab-btn{padding:5px 8px;font-size:11px;}
+  .bab-sel{padding:5px 7px;font-size:11px;}
+
+  /* Daily */
+  .daily-th,.daily-tr{grid-template-columns:28px 1fr 70px;}
+  .daily-header .btn{font-size:11px;padding:5px 8px;}
+
+  /* Notification panel */
+  .np{width:100%;}
+  .npi{padding:10px 11px;}
+  .ni-icon{width:28px;height:28px;font-size:12px;}
+
+  /* Sub-task add row */
+  .add-s{flex-wrap:wrap;}
+  .add-s input{min-width:calc(100% - 90px);}
+}
+
+/* ── Safe area insets for notch/home-indicator devices ── */
+@supports(padding-bottom: env(safe-area-inset-bottom)){
+  .sbf{padding-bottom:calc(13px + env(safe-area-inset-bottom,0px));}
+  #toast{bottom:calc(18px + env(safe-area-inset-bottom,0px));}
+  .bab{bottom:calc(24px + env(safe-area-inset-bottom,0px));}
+}
+
+/* ── Smooth scrolling for nav panel ── */
+.sbn,.npb,.ct{scroll-behavior:smooth;-webkit-overflow-scrolling:touch;}
+
+/* ── Improved focus ring for keyboard users ── */
+button:focus-visible,input:focus-visible,select:focus-visible,textarea:focus-visible{
+  outline:2px solid var(--red);outline-offset:2px;
+}
+
+/* ── Hover states only on non-touch devices ── */
+@media(hover:none){
+  .tr:hover{background:transparent;}
+  .ni:hover{background:transparent;}
+  .ra{opacity:1!important;}/* always show actions on touch */
+  .ni-del{display:block!important;}
+  .proj-del{display:block!important;}
+}
+
+/* ── Print: hide sidebar and controls ── */
+@media print{
+  .sb,.tb,.bab,.np,#toast{display:none!important;}
+  .ag{display:block;}
+  .mn{height:auto;overflow:visible;}
+  .ct{overflow:visible;height:auto;}
+  body,html{overflow:visible;height:auto;}
+}
 </style>
 </head>
 <body>
@@ -459,9 +712,9 @@ input[type="date"]{color-scheme:dark;}
           <div class="tb-title" id="vt">Dashboard</div>
         </div>
         <div class="tb-act">
-          <button class="btn bg bsm" onclick="openM('task')">+ Task</button>
-          <button class="btn br bsm" onclick="openM('project')">+ Project</button>
-          <button class="btn bg bsm" onclick="openM('user')">+ User</button>
+          <button class="btn bg bsm tb-btn-task" onclick="openM('task')">+ Task</button>
+          <button class="btn br bsm tb-btn-proj" onclick="openM('project')">+ Project</button>
+          <button class="btn bg bsm tb-btn-user" onclick="openM('user')">+ User</button>
           <button class="btn bg bsm" onclick="toggleNP()" style="position:relative;padding:6px 11px;">
             🔔<span class="unread-badge" id="nbadge"></span>
           </button>
